@@ -13,14 +13,14 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
 
-      # - name: Set up Docker Buildx
-      #   uses: docker/setup-buildx-action@v2
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v2
 
-      # - name: Install Docker Compose
-      #   run: |
-      #     sudo curl -L "https://github.com/docker/compose/releases/download/$(curl -s https://api.github.com/repos/docker/compose/releases/latest | grep tag_name | cut -d '"' -f 4)/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
-      #     sudo chmod +x /usr/local/bin/docker-compose
-      #     docker-compose --version  # Verify installation
+      - name: Install Docker Compose
+        run: |
+          sudo curl -L "https://github.com/docker/compose/releases/download/$(curl -s https://api.github.com/repos/docker/compose/releases/latest | grep tag_name | cut -d '"' -f 4)/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
+          sudo chmod +x /usr/local/bin/docker-compose
+          docker-compose --version  # Verify installation
 
       - name: Deploy to Server
         run: |
@@ -29,8 +29,8 @@ jobs:
           ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -i /tmp/id_rsa ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_IP }} << 'EOF'
             cd ~/vote
             git pull
-            echo "${{ secrets.SUDO_PASSWORD }}" | sudo -S docker-compose down --volumes --remove-orphans
-            echo "${{ secrets.SUDO_PASSWORD }}" | sudo -S docker compose down --volumes --remove-orphans
-            echo "${{ secrets.SUDO_PASSWORD }}" | sudo -S docker system prune -a -f
-            echo "${{ secrets.SUDO_PASSWORD }}" | sudo -S docker compose up --build
+            
+            echo "${{ secrets.SUDO_PASSWORD }}" | sudo -S docker-compose build
+            echo "${{ secrets.SUDO_PASSWORD }}" | sudo -S docker-compose pull 
+            echo "${{ secrets.SUDO_PASSWORD }}" | sudo -S docker-compose up -d
           EOF
