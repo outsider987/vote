@@ -29,7 +29,7 @@ jobs:
           ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -i /tmp/id_rsa ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_IP }} << 'EOF'
             cd ~/vote
             git pull
-            docker-compose build
-            docker-compose pull 
-            docker-compose up -d
+            sudo docker-compose build
+            sudo docker-compose pull 
+            sudo docker-compose up -d
           EOF
