@@ -30,5 +30,9 @@ jobs:
             cd ~/vote
             git pull
             
-            echo "${{ secrets.SUDO_PASSWORD }}" | sudo -S docker compose up --build
+            # Stop any running containers
+            echo "${{ secrets.SUDO_PASSWORD }}" | sudo -S docker compose down
+            # Build and start the containers
+            echo "${{ secrets.SUDO_PASSWORD }}" | sudo -S docker compose build
+            echo "${{ secrets.SUDO_PASSWORD }}" | sudo -S docker compose up -d
           EOF
