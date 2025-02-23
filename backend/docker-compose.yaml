@@ -1,0 +1,20 @@
+services:
+  db:
+    image: mysql:8.0
+    restart: always
+    command: --default-authentication-plugin=caching_sha2_password
+    environment:
+      MYSQL_ROOT_PASSWORD: "root"  # Only keep this
+      # MYSQL_DATABASE: voting_db
+      MYSQL_USER: "root"
+      # MYSQL_PASSWORD: "root"
+      # MYSQL_ROOT_PASSWORD: 123456
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+      - ./initdb:/docker-entrypoint-initdb.d  # Mount init SQL files
+
+
+volumes:
+  mysql_data:
