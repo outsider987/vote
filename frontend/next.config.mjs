@@ -29,7 +29,7 @@ const nextConfig = {
     return config;
   },
   eslint:{
-    ignoreDuringBuilds: true,
+    // ignoreDuringBuilds: true,
     rules: {
       'react/no-unescaped-entities': 'off'
     }
