@@ -30,9 +30,12 @@ jobs:
             cd ~/vote
             git pull
             
-            # Stop any running containers
+            # Ensure Docker Compose is installed
+            sudo apt-get update
+            sudo apt-get install -y docker-compose-plugin
+
+            # Stop and rebuild containers
             echo "${{ secrets.SUDO_PASSWORD }}" | sudo -S docker compose down
-            # Build and start the containers
             echo "${{ secrets.SUDO_PASSWORD }}" | sudo -S docker compose build
             echo "${{ secrets.SUDO_PASSWORD }}" | sudo -S docker compose up -d
           EOF
