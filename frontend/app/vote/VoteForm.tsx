@@ -34,13 +34,13 @@ export function VoteForm({ voteInfo, vote_code, onMessage }: VoteFormProps) {
 
   const toggleCandidate = (candidate: string) => {
     const currentCandidates = watch("candidates");
-
+    
     if (currentCandidates.includes(candidate)) {
       setValue(
         "candidates",
         currentCandidates.filter((c) => c !== candidate)
       );
-    } else if (currentCandidates.length < voteInfo.votes_per_user) {
+    } else if (currentCandidates.length < voteInfo.event.options.length) {
       setValue("candidates", [...currentCandidates, candidate]);
     }
   };
