@@ -28,7 +28,7 @@ interface Event {
 interface Ticket {
   id: string;
   code: string;
-  isUsed: boolean;
+  used: boolean;
   usedAt?: string;
   voteCode: string;
 }
@@ -184,10 +184,10 @@ export default function EventList() {
             <DialogTitle>{selectedEvent?.title} - 票券列表</DialogTitle>
             <div className="flex gap-4 mt-2 text-sm text-gray-500">
               <p className="text-red">
-                已使用票券: {tickets?.filter((ticket) => ticket.isUsed).length}
+                已使用票券: {tickets?.filter((ticket) => ticket.used).length}
               </p>
               <p className="text-green">
-                未使用票券: {tickets?.filter((ticket) => !ticket.isUsed).length}
+                未使用票券: {tickets?.filter((ticket) => !ticket.used).length}
               </p>
               <p className="text-gray-100">總票券數: {tickets.length}</p>
             </div>
@@ -199,7 +199,7 @@ export default function EventList() {
                   <div
                     key={ticket.id}
                     className={`p-4 border rounded ${
-                      ticket.isUsed ? "bg-gray-100" : "bg-white"
+                      ticket.used ? "bg-gray-100" : "bg-white"
                     }`}
                   >
                     <div className="flex flex-col items-center gap-2">
@@ -225,10 +225,10 @@ export default function EventList() {
                       </div>
                       <p
                         className={`text-sm font-bold ${
-                          ticket.isUsed ? "text-red" : "text-green"
+                          ticket.used ? "text-red" : "text-green"
                         }`}
                       >
-                        {ticket.isUsed ? "已使用" : "未使用"}
+                        {ticket.used ? "已使用" : "未使用"}
                       </p>
                       {ticket.usedAt && (
                         <p className="text-xs text-gray-400">
