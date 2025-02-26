@@ -145,12 +145,14 @@ export default function LiveVoteCount() {
           <div className="bg-white p-4 rounded-lg shadow">
             <h3 className="text-xl font-semibold mb-4">詳細票數</h3>
             <div className="grid grid-cols-2 gap-4">
-              {Object.entries(voteCounts).map(([candidate, count]) => (
-                <div key={candidate} className="flex justify-between items-center p-2 bg-primary rounded">
-                  <span className="font-medium">候選人 {candidate}</span>
-                  <span className="text-lg font-bold text-blue-600">{count} 票</span>
-                </div>
-              ))}
+              {Object.entries(voteCounts)
+                .sort(([a], [b]) => a.localeCompare(b))
+                .map(([candidate, count]) => (
+                  <div key={candidate} className="flex justify-between items-center p-2 bg-primary rounded">
+                    <span className="font-medium">候選人 {candidate}</span>
+                    <span className="text-lg font-bold text-blue-600">{count} 票</span>
+                  </div>
+                ))}
             </div>
           </div>
         </>
