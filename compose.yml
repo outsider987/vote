@@ -24,6 +24,8 @@ services:
     volumes:
       - ./frontend:/app
       - /app/node_modules
+      - /app/.next
+
     env_file:
       - ./frontend/.env
     command: ["pnpm", "run", "start"]
