@@ -49,7 +49,7 @@ export default function EventList() {
 
     const fetchData = async () => {
       if (initialFetchDone.current) return;
-      
+
       try {
         const response = await GET_EVENTS();
         const data = response.data;
@@ -66,7 +66,7 @@ export default function EventList() {
         initialFetchDone.current = true;
       } catch (err) {
         if (!mounted) return;
-        setError("載入失敗，請稍後再試");
+        setError(`載入失敗，請稍後再試: ${err}`);
       }
     };
 
@@ -92,7 +92,7 @@ export default function EventList() {
   };
 
   const getVoteCodeURL = (voteCode: string) => {
-    if (typeof window !== 'undefined') {
+    if (typeof window !== "undefined") {
       return `${window.location.origin}/vote?vote_code=${voteCode}`;
     }
     return `/vote?vote_code=${voteCode}`;
@@ -223,15 +223,19 @@ export default function EventList() {
                       />
                       <div className="flex items-center gap-2">
                         <p className="font-mono text-sm text-gray-900">
-                          {ticket.voteCode.length > 12 
-                            ? `${ticket.voteCode.substring(0, 12)}...` 
+                          {ticket.voteCode.length > 12
+                            ? `${ticket.voteCode.substring(0, 12)}...`
                             : ticket.voteCode}
                         </p>
                         <Button
-                          variant="ghost" 
+                          variant="ghost"
                           size="icon"
                           className="h-6 w-6"
-                          onClick={() => navigator.clipboard.writeText(getVoteCodeURL(ticket.voteCode))}
+                          onClick={() =>
+                            navigator.clipboard.writeText(
+                              getVoteCodeURL(ticket.voteCode)
+                            )
+                          }
                         >
                           <Copy className="h-4 w-4 text-blue" />
                         </Button>
