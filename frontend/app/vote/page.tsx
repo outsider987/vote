@@ -9,13 +9,14 @@ import { VoteForm } from "./VoteForm";
 import { Alert } from "@/components/ui/alert";
 
 interface VoteInfo {
-  event_id: string;
+  eventId: string;
   title: string;
-  votes_per_user: number;
+
   used: boolean;
   event: {
     options: string[];
     isVotingStarted: boolean;
+    votesPerUser: number;
   };
 }
 
@@ -63,7 +64,7 @@ export default function VotePage() {
     return (
       <VoteForm 
         voteInfo={voteInfo} 
-        vote_code={voteCode!} 
+        voteCode={voteCode!} 
         onMessage={setMessage} 
       />
     );

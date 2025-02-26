@@ -8,10 +8,11 @@ interface VoteFormProps {
   voteInfo: {
     event: {
       options: string[];
+      votesPerUser: number;
     };
-    votes_per_user: number;
+   
   };
-  vote_code: string;
+  voteCode: string;
   onMessage: (message: string) => void;
 }
 
@@ -19,7 +20,7 @@ interface VoteFormData {
   candidates: string[];
 }
 
-export function VoteForm({ voteInfo, vote_code, onMessage }: VoteFormProps) {
+export function VoteForm({ voteInfo, voteCode: vote_code, onMessage }: VoteFormProps) {
   const { POST_VOTE } = getVoteInfo();
   const {
     register,
@@ -40,14 +41,16 @@ export function VoteForm({ voteInfo, vote_code, onMessage }: VoteFormProps) {
         "candidates",
         currentCandidates.filter((c) => c !== candidate)
       );
-    } else if (currentCandidates.length < voteInfo.event.options.length) {
+    } else if (currentCandidates.length < voteInfo.event.votesPerUser) {
       setValue("candidates", [...currentCandidates, candidate]);
+    } else {
+      onMessage(`最多只能選擇 ${voteInfo.event.votesPerUser} 人`);
     }
   };
 
   const onSubmit = async (data: VoteFormData) => {
-    if (data.candidates.length > voteInfo.votes_per_user) {
-      onMessage(`最多只能選擇 ${voteInfo.votes_per_user} 人`);
+    if (data.candidates.length > voteInfo.event.votesPerUser) {
+      onMessage(`最多只能選擇 ${voteInfo.event.votesPerUser} 人`);
       return;
     }
 
@@ -58,7 +61,7 @@ export function VoteForm({ voteInfo, vote_code, onMessage }: VoteFormProps) {
   return (
     <div className="shadow-lg p-4">
       <p className="mb-4 text-gray-100">
-        請選擇候選人 (最多 {voteInfo.votes_per_user} 人):
+        請選擇候選人 (最多 {voteInfo.event.votesPerUser} 人):
       </p>
       <form onSubmit={handleSubmit(onSubmit)}>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
