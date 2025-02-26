@@ -64,6 +64,7 @@ export default function EventList() {
         setEvents(data);
         setError("");
         initialFetchDone.current = true;
+        console.log("data", data);
       } catch (err) {
         if (!mounted) return;
         setError(`載入失敗，請稍後再試: ${err}`);
