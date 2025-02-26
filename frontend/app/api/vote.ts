@@ -88,5 +88,11 @@ export function getVoteInfo() {
         url: `/events/${eventId}/toggle-voting?start_voting=${startVoting}`,
       });
     },
+    GET_VOTE_COUNTS: (eventId: string) => {
+      return request({
+        method: "GET",
+        url: `/votes/counts/${eventId}`,
+      });
+    },
   };
 }

@@ -169,6 +169,7 @@ export default function EventList() {
               <p>會員人數: {event.memberCount}</p>
               <p>每人可投票數: {event.votesPerUser}</p>
               <p>候選人數: {event.options.length}</p>
+              <p>事件 ID: {event.id}</p>
             </div>
             <div className="flex justify-end gap-2">
               <Button

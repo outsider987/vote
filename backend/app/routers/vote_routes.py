@@ -50,7 +50,7 @@ async def submit_vote(
         
     return JSONResponse({"message": "投票成功"})
 
-@router.websocket("/ws/updates")
+@router.websocket("/ws/vote-updates")
 async def vote_updates(
     websocket: WebSocket,
     db: Session = Depends(get_db)
@@ -64,4 +64,12 @@ async def vote_updates(
             await websocket.send_json(vote_counts)
             await asyncio.sleep(2)
     except WebSocketDisconnect:
-        active_websockets.remove(websocket) 
+        active_websockets.remove(websocket)
+
+@router.get("/counts/{event_id}")
+async def get_event_vote_counts(
+    event_id: str,
+    db: Session = Depends(get_db)
+):
+    vote_counts = vote_service.get_vote_counts(db, event_id)
+    return JSONResponse(vote_counts) 

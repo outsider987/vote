@@ -25,11 +25,11 @@ export default function Navbar({className = ""}) {
               建立投票事件
             </Button>
           </Link>
-          <Link href="/generate-tickets">
+          {/* <Link href="/generate-tickets">
             <Button    className="hover:bg-gray-700">
               票券產生
             </Button>
-          </Link>
+          </Link> */}
           <Link href="/live-vote-count">
             <Button  className="hover:bg-gray-700">
               投票結果
@@ -56,11 +56,11 @@ export default function Navbar({className = ""}) {
                 建立投票事件
               </Button>
             </Link>
-            <Link href="/generate-tickets" onClick={() => setMobileMenuOpen(false)}>
+            {/* <Link href="/generate-tickets" onClick={() => setMobileMenuOpen(false)}>
               <Button variant="ghost" className="w-full text-left">
                 票券產生
               </Button>
-            </Link>
+            </Link> */}
             <Link href="/live-vote-count" onClick={() => setMobileMenuOpen(false)}>
               <Button variant="ghost" className="w-full text-left">
                 投票結果
