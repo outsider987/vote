@@ -1,5 +1,5 @@
 'use client'
-import { useEffect, useState } from 'react';
+import { Suspense, useEffect, useState } from 'react';
 import {
   Chart as ChartJS,
   CategoryScale,
@@ -24,6 +24,14 @@ ChartJS.register(
 );
 
 export default function LiveVoteCount() {
+  return (
+    <Suspense fallback={<div>Loading...</div>}>
+      <LiveVoteContent />
+    </Suspense>
+  );
+}
+
+function LiveVoteContent() {
   const [voteCounts, setVoteCounts] = useState<{ [key: string]: number }>({});
   const [isConnecting, setIsConnecting] = useState(false);
   const searchParams = useSearchParams();
