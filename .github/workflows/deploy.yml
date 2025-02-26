@@ -34,6 +34,6 @@ jobs:
 
             # Stop and rebuild containers
             echo "${{ secrets.SUDO_PASSWORD }}" | sudo -S docker-compose down
-            echo "${{ secrets.SUDO_PASSWORD }}" | sudo -S docker-compose build
+            echo "${{ secrets.SUDO_PASSWORD }}" | sudo -S docker-compose build --no-cache
             echo "${{ secrets.SUDO_PASSWORD }}" | sudo -S docker-compose up -d
           EOF
