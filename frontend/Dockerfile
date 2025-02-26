@@ -4,7 +4,7 @@ FROM node:18-alpine AS builder
 WORKDIR /app
 
 # Install dependencies first (to leverage Docker cache)
-COPY package.json pnpm-lock.yaml ./
+COPY package.json ./
 RUN corepack enable && pnpm install --frozen-lockfile
 
 # Copy the rest of the application
