@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { Button } from "@/components/ui/button";
 import { getVoteInfo } from "@/app/api/vote";
 import {
@@ -39,30 +39,43 @@ export default function EventList() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedEvent, setSelectedEvent] = useState<Event | null>(null);
   const [tickets, setTickets] = useState<Ticket[]>([]);
+  const initialFetchDone = useRef(false);
 
   const { GET_EVENTS, DELETE_EVENT, GET_TICKETS, POST_TOGGLE_EVENT_VOTING } =
     getVoteInfo();
 
   useEffect(() => {
-    fetchEvents();
-  }, []);
+    let mounted = true;
 
-  const fetchEvents = async () => {
-    try {
-      const response = await GET_EVENTS();
-      const data = response.data;
+    const fetchData = async () => {
+      if (initialFetchDone.current) return;
+      
+      try {
+        const response = await GET_EVENTS();
+        const data = response.data;
 
-      if (response.status !== 200) {
-        setError(data.message);
-        return;
+        if (!mounted) return;
+
+        if (response.status !== 200) {
+          setError(data.message);
+          return;
+        }
+
+        setEvents(data);
+        setError("");
+        initialFetchDone.current = true;
+      } catch (err) {
+        if (!mounted) return;
+        setError("載入失敗，請稍後再試");
       }
+    };
 
-      setEvents(data);
-      setError("");
-    } catch (err) {
-      setError("載入失敗，請稍後再試");
-    }
-  };
+    fetchData();
+
+    return () => {
+      mounted = false;
+    };
+  }, []);
 
   const handleDeleteEvent = async (eventId: string) => {
     try {
