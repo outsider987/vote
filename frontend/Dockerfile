@@ -1,24 +1,28 @@
-# Use the official Node.js image as a base image
-FROM node:23
+# Use official Node.js image as base
+FROM node:18-alpine AS builder
 
-# Install pnpm globally
-RUN npm install -g pnpm
-
-# Set the working directory
 WORKDIR /app
 
-# Install dependencies
-COPY package*.json ./
-RUN pnpm install
+# Install dependencies first (to leverage Docker cache)
+COPY package.json pnpm-lock.yaml ./
+RUN corepack enable && pnpm install --frozen-lockfile
 
-# Copy the rest of the application code
+# Copy the rest of the application
 COPY . .
 
-# Build the Next.js application
+# Build the Next.js app
 RUN pnpm run build
 
-# Expose the port the app runs on
-EXPOSE 3000
+# Use a lightweight image for serving the built app
+FROM node:18-alpine
 
-# Start the Next.js application
-CMD ["pnpm", "start"]
+WORKDIR /app
+
+# Copy built files from the builder stage
+COPY --from=builder /app/package.json ./
+COPY --from=builder /app/.next ./.next
+COPY --from=builder /app/public ./public
+COPY --from=builder /app/node_modules ./node_modules
+
+# Start the Next.js production server
+CMD ["pnpm", "run", "start"]
