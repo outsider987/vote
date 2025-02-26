@@ -14,7 +14,10 @@ app = FastAPI(title="Voting System API")
 # Add CORS middleware configuration
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:3000","https://vote.cashone.tw/"],  # In production, replace with specific origins
+    allow_origins=[
+        "http://localhost:3000",
+        "https://vote.cashone.tw/",
+    ],  # In production, replace with specific origins
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -27,7 +30,10 @@ app.add_exception_handler(VotingError, voting_exception_handler)
 active_websockets: List[WebSocket] = []
 
 
-app.include_router(router, prefix="/api")
+app.include_router(
+    router,
+)
+
 
 @app.on_event("startup")
 async def startup_event():
@@ -39,21 +45,20 @@ async def startup_event():
         logger.error(f"Failed to initialize application: {str(e)}")
         raise
 
+
 @app.on_event("shutdown")
 async def shutdown_event():
     """Cleanup database connections on shutdown"""
     dispose_engine()
-    
+
+
 @app.get("/health")
 async def health_check():
     """Health check endpoint to verify API is running"""
     return {"status": "healthy"}
 
+
 if __name__ == "__main__":
     import uvicorn
-    uvicorn.run(
-        "main:app",
-        host=settings.API_HOST,
-        port=settings.API_PORT,
-        reload=True
-    )
+
+    uvicorn.run("main:app", host=settings.API_HOST, port=settings.API_PORT, reload=True)
