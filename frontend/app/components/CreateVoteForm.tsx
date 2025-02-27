@@ -6,6 +6,11 @@ import { Button } from "@/components/ui/button";
 import DynamicOptionsInput from "@/app/components/DynamicOptionsInput";
 import { DatePicker } from "@/components/ui/date-picker";
 
+interface Option {
+  number: number;
+  text: string;
+}
+
 export default function CreateVoteForm() {
   const [formData, setFormData] = useState({
     eventDate: "",
@@ -14,7 +19,7 @@ export default function CreateVoteForm() {
     votesPerUser: "",
     showCount: "",
   });
-  const [options, setOptions] = useState<string[]>([]);
+  const [options, setOptions] = useState<Option[]>([]);
   const [response, setResponse] = useState<any>(null);
 
   const handleDateChange = (date: Date | null) => {
