@@ -1,8 +1,10 @@
+'use client'
 import { useForm } from "react-hook-form";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardFooter } from "@/components/ui/card";
 import { getVoteInfo } from "../../api/vote";
 import { useRouter } from "next/navigation";
+import { useState } from "react";
 
 
 interface VoteFormProps {
@@ -23,6 +25,7 @@ interface VoteFormData {
 
 export function VoteForm({ voteInfo, voteCode: vote_code, onMessage }: VoteFormProps) {
   const { POST_VOTE } = getVoteInfo();
+  const [isSuccess, setIsSuccess] = useState(false);
   const router = useRouter();
   const {
     register,
@@ -60,7 +63,7 @@ export function VoteForm({ voteInfo, voteCode: vote_code, onMessage }: VoteFormP
     onMessage(res.data.message);
     if (res.status === 200) {
       alert('投票成功');
-      router.push(`/client/live-vote-count?eventId=${voteInfo.event.id}`);
+      // router.push(`/client/live-vote-count?eventId=${voteInfo.event.id}`);
     }
   };
 

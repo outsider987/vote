@@ -12,7 +12,7 @@ import {
 import moment from "moment";
 import QRCode from "react-qr-code";
 import { Copy } from "lucide-react";
-
+import { useRouter } from "next/navigation";
 interface Event {
   id: string;
   title: string;
@@ -40,6 +40,7 @@ export default function EventList() {
   const [selectedEvent, setSelectedEvent] = useState<Event | null>(null);
   const [tickets, setTickets] = useState<Ticket[]>([]);
   const initialFetchDone = useRef(false);
+  const router = useRouter();
 
   const { GET_EVENTS, DELETE_EVENT, GET_TICKETS, POST_TOGGLE_EVENT_VOTING } =
     getVoteInfo();
@@ -163,27 +164,45 @@ export default function EventList() {
               </Button>
             </div>
 
-            <div className="text-sm text-gray-300">
-              <p>投票日期: {moment(event.eventDate).format("YYYY-MM-DD")}</p>
-              <p>建立時間: {moment(event.createdAt).format("YYYY-MM-DD")}</p>
-              <p>會員人數: {event.memberCount}</p>
-              <p>每人可投票數: {event.votesPerUser}</p>
-              <p>候選人數: {event.options.length}</p>
-              <p>事件 ID: {event.id}</p>
+            <div className="flex justify-between gap-2">
+              <div className="text-sm text-gray-300">
+                <p>
+                  投票日期:{" "}
+                  {moment(event.eventDate).format("YYYY-MM-DD HH:mm:ss")}
+                </p>
+                <p>
+                  建立時間:{" "}
+                  {moment(event.createdAt).format("YYYY-MM-DD HH:mm:ss")}
+                </p>
+                <p>會員人數: {event.memberCount}</p>
+                <p>每人可投票數: {event.votesPerUser}</p>
+                <p>候選人數: {event.options.length}</p>
+                <p>事件 ID: {event.id}</p>
+              </div>
+              <Button  className="min-h-[80px]" >列印票卷</Button>
             </div>
-            <div className="flex justify-end gap-2">
+
+            <div className="flex justify-end gap-2 mt-2">
+              <Button
+                variant="secondary"
+                onClick={() =>
+                  router.push(`/client/live-vote-count?eventId=${event.id}`)
+                }
+              >
+                查看投票結果
+              </Button>
               <Button
                 onClick={() =>
                   handleToggleVoting(event.id, !event.isVotingStarted)
                 }
-                className="mt-2"
+                className=""
                 variant={event.isVotingStarted ? "destructive" : "default"}
               >
                 {event.isVotingStarted ? "停止投票" : "開始投票"}
               </Button>
               <Button
                 onClick={() => handleDeleteEvent(event.id)}
-                className="mt-2"
+                className=""
                 variant="destructive"
               >
                 刪除
