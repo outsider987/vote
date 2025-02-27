@@ -6,14 +6,13 @@ import { getVoteInfo } from "../../api/vote";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 
-
 interface VoteFormProps {
   voteInfo: {
     event: {
       options: string[];
       votesPerUser: number;
+      id: string; // Used when navigating to live vote count
     };
-   
   };
   voteCode: string;
   onMessage: (message: string) => void;
@@ -38,14 +37,14 @@ export function VoteForm({ voteInfo, voteCode: vote_code, onMessage }: VoteFormP
     },
   });
 
+  const selectedCount = watch("candidates").length;
+
   const toggleCandidate = (candidate: string) => {
+    if (isSuccess) return; // Prevent changes after submission
     const currentCandidates = watch("candidates");
-    
+
     if (currentCandidates.includes(candidate)) {
-      setValue(
-        "candidates",
-        currentCandidates.filter((c) => c !== candidate)
-      );
+      setValue("candidates", currentCandidates.filter((c) => c !== candidate));
     } else if (currentCandidates.length < voteInfo.event.votesPerUser) {
       setValue("candidates", [...currentCandidates, candidate]);
     } else {
@@ -54,8 +53,9 @@ export function VoteForm({ voteInfo, voteCode: vote_code, onMessage }: VoteFormP
   };
 
   const onSubmit = async (data: VoteFormData) => {
-    if (data.candidates.length > voteInfo.event.votesPerUser) {
-      onMessage(`最多只能選擇 ${voteInfo.event.votesPerUser} 人`);
+    // Ensure exactly votesPerUser candidates are selected
+    if (data.candidates.length !== voteInfo.event.votesPerUser) {
+      onMessage(`請選擇 ${voteInfo.event.votesPerUser} 人`);
       return;
     }
 
@@ -63,6 +63,7 @@ export function VoteForm({ voteInfo, voteCode: vote_code, onMessage }: VoteFormP
     onMessage(res.data.message);
     if (res.status === 200) {
       alert('投票成功');
+      setIsSuccess(true); // Disable further interactions
       // router.push(`/client/live-vote-count?eventId=${voteInfo.event.id}`);
     }
   };
@@ -81,37 +82,50 @@ export function VoteForm({ voteInfo, voteCode: vote_code, onMessage }: VoteFormP
               isSelected={watch("candidates").includes(option)}
               onToggle={toggleCandidate}
               register={register}
+              disabled={isSuccess}
             />
           ))}
         </div>
         <CardFooter className="flex justify-center mt-4">
-          <Button type="submit" className="w-full py-2 text-lg">
+          <Button 
+            type="submit" 
+            className="w-full py-2 text-lg"
+            disabled={selectedCount !== voteInfo.event.votesPerUser || isSuccess}
+          >
             送出投票
           </Button>
         </CardFooter>
       </form>
+      <div className="fixed right-3 bottom-3 text-primary flex flex-col gap-2">
+        <span className="text-primary">可投 {voteInfo.event.votesPerUser - selectedCount} 人</span>
+        <span className="text-primary">已選擇 {selectedCount} 人</span>
+      </div>
     </div>
   );
 }
 
-const CandidateCard = ({ 
-  option, 
-  isSelected, 
-  onToggle, 
-  register 
-}: { 
+const CandidateCard = ({
+  option,
+  isSelected,
+  onToggle,
+  register,
+  disabled = false,
+}: {
   option: string;
   isSelected: boolean;
   onToggle: (option: string) => void;
   register: any;
+  disabled?: boolean;
 }) => (
   <Card
-    className={`cursor-pointer transition-all p-3 xl: ${
+    className={`cursor-pointer transition-all p-3 ${
       isSelected
         ? "border-2 border-solid border-orange-500 bg-orange-50"
         : "hover:bg-gray-100"
-    }`}
-    onClick={() => onToggle(option)}
+    } ${disabled ? "opacity-50 cursor-not-allowed" : ""}`}
+    onClick={() => {
+      if (!disabled) onToggle(option);
+    }}
   >
     <CardContent className="flex items-center gap-3">
       <input
@@ -121,11 +135,11 @@ const CandidateCard = ({
         checked={isSelected}
         onChange={(e) => {
           e.stopPropagation();
-          onToggle(option);
+          if (!disabled) onToggle(option);
         }}
         className="w-5 h-5 hidden"
       />
       <div className="text-lg font-medium">{option}</div>
     </CardContent>
   </Card>
-); 
+);

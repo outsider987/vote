@@ -62,11 +62,13 @@ export default function VotePage() {
     }
 
     return (
-      <VoteForm 
-        voteInfo={voteInfo} 
-        voteCode={voteCode!} 
-        onMessage={setMessage} 
-      />
+      <>
+        <VoteForm
+          voteInfo={voteInfo}
+          voteCode={voteCode!}
+          onMessage={setMessage}
+        />
+      </>
     );
   };
 

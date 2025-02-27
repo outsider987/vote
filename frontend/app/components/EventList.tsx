@@ -81,13 +81,14 @@ export default function EventList() {
 
   const handleDeleteEvent = async (eventId: string) => {
     try {
+      setEvents((prev) => prev.filter((event) => event.id !== eventId));
       const response = await DELETE_EVENT(eventId);
       if (response.status !== 200) {
         setError(response.data.message);
         return;
       }
 
-      setEvents((prev) => prev.filter((event) => event.id !== eventId));
+     
     } catch (err) {
       setError("刪除失敗，請稍後再試");
     }

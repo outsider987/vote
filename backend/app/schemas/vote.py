@@ -7,7 +7,7 @@ class EventBase(BaseModel):
     event_date: datetime
     member_count: int = Field(gt=0)
     title: str = Field(min_length=1, max_length=255)
-    options: List[str]
+    options: List[dict[str, str | int]] = Field(default_factory=list)
     votes_per_user: int = Field(gt=0)
     show_count: int = Field(gt=0)
 

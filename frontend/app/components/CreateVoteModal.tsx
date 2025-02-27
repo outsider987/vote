@@ -5,7 +5,6 @@ import { useForm, Controller } from "react-hook-form";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import DynamicOptionsInput from "@/app/components/DynamicOptionsInput";
-import { DatePicker } from "@/components/ui/date-picker";
 import moment from "moment";
 import {
   Dialog,
@@ -18,13 +17,18 @@ import { getVoteInfo } from "../api/vote";
 import { mockVoteData } from "../mock/voteData";
 import { DateTimePicker } from "@/components/ui/date-time-picker";
 
+interface Option {
+  number: number;
+  text: string;
+}
+
 type FormValues = {
   event_date: string;
   member_count: number;
   title: string;
   votes_per_user: number;
   show_count: number;
-  options: string[];
+  options: Option[];
 };
 
 export default function CreateVoteModal() {
@@ -41,7 +45,10 @@ export default function CreateVoteModal() {
       title: mockVoteData.eventBasicInfo.eventTitle,
       votes_per_user: mockVoteData.sampleVoteEvents[0].votesPerUser,
       show_count: mockVoteData.sampleVoteEvents[0].showCount,
-      options: mockVoteData.sampleVoteEvents[0].options,
+      options: mockVoteData.sampleVoteEvents[0].options.map((opt: any, index: number) => ({
+        number: index + 1,
+        text: opt
+      })),
     },
   });
 
@@ -73,7 +80,15 @@ export default function CreateVoteModal() {
         <DialogHeader>
           <DialogTitle>建立投票事件</DialogTitle>
         </DialogHeader>
-        <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
+        <form onSubmit={(e: React.FormEvent<HTMLFormElement>) => {
+          // Prevent form submission if the delete button was clicked
+          const target = (e.nativeEvent as SubmitEvent).submitter as HTMLButtonElement;
+          if (target?.type === 'button') {
+            e.preventDefault();
+            return;
+          }
+          handleSubmit(onSubmit)(e);
+        }} className="space-y-4">
           {/* Event Date */}
           <div>
             <label className="block font-medium pb-2 w-full">活動日期:</label>
