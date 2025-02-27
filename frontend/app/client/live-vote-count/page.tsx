@@ -152,6 +152,7 @@ function LiveVoteContent() {
           {/* Table display */}
           <div className="bg-white p-4 rounded-lg shadow">
             <h3 className="text-xl font-semibold mb-4">詳細票數</h3>
+            {/* {JSON.stringify(voteCounts)} */}
             <div className="grid grid-cols-2 gap-4">
               {Object.entries(voteCounts)
                 .sort(([a], [b]) => a.localeCompare(b))

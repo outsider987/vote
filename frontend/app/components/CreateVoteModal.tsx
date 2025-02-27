@@ -45,10 +45,7 @@ export default function CreateVoteModal() {
       title: mockVoteData.eventBasicInfo.eventTitle,
       votes_per_user: mockVoteData.sampleVoteEvents[0].votesPerUser,
       show_count: mockVoteData.sampleVoteEvents[0].showCount,
-      options: mockVoteData.sampleVoteEvents[0].options.map((opt: any, index: number) => ({
-        number: index + 1,
-        text: opt
-      })),
+      options: mockVoteData.sampleVoteEvents[0].options,
     },
   });
 

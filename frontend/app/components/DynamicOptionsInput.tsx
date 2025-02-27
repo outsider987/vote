@@ -131,7 +131,8 @@ export default function DynamicOptionsInput({
               ) : (
                 <>
                   <span>
-                    {option.number} - {option.text}
+                    {`${option.number} - ${option.text}`}
+                    {/* {JSON.stringify(option)} */}
                   </span>
                   <div className="flex space-x-2">
                     <Button type="button" size="sm" onClick={() => handleEditOption(index)}>

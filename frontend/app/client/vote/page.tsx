@@ -17,6 +17,7 @@ interface VoteInfo {
     options: string[];
     isVotingStarted: boolean;
     votesPerUser: number;
+    id: string;
   };
 }
 
