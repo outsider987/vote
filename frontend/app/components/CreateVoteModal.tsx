@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { useForm, Controller } from "react-hook-form";
+import { useForm, Controller, SubmitHandler } from "react-hook-form";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import DynamicOptionsInput from "@/app/components/DynamicOptionsInput";
@@ -16,6 +16,7 @@ import {
 import { getVoteInfo } from "../api/vote";
 import { mockVoteData } from "../mock/voteData";
 import { DateTimePicker } from "@/components/ui/date-time-picker";
+import { useSnackbar } from "notistack";
 
 interface Option {
   number: number;
@@ -49,21 +50,30 @@ export default function CreateVoteModal() {
     },
   });
 
-  const [response, setResponse] = useState<any>(null);
   const [isOpen, setIsOpen] = useState(false);
   const voteApi = getVoteInfo();
+  const { enqueueSnackbar } = useSnackbar();
 
-  const onSubmit = async (data: FormValues) => {
-    // Only submits when validation passes.
-    const res = await voteApi.CREATE_EVENT(data);
-    setResponse({ event_id: res.data.event_id, message: "活動建立成功" });
+  const onSubmit: SubmitHandler<FormValues> = async (data) => {
+    try {
+      const res = await voteApi.CREATE_EVENT(data);
+
+      // Close modal after successful submission
+      setIsOpen(false);
+
+      // Show success message
+      enqueueSnackbar("活動建立成功", { variant: "success" });
+
+      // Reset form when reopening
+      reset();
+    } catch (error) {
+      enqueueSnackbar("活動建立失敗，請重試", { variant: "error" });
+    }
   };
 
   const handleOpenChange = (open: boolean) => {
     if (!open) {
-      // Reset the form and clear any response when closing the modal.
-      reset();
-      setResponse(null);
+      reset(); // Reset form when closing
     }
     setIsOpen(open);
   };
@@ -77,15 +87,15 @@ export default function CreateVoteModal() {
         <DialogHeader>
           <DialogTitle>建立投票事件</DialogTitle>
         </DialogHeader>
-        <form onSubmit={(e: React.FormEvent<HTMLFormElement>) => {
-          // Prevent form submission if the delete button was clicked
-          const target = (e.nativeEvent as SubmitEvent).submitter as HTMLButtonElement;
-          if (target?.type === 'button') {
+        <form
+          onSubmit={(e) => {
             e.preventDefault();
-            return;
-          }
-          handleSubmit(onSubmit)(e);
-        }} className="space-y-4">
+            const submitter = (e.nativeEvent as SubmitEvent).submitter as HTMLButtonElement | null;
+            if (submitter?.type === "button") return;
+            handleSubmit(onSubmit)(e);
+          }}
+          className="space-y-4"
+        >
           {/* Event Date */}
           <div>
             <label className="block font-medium pb-2 w-full">活動日期:</label>
@@ -197,14 +207,6 @@ export default function CreateVoteModal() {
             <Button type="submit">建立活動</Button>
           </div>
         </form>
-
-        {response && (
-          <div className="mt-6 p-4 bg-green-50 border rounded">
-            <h3 className="font-bold">回應:</h3>
-            <p>活動ID: {response.event_id}</p>
-            <p>{response.message}</p>
-          </div>
-        )}
       </DialogContent>
     </Dialog>
   );

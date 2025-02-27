@@ -6,7 +6,7 @@ import clsx from "clsx";
 import NavBar from "./layouts/NavBar";
 import MyWagmiProvider from "./Provide/MyWagmiProvider";
 import 'react-datepicker/dist/react-datepicker.css';
-
+import { SnackbarProvider } from 'notistack';
 
 const inter = Inter({ subsets: ["latin"] });
 
