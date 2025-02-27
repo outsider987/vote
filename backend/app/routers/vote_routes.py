@@ -12,14 +12,7 @@ active_websockets: List[WebSocket] = []
 ticket_service = TicketService()
 vote_service = VoteService()  # Create single instance at module level
 
-@router.post("/generate-ticket")
-async def generate_ticket(
-    event_id: str,
-    db: Session = Depends(get_db)
-):
-  
-    ticket = ticket_service.generate_ticket(db, event_id)
-    return JSONResponse({"vote_code": ticket.vote_code})
+
 
 @router.get("/info/{vote_code}")
 async def get_vote_info(

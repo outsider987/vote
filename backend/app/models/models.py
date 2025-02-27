@@ -1,4 +1,4 @@
-from sqlalchemy import Column, String, Date, Integer, Boolean, JSON, ForeignKey, TIMESTAMP, DateTime
+from sqlalchemy import Column, String, Date, Integer, Boolean, JSON, ForeignKey, TIMESTAMP, DateTime, Time
 from sqlalchemy.orm import relationship
 from sqlalchemy.sql import func
 from app.db.database import Base
@@ -17,6 +17,8 @@ class Event(Base):
     votes_per_user = Column(Integer, nullable=False)
     show_count = Column(Integer, nullable=False)
     is_voting_started = Column(Boolean, default=False)
+    start_time = Column(Time, nullable=False)
+    end_time = Column(Time, nullable=False)
     created_at = Column(TIMESTAMP, server_default=func.now())
 
     tickets = relationship("Ticket", back_populates="event", cascade="all, delete-orphan")
@@ -46,3 +48,11 @@ class Vote(Base):
 
     event = relationship("Event", back_populates="votes")
     ticket = relationship("Ticket", back_populates="votes") 
+    
+class Admin(Base):
+    __tablename__ = "admins"
+    __table_args__ = {'extend_existing': True}
+
+    id = Column(String(36), primary_key=True, default=lambda: str(uuid4()))
+    username = Column(String(255), nullable=False)
+    password = Column(String(255), nullable=False)

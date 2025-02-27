@@ -8,6 +8,8 @@ CREATE TABLE IF NOT EXISTS events (
   votes_per_user INT NOT NULL,
   show_count INT NOT NULL,
   is_voting_started BOOLEAN DEFAULT FALSE,
+  start_time TIME,
+  end_time TIME,
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
@@ -35,4 +37,12 @@ CREATE TABLE IF NOT EXISTS votes (
   CONSTRAINT fk_ticket_vote
     FOREIGN KEY(vote_code)
       REFERENCES tickets(vote_code) ON DELETE CASCADE
+);
+
+-- 建立管理員資料表
+CREATE TABLE IF NOT EXISTS admins (
+  id VARCHAR(36) PRIMARY KEY,
+  username VARCHAR(255) NOT NULL,
+  password VARCHAR(255) NOT NULL,
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );

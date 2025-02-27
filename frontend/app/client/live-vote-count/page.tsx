@@ -10,7 +10,7 @@ import {
   Legend
 } from 'chart.js';
 import { Bar } from 'react-chartjs-2';
-import { getVoteInfo } from '../api/vote';
+import { getVoteInfo } from '@/app/api/vote';
 import { useSearchParams } from 'next/navigation';
 
 // Register ChartJS components

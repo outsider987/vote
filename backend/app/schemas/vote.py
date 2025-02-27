@@ -1,10 +1,10 @@
 from typing import List
-from datetime import date
+from datetime import datetime
 from pydantic import BaseModel, Field
 from uuid import UUID
 
 class EventBase(BaseModel):
-    event_date: date
+    event_date: datetime
     member_count: int = Field(gt=0)
     title: str = Field(min_length=1, max_length=255)
     options: List[str]

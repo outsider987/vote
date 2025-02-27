@@ -7,12 +7,16 @@ class Settings(BaseSettings):
     API_HOST: str = "0.0.0.0"
     API_PORT: int = 8000
     
+    # Security Settings
+    SECRET_KEY: str
+    
     # Database Settings
     DB_USER: str
     DB_PASSWORD: str
     DB_HOST: str
     DB_PORT: int
     DB_NAME: str
+    
     
     @property
     def DATABASE_URL(self) -> str:

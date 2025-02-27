@@ -6,6 +6,7 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import DynamicOptionsInput from "@/app/components/DynamicOptionsInput";
 import { DatePicker } from "@/components/ui/date-picker";
+import moment from "moment";
 import {
   Dialog,
   DialogContent,
@@ -15,6 +16,7 @@ import {
 } from "@/components/ui/dialog";
 import { getVoteInfo } from "../api/vote";
 import { mockVoteData } from "../mock/voteData";
+import { DateTimePicker } from "@/components/ui/date-time-picker";
 
 type FormValues = {
   event_date: string;
@@ -80,10 +82,12 @@ export default function CreateVoteModal() {
               name="event_date"
               rules={{ required: "請選擇活動日期" }}
               render={({ field }) => (
-                <DatePicker
-                  date={field.value ? new Date(field.value) : null}
+                <DateTimePicker
+                  value={field.value ? new Date(field.value) : undefined}
                   onChange={(date) =>
-                    field.onChange(date ? date.toISOString() : "")
+                    field.onChange(
+                      date ? moment(date).format("YYYY-MM-DD HH:mm:ss") : ""
+                    )
                   }
                 />
               )}
@@ -158,7 +162,10 @@ export default function CreateVoteModal() {
               name="options"
               rules={{ required: "請至少添加一個選項" }}
               render={({ field }) => (
-                <DynamicOptionsInput value={field.value} onChange={field.onChange} />
+                <DynamicOptionsInput
+                  value={field.value}
+                  onChange={field.onChange}
+                />
               )}
             />
             {errors.options && (
@@ -168,7 +175,11 @@ export default function CreateVoteModal() {
 
           {/* Buttons */}
           <div className="flex justify-end gap-2">
-            <Button type="button" variant="outline" onClick={() => setIsOpen(false)}>
+            <Button
+              type="button"
+              variant="outline"
+              onClick={() => setIsOpen(false)}
+            >
               取消
             </Button>
             <Button type="submit">建立活動</Button>

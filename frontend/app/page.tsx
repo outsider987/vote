@@ -1,10 +1,22 @@
 "use client";
 
+import { useEffect } from "react";
+import { useRouter } from "next/navigation";
 import VoteInfoList from "./components/VoteInfoList";
 import CreateVoteModal from "./components/CreateVoteModal";
 import EventList from "./components/EventList";
 
 export default function Home() {
+  const router = useRouter();
+
+  useEffect(() => {
+    // Check if token exists
+    const token = localStorage.getItem('token');
+    if (!token) {
+      router.push('/login');
+    }
+  }, [router]);
+
   return (
     <div className="max-w-xl mx-auto p-4">
       <div className="flex justify-between items-center mb-8">

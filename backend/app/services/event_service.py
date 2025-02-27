@@ -4,6 +4,7 @@ from app.schemas.vote import EventCreate
 from app.errors.handlers import VotingError, ErrorCodes
 import uuid
 import logging
+from datetime import datetime, timedelta
 
 logger = logging.getLogger(__name__)
 
@@ -41,7 +42,13 @@ class EventService:
                 error_code=ErrorCodes.EVENT_NOT_FOUND
             )
         
+       
         event.is_voting_started = start_voting
+        if start_voting:
+            event.start_time = datetime.now().time()
+            event.end_time = None
+        else:
+            event.end_time = (datetime.now() + timedelta(minutes=30)).time()
         db.commit()
         return event
 

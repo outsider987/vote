@@ -1,7 +1,8 @@
 import { useForm } from "react-hook-form";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardFooter } from "@/components/ui/card";
-import { getVoteInfo } from "../api/vote";
+import { getVoteInfo } from "../../api/vote";
+import { useRouter } from "next/navigation";
 
 
 interface VoteFormProps {
@@ -22,6 +23,7 @@ interface VoteFormData {
 
 export function VoteForm({ voteInfo, voteCode: vote_code, onMessage }: VoteFormProps) {
   const { POST_VOTE } = getVoteInfo();
+  const router = useRouter();
   const {
     register,
     handleSubmit,
@@ -56,6 +58,10 @@ export function VoteForm({ voteInfo, voteCode: vote_code, onMessage }: VoteFormP
 
     const res = await POST_VOTE({ vote_code, candidate_ids: data.candidates });
     onMessage(res.data.message);
+    if (res.status === 200) {
+      alert('投票成功');
+      router.push(`/client/live-vote-count?eventId=${voteInfo.event.id}`);
+    }
   };
 
   return (

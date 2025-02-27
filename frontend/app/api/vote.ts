@@ -94,5 +94,15 @@ export function getVoteInfo() {
         url: `/votes/counts/${eventId}`,
       });
     },
+    LOGIN: (payload: { username: string; password: string }) => {
+      return request({
+        method: "POST",
+        url: "/auth/login",
+        headers: {
+          "Content-Type": "application/x-www-form-urlencoded",
+        },
+        data: toBeFormData(payload),
+      });
+    },
   };
 }

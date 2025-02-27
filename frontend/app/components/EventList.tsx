@@ -94,9 +94,9 @@ export default function EventList() {
 
   const getVoteCodeURL = (voteCode: string) => {
     if (typeof window !== "undefined") {
-      return `${window.location.origin}/vote?vote_code=${voteCode}`;
+      return `${window.location.origin}/client/vote?vote_code=${voteCode}`;
     }
-    return `/vote?vote_code=${voteCode}`;
+    return `/client/vote?vote_code=${voteCode}`;
   };
 
   const handleToggleVoting = async (eventId: string, startVoting: boolean) => {
@@ -208,7 +208,7 @@ export default function EventList() {
             </div>
           </DialogHeader>
           <div className="mt-4">
-            <div className="grid grid-cols-3 gap-4">
+            <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
               {tickets && tickets.length > 0 ? (
                 tickets.map((ticket) => (
                   <div
