@@ -29,7 +29,7 @@ type FormValues = {
   title: string;
   votes_per_user: number;
   show_count: number;
-  options: Option[];
+  options: any;
 };
 
 export default function CreateVoteModal() {
