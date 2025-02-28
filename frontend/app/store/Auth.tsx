@@ -35,7 +35,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
   };
 
   useEffect(() => {
-    const storedToken = localStorage.getItem("token");
+    const storedToken = document.cookie.split("; ").find(row => row.startsWith("token="))?.split("=")[1];
     if (storedToken) {
       setToken(storedToken);
     }
