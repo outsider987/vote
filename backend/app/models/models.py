@@ -10,7 +10,7 @@ class Event(Base):
     __table_args__ = {'extend_existing': True}
 
     id = Column(String(36), primary_key=True, default=lambda: str(uuid4()))
-    event_date = Column(Date, nullable=False)
+    event_date = Column(DateTime, nullable=False)
     member_count = Column(Integer, nullable=False)
     title = Column(String(255), nullable=False)
     options = Column(JSON, nullable=False)

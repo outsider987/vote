@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Depends
+from fastapi import APIRouter, Depends, Header
 from sqlalchemy.orm import Session
 from app.db.database import get_db
 from app.schemas.vote import EventCreate
@@ -6,6 +6,8 @@ from fastapi.responses import JSONResponse
 from app.services.event_service import EventService
 from app.services.ticket_service import TicketService
 from app.utils.case_utils import to_camel_case
+from app.services.auth_service import require_auth
+from typing import Optional
 
 router = APIRouter(prefix="/events", tags=["events"])
 event_service = EventService()
@@ -13,7 +15,13 @@ ticket_service = TicketService()
 
 
 @router.post("")
-async def create_event(data: EventCreate, db: Session = Depends(get_db)):
+@require_auth()
+async def create_event(
+    data: EventCreate, 
+    db: Session = Depends(get_db),
+    authorization: Optional[str] = Header(None),
+    # current_user: dict = None
+):
     # Create event
     event = event_service.create_event(db, data)
 
@@ -27,20 +35,36 @@ async def create_event(data: EventCreate, db: Session = Depends(get_db)):
 
 
 @router.post("/{event_id}/toggle-voting")
-async def toggle_voting(event_id: str, start_voting: bool, db: Session = Depends(get_db)):
+@require_auth()
+async def toggle_voting(
+    event_id: str, 
+    start_voting: bool, 
+    db: Session = Depends(get_db),
+    authorization: Optional[str] = Header(None)
+):
     event = event_service.toggle_voting(db, event_id, start_voting)
     status = "開始" if start_voting else "停止"
     return JSONResponse({"message": f"投票已{status}"})
 
 
 @router.get("")
-async def get_events(db: Session = Depends(get_db)):
+@require_auth()
+async def get_events(
+    db: Session = Depends(get_db),
+    authorization: Optional[str] = Header(None),
+    current_user: dict = None
+):
     events = event_service.get_events(db)
     camel_case_events = to_camel_case(events)
     return camel_case_events
 
 
 @router.delete("/{event_id}")
-async def delete_event(event_id: str, db: Session = Depends(get_db)):
+@require_auth()
+async def delete_event(
+    event_id: str, 
+    db: Session = Depends(get_db),
+    authorization: Optional[str] = Header(None)
+):
     event_service.delete_event(db, event_id)
     return JSONResponse({"message": "活動刪除成功"})

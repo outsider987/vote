@@ -1,7 +1,7 @@
 -- 建立活動資料表
 CREATE TABLE IF NOT EXISTS events (
   id VARCHAR(36) PRIMARY KEY,
-  event_date DATE NOT NULL,
+  event_date TIMESTAMP NOT NULL,
   member_count INT NOT NULL,
   title VARCHAR(255) NOT NULL,
   options JSON NOT NULL,

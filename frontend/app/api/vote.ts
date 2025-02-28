@@ -1,5 +1,5 @@
 import { toBeFormData } from "../utils/other";
-import { request } from "../utils/request";
+import { getToken, request } from "../utils/request";
 
 export function getVoteInfo() {
   return {
@@ -8,15 +8,12 @@ export function getVoteInfo() {
         method: "POST",
         url: "/events",
         data: payload,
+        headers: {
+          Authorization: `Bearer ${getToken()}`,
+        },
       });
     },
-    GENERATE_TICKET: (payload: any) => {
-      return request({
-        method: "POST",
-        url: "/generate-ticket",
-        data: payload,
-      });
-    },
+
     TOGGLE_VOTING: (payload: any) => {
       return request({
         method: "POST",
@@ -41,6 +38,9 @@ export function getVoteInfo() {
     GET_EVENTS: () => {
       return request({
         method: "GET",
+        headers: {
+          Authorization: `Bearer ${getToken()}`,
+        },
         url: "/events",
       });
     },
