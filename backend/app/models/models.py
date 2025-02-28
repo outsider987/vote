@@ -43,7 +43,7 @@ class Vote(Base):
     id = Column(String(36), primary_key=True, default=lambda: str(uuid4()))
     event_id = Column(String(36), ForeignKey("events.id", ondelete="CASCADE"), nullable=False)
     vote_code = Column(String(36), ForeignKey("tickets.vote_code", ondelete="CASCADE"), nullable=False)
-    candidate = Column(String(255), nullable=False)
+    candidate = Column(JSON, nullable=False)
     created_at = Column(TIMESTAMP, server_default=func.now())
 
     event = relationship("Event", back_populates="votes")

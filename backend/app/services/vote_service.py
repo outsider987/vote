@@ -7,7 +7,7 @@ import uuid
 
 class VoteService:
     @staticmethod
-    def submit_vote(db: Session, vote_code: str, candidate_ids: List[str]) -> None:
+    def submit_vote(db: Session, vote_code: str, candidates: List[str]) -> None:
         ticket = db.query(Ticket).filter(Ticket.vote_code == vote_code).first()
         if not ticket:
             raise VotingError(
@@ -31,23 +31,23 @@ class VoteService:
                 error_code=ErrorCodes.VOTING_NOT_STARTED
             )
 
-        if len(candidate_ids) > event.votes_per_user:
+        if len(candidates) > event.votes_per_user:
             raise VotingError(
                 status_code=400,
                 message=f"超過每人可投票數 (最多 {event.votes_per_user} 票)",
                 error_code=ErrorCodes.INVALID_VOTE_COUNT,
-                details={"max_votes": event.votes_per_user, "submitted_votes": len(candidate_ids)}
+                details={"max_votes": event.votes_per_user, "submitted_votes": len(candidates)}
             )
 
         try:
             ticket.used = True
             
-            for candidate_id in candidate_ids:
+            for candidate in candidates:
                 vote = Vote(
                     id=str(uuid.uuid4()),
                     event_id=ticket.event_id,
                     vote_code=vote_code,
-                    candidate=candidate_id.strip()
+                    candidate=candidate
                 )
                 db.add(vote)
             

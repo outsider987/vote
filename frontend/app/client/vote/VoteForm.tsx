@@ -1,4 +1,4 @@
-'use client'
+"use client";
 import { useForm } from "react-hook-form";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardFooter } from "@/components/ui/card";
@@ -9,7 +9,7 @@ import { useState } from "react";
 interface VoteFormProps {
   voteInfo: {
     event: {
-      options: { text: string, number: number }[];
+      options: { text: string; number: number }[];
       votesPerUser: number;
       id: string; // Used when navigating to live vote count
     };
@@ -19,19 +19,18 @@ interface VoteFormProps {
 }
 
 interface VoteFormData {
-  candidates: string[];
+  candidates: { text: string; number: number }[];
 }
 
-export function VoteForm({ voteInfo, voteCode: vote_code, onMessage }: VoteFormProps) {
+export function VoteForm({
+  voteInfo,
+  voteCode: vote_code,
+  onMessage,
+}: VoteFormProps) {
   const { POST_VOTE } = getVoteInfo();
   const [isSuccess, setIsSuccess] = useState(false);
   const router = useRouter();
-  const {
-    register,
-    handleSubmit,
-    watch,
-    setValue,
-  } = useForm<VoteFormData>({
+  const { register, handleSubmit, watch, setValue } = useForm<VoteFormData>({
     defaultValues: {
       candidates: [],
     },
@@ -39,12 +38,19 @@ export function VoteForm({ voteInfo, voteCode: vote_code, onMessage }: VoteFormP
 
   const selectedCount = watch("candidates").length;
 
-  const toggleCandidate = (candidate: string) => {
+  const toggleCandidate = (candidate: { text: string; number: number }) => {
     if (isSuccess) return; // Prevent changes after submission
     const currentCandidates = watch("candidates");
 
-    if (currentCandidates.includes(candidate)) {
-      setValue("candidates", currentCandidates.filter((c) => c !== candidate));
+    const isAlreadySelected = currentCandidates.some(
+      (c) => c.number === candidate.number
+    );
+
+    if (isAlreadySelected) {
+      setValue(
+        "candidates",
+        currentCandidates.filter((c) => c.number !== candidate.number)
+      );
     } else if (currentCandidates.length < voteInfo.event.votesPerUser) {
       setValue("candidates", [...currentCandidates, candidate]);
     } else {
@@ -59,10 +65,10 @@ export function VoteForm({ voteInfo, voteCode: vote_code, onMessage }: VoteFormP
       return;
     }
 
-    const res = await POST_VOTE({ vote_code, candidate_ids: data.candidates });
+    const res = await POST_VOTE({ vote_code, candidate: data.candidates });
     onMessage(res.data.message);
     if (res.status === 200) {
-      alert('投票成功');
+      alert("投票成功");
       setIsSuccess(true); // Disable further interactions
       // router.push(`/client/live-vote-count?eventId=${voteInfo.event.id}`);
     }
@@ -79,7 +85,9 @@ export function VoteForm({ voteInfo, voteCode: vote_code, onMessage }: VoteFormP
             <CandidateCard
               key={index}
               option={option}
-              isSelected={watch("candidates").includes(option.text)}
+              isSelected={watch("candidates").some(
+                (c) => c.number === option.number
+              )} // Compare by number
               onToggle={toggleCandidate}
               register={register}
               disabled={isSuccess}
@@ -87,17 +95,21 @@ export function VoteForm({ voteInfo, voteCode: vote_code, onMessage }: VoteFormP
           ))}
         </div>
         <CardFooter className="flex justify-center mt-4">
-          <Button 
-            type="submit" 
+          <Button
+            type="submit"
             className="w-full py-2 text-lg"
-            disabled={selectedCount !== voteInfo.event.votesPerUser || isSuccess}
+            disabled={
+              selectedCount !== voteInfo.event.votesPerUser || isSuccess
+            }
           >
             送出投票
           </Button>
         </CardFooter>
       </form>
       <div className="fixed right-3 bottom-3 text-primary flex flex-col gap-2">
-        <span className="text-primary">可投 {voteInfo.event.votesPerUser - selectedCount} 人</span>
+        <span className="text-primary">
+          可投 {voteInfo.event.votesPerUser - selectedCount} 人
+        </span>
         <span className="text-primary">已選擇 {selectedCount} 人</span>
       </div>
     </div>
@@ -111,9 +123,9 @@ const CandidateCard = ({
   register,
   disabled = false,
 }: {
-  option: { text: string, number: number };
+  option: { text: string; number: number };
   isSelected: boolean;
-  onToggle: (option: string) => void;
+  onToggle: (option: { text: string; number: number }) => void;
   register: any;
   disabled?: boolean;
 }) => (
@@ -124,18 +136,18 @@ const CandidateCard = ({
         : "hover:bg-gray-100"
     } ${disabled ? "opacity-50 cursor-not-allowed" : ""}`}
     onClick={() => {
-      if (!disabled) onToggle(option.text);
+      if (!disabled) onToggle(option); // Pass the whole object instead of just text
     }}
   >
     <CardContent className="flex items-center gap-3">
       <input
         type="checkbox"
         {...register("candidates")}
-        value={option}
+        value={JSON.stringify(option)} // Store as JSON string to avoid React warnings
         checked={isSelected}
         onChange={(e) => {
           e.stopPropagation();
-          if (!disabled) onToggle(option.text);
+          if (!disabled) onToggle(option);
         }}
         className="w-5 h-5 hidden"
       />

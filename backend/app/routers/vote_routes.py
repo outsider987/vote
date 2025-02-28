@@ -6,6 +6,7 @@ from app.services.ticket_service import TicketService
 from fastapi.responses import JSONResponse
 from typing import List
 import asyncio
+from app.schemas.vote import Vote
 
 router = APIRouter(prefix="/votes", tags=["votes"])
 active_websockets: List[WebSocket] = []
@@ -29,15 +30,14 @@ async def get_vote_info(
 
 @router.post("")
 async def submit_vote(
-    vote_code: str = Form(...),
-    candidate_ids: str = Form(...),
+    vote: Vote = Form(...),
     db: Session = Depends(get_db)
 ):
-    candidate_list = [cid.strip() for cid in candidate_ids.split(',')]
-    vote_service.submit_vote(db, vote_code, candidate_list)  # Use existing instance
+    candidate_list = [{"text": c.text, "number": c.number} for c in vote.candidate]
+    vote_service.submit_vote(db, vote.vote_code, candidate_list)  # Use existing instance
     
     # Get updated vote counts and broadcast to websocket clients
-    vote_counts = vote_service.get_vote_counts(db, vote_code)
+    vote_counts = vote_service.get_vote_counts(db, vote.vote_code)
     for ws in active_websockets:
         await ws.send_json(vote_counts)
         

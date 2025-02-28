@@ -71,7 +71,7 @@ export function getVoteInfo() {
     },
     POST_VOTE: (param: {
       vote_code: string;
-      candidate_ids: string[];
+      candidate: any;
     }) => {
       return request({
         method: "POST",
@@ -79,7 +79,7 @@ export function getVoteInfo() {
         headers: {
           "Content-Type": "application/x-www-form-urlencoded",
         },
-        data: toBeFormData(param),
+        data: toBeFormData(param,true),
       });
     },
     POST_TOGGLE_EVENT_VOTING: (eventId: string, startVoting: boolean) => {

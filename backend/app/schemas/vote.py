@@ -33,7 +33,7 @@ class TicketResponse(BaseModel):
 
 class VoteCreate(BaseModel):
     vote_code: UUID
-    candidate_ids: List[str]
+    candidate: List[str]
 
 class VoteResponse(BaseModel):
     id: UUID
@@ -53,3 +53,6 @@ class VoteInfo(BaseModel):
     title: str
     options: List[str]
     votes_per_user: int 
+    
+class Vote(BaseModel):
+    candidate: List[str]
