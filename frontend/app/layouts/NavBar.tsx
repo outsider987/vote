@@ -8,7 +8,7 @@ import clsx from "clsx";
 import { useAuth } from "../store/Auth";
 export default function Navbar({ className = "" }) {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  const { token } = useAuth();
+  const { token, logout } = useAuth();
 
   const toggleMenu = () => {
     setMobileMenuOpen(!mobileMenuOpen);
@@ -40,6 +40,10 @@ export default function Navbar({ className = "" }) {
               <Link href="/live-vote-count">
                 <Button className="hover:bg-gray-700">投票結果</Button>
               </Link>
+
+              <Button onClick={logout} className="hover:bg-gray-700">
+                登出
+              </Button>
             </div>
             {/* 手機版漢堡按鈕 */}
             <div className="md:hidden">
@@ -74,6 +78,9 @@ export default function Navbar({ className = "" }) {
                     投票結果
                   </Button>
                 </Link>
+                <Button onClick={logout} className="hover:bg-gray-700">
+                  登出
+                </Button>
               </div>
             </div>
           )}
