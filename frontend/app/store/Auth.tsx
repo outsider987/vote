@@ -44,9 +44,8 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
   const login = async (username: string, password: string) => {
     const response = await api.LOGIN({ username, password });
     if (response.status === 200) {
-      setToken(response.data.token);
-      document.cookie = `token=${response.data.token}; path=/`;
-      localStorage.setItem("token", response.data.token);
+      setToken(response.data.access_token);
+      document.cookie = `token=${response.data.access_token}; path=/`;
     }
   };
 
