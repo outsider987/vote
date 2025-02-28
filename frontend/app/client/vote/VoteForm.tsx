@@ -9,7 +9,7 @@ import { useState } from "react";
 interface VoteFormProps {
   voteInfo: {
     event: {
-      options: string[];
+      options: { text: string, number: number }[];
       votesPerUser: number;
       id: string; // Used when navigating to live vote count
     };
@@ -79,7 +79,7 @@ export function VoteForm({ voteInfo, voteCode: vote_code, onMessage }: VoteFormP
             <CandidateCard
               key={index}
               option={option}
-              isSelected={watch("candidates").includes(option)}
+              isSelected={watch("candidates").includes(option.text)}
               onToggle={toggleCandidate}
               register={register}
               disabled={isSuccess}
@@ -111,7 +111,7 @@ const CandidateCard = ({
   register,
   disabled = false,
 }: {
-  option: string;
+  option: { text: string, number: number };
   isSelected: boolean;
   onToggle: (option: string) => void;
   register: any;
@@ -124,7 +124,7 @@ const CandidateCard = ({
         : "hover:bg-gray-100"
     } ${disabled ? "opacity-50 cursor-not-allowed" : ""}`}
     onClick={() => {
-      if (!disabled) onToggle(option);
+      if (!disabled) onToggle(option.text);
     }}
   >
     <CardContent className="flex items-center gap-3">
@@ -135,11 +135,11 @@ const CandidateCard = ({
         checked={isSelected}
         onChange={(e) => {
           e.stopPropagation();
-          if (!disabled) onToggle(option);
+          if (!disabled) onToggle(option.text);
         }}
         className="w-5 h-5 hidden"
       />
-      <div className="text-lg font-medium">{option}</div>
+      <div className="text-lg font-medium">{option.text}</div>
     </CardContent>
   </Card>
 );
