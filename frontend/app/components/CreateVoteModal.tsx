@@ -191,7 +191,7 @@ export default function CreateVoteModal() {
               )}
             />
             {errors.options && (
-              <p className="text-red-600">{errors.options.message}</p>
+              <p className="text-red-600">{errors.options.message?.toString()}</p>
             )}
           </div>
 
