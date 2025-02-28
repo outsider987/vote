@@ -32,7 +32,11 @@ type FormValues = {
   options: any;
 };
 
-export default function CreateVoteModal() {
+interface CreateVoteModalProps {
+  onSuccess?: () => void;
+}
+
+export default function CreateVoteModal({ onSuccess }: CreateVoteModalProps) {
   const {
     register,
     handleSubmit,
@@ -63,6 +67,9 @@ export default function CreateVoteModal() {
 
       // Show success message
       enqueueSnackbar("活動建立成功", { variant: "success" });
+
+      // Call onSuccess callback if provided
+      onSuccess?.();
 
       // Reset form when reopening
       reset();

@@ -1,8 +1,7 @@
 "use client";
 
-import { useState, useEffect, useRef } from "react";
+import { useState, forwardRef, useImperativeHandle } from "react";
 import { Button } from "@/components/ui/button";
-import { getVoteInfo } from "@/app/api/vote";
 import {
   Dialog,
   DialogContent,
@@ -13,86 +12,24 @@ import moment from "moment";
 import QRCode from "react-qr-code";
 import { Copy } from "lucide-react";
 import { useRouter } from "next/navigation";
-interface Event {
-  id: string;
-  title: string;
-  eventDate: string;
-  createdAt: string;
-  isVotingStarted: boolean;
-  memberCount: number;
-  options: string[];
-  showCount: number;
-  votesPerUser: number;
+import type { Event } from "../data/types";
+import { useEvents } from "../data/queries/events";
+import { useTickets } from "../data/queries/tickets";
+import { useDeleteEvent, useToggleVoting } from "../data/mutations/events";
+
+export interface EventListRef {
+  fetchEvents: () => Promise<void>;
 }
 
-interface Ticket {
-  id: string;
-  code: string;
-  used: boolean;
-  usedAt?: string;
-  voteCode: string;
-}
-
-export default function EventList() {
-  const [events, setEvents] = useState<Event[]>([]);
-  const [error, setError] = useState("");
+const EventList = forwardRef<EventListRef>((props, ref) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedEvent, setSelectedEvent] = useState<Event | null>(null);
-  const [tickets, setTickets] = useState<Ticket[]>([]);
-  const initialFetchDone = useRef(false);
   const router = useRouter();
 
-  const { GET_EVENTS, DELETE_EVENT, GET_TICKETS, POST_TOGGLE_EVENT_VOTING } =
-    getVoteInfo();
-
-  useEffect(() => {
-    let mounted = true;
-
-    const fetchData = async () => {
-      if (initialFetchDone.current) return;
-
-      try {
-        const response = await GET_EVENTS();
-        const data = response.data;
-
-        if (!mounted) return;
-
-        if (response.status !== 200) {
-          setError(data.message);
-          return;
-        }
-
-        setEvents(data);
-        setError("");
-        initialFetchDone.current = true;
-        console.log("data", data);
-      } catch (err) {
-        if (!mounted) return;
-        setError(`載入失敗，請稍後再試: ${err}`);
-      }
-    };
-
-    fetchData();
-
-    return () => {
-      mounted = false;
-    };
-  }, []);
-
-  const handleDeleteEvent = async (eventId: string) => {
-    try {
-      setEvents((prev) => prev.filter((event) => event.id !== eventId));
-      const response = await DELETE_EVENT(eventId);
-      if (response.status !== 200) {
-        setError(response.data.message);
-        return;
-      }
-
-     
-    } catch (err) {
-      setError("刪除失敗，請稍後再試");
-    }
-  };
+  const { data: events = [], error, refetch } = useEvents();
+  const { data: tickets = [], refetch: refetchTickets } = useTickets(selectedEvent?.id);
+  const deleteMutation = useDeleteEvent();
+  const toggleVotingMutation = useToggleVoting();
 
   const getVoteCodeURL = (voteCode: string) => {
     if (typeof window !== "undefined") {
@@ -101,54 +38,44 @@ export default function EventList() {
     return `/client/vote?vote_code=${voteCode}`;
   };
 
-  const handleToggleVoting = async (eventId: string, startVoting: boolean) => {
+  useImperativeHandle(ref, () => ({
+    fetchEvents: async () => {
+      await refetch();
+    }
+  }));
+
+  const handleDeleteEvent = async (eventId: string) => {
     try {
-      const response = await POST_TOGGLE_EVENT_VOTING(eventId, startVoting);
-      const data = response.data;
-
-      if (response.status !== 200) {
-        setError(data.message);
-        return;
-      }
-
-      setEvents((prev) =>
-        prev.map((event) =>
-          event.id === eventId
-            ? { ...event, isVotingStarted: startVoting }
-            : event
-        )
-      );
-      setError("");
+      await deleteMutation.mutateAsync(eventId);
     } catch (err) {
-      setError("操作失敗，請稍後再試");
+      console.error('刪除失敗，請稍後再試', err);
     }
   };
 
-  const fetchTickets = async (eventId: string) => {
+  const handleToggleVoting = async (eventId: string, startVoting: boolean) => {
     try {
-      const response = await GET_TICKETS(eventId);
-      if (response.status === 200) {
-        setTickets(response.data);
-      } else {
-        setError("無法載入票券資訊");
-      }
+      await toggleVotingMutation.mutateAsync({ eventId, startVoting });
     } catch (err) {
-      setError("載入票券失敗，請稍後再試");
+      console.error('操作失敗，請稍後再試', err);
     }
   };
 
   const handleOpenTicketsModal = async (event: Event) => {
     setSelectedEvent(event);
     setIsModalOpen(true);
-    await fetchTickets(event.id);
+    await refetchTickets();
   };
+
+  if (error) {
+    return (
+      <div className="p-4 bg-red-50 text-red-600 rounded">
+        {error instanceof Error ? error.message : '載入失敗，請稍後再試'}
+      </div>
+    );
+  }
 
   return (
     <div className="space-y-4">
-      {error && (
-        <div className="p-4 bg-red-50 text-red-600 rounded">{error}</div>
-      )}
-
       <div className="space-y-4">
         {events.map((event) => (
           <div
@@ -289,4 +216,6 @@ export default function EventList() {
       </Dialog>
     </div>
   );
-}
+});
+
+export default EventList;
