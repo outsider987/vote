@@ -2,7 +2,6 @@
 
 import { useEffect } from "react";
 import { useRouter } from "next/navigation";
-import VoteInfoList from "./components/VoteInfoList";
 import CreateVoteModal from "./components/CreateVoteModal";
 import EventList from "./components/EventList";
 
