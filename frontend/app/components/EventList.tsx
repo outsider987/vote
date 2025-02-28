@@ -16,6 +16,7 @@ import type { Event } from "../data/types";
 import { useEvents } from "../data/queries/events";
 import { useTickets } from "../data/queries/tickets";
 import { useDeleteEvent, useToggleVoting } from "../data/mutations/events";
+import ReactDOM from "react-dom/client";
 
 export interface EventListRef {
   fetchEvents: () => Promise<void>;
@@ -66,6 +67,152 @@ const EventList = forwardRef<EventListRef>((props, ref) => {
     await refetchTickets();
   };
 
+  const handlePrint = async (event: Event) => {
+    // First fetch tickets if not already loaded
+    setSelectedEvent(event);
+    await refetchTickets();
+    
+    // Create a new window for printing
+    const printWindow = window.open('', '_blank');
+    if (!printWindow) return;
+
+    // Create print-specific styles
+    const styles = `
+      <style>
+        @media print {
+          @page {
+            size: A4;
+            margin: 0.5cm;
+          }
+          body {
+            margin: 0;
+            padding: 0;
+          }
+          .page {
+            break-after: page;
+            padding: 0.5cm;
+          }
+          .page:last-child {
+            break-after: auto;
+          }
+          .qr-grid {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 0.3cm;
+            height: calc(100% - 1cm);
+          }
+          .qr-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 0.3cm;
+            border: 1px solid #ccc;
+            background: white;
+            break-inside: avoid;
+            page-break-inside: avoid;
+          }
+          .qr-code {
+            width: 3cm;
+            height: 3cm;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+          }
+          .qr-code svg {
+            width: 100%;
+            height: 100%;
+          }
+          .vote-code {
+            margin-top: 0.2cm;
+            font-size: 8pt;
+            font-family: monospace;
+          }
+          .page-header {
+            text-align: center;
+            margin-bottom: 0.5cm;
+            font-size: 12pt;
+            font-weight: bold;
+          }
+        }
+      </style>
+    `;
+
+    // Create a temporary div to render QR codes
+    const tempDiv = document.createElement('div');
+    const root = ReactDOM.createRoot(tempDiv);
+    
+    // Render QR codes to get their SVG content
+    root.render(
+      <div style={{ display: 'none' }}>
+        {tickets.map(ticket => (
+          <div key={ticket.voteCode} id={`qr-${ticket.voteCode}`}>
+            <QRCode
+              value={getVoteCodeURL(ticket.voteCode)}
+              size={256}
+              level="M"
+            />
+          </div>
+        ))}
+      </div>
+    );
+
+    // Wait for render
+    await new Promise(resolve => setTimeout(resolve, 100));
+
+    // Calculate items per page (5x5 = 25 items per page)
+    const itemsPerPage = 25;
+    const pages = Math.ceil(tickets.length / itemsPerPage);
+
+    // Create the content with pagination
+    const content = `
+      <html>
+        <head>
+          <title>Print QR Codes - ${event.title}</title>
+          ${styles}
+        </head>
+        <body>
+          ${Array.from({ length: pages }, (_, pageIndex) => {
+            const pageTickets = tickets.slice(pageIndex * itemsPerPage, (pageIndex + 1) * itemsPerPage);
+            return `
+              <div class="page">
+                <div class="page-header">
+                  ${event.title} - 投票券 (第 ${pageIndex + 1} 頁，共 ${pages} 頁)
+                </div>
+                <div class="qr-grid">
+                  ${pageTickets.map(ticket => {
+                    const qrElement = tempDiv.querySelector(`#qr-${ticket.voteCode}`);
+                    const qrSvg = qrElement?.innerHTML || '';
+                    return `
+                      <div class="qr-item">
+                        <div class="qr-code">
+                          ${qrSvg}
+                        </div>
+                        <div class="vote-code">${ticket.voteCode}</div>
+                      </div>
+                    `;
+                  }).join('')}
+                </div>
+              </div>
+            `;
+          }).join('')}
+        </body>
+      </html>
+    `;
+
+    // Clean up
+    root.unmount();
+
+    // Write content to the new window and print
+    printWindow.document.write(content);
+    printWindow.document.close();
+    printWindow.onload = () => {
+      printWindow.print();
+      printWindow.onafterprint = () => {
+        printWindow.close();
+      };
+    };
+  };
+
   if (error) {
     return (
       <div className="p-4 bg-red-50 text-red-600 rounded">
@@ -107,7 +254,13 @@ const EventList = forwardRef<EventListRef>((props, ref) => {
                 <p>候選人數: {event.options.length}</p>
                 <p>事件 ID: {event.id}</p>
               </div>
-              <Button  className="min-h-[80px]" >列印票卷</Button>
+              <Button 
+                className="min-h-[80px]" 
+                onClick={() => handlePrint(event)}
+                type="button"
+              >
+                列印票卷
+              </Button>
             </div>
 
             <div className="flex justify-end gap-2 mt-2">
