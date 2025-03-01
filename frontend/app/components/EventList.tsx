@@ -86,7 +86,7 @@ const EventList = forwardRef<EventListRef>((props, ref) => {
           .qr-grid {
             display: grid;
             grid-template-columns: repeat(6, 1fr);
-            gap: 0.2cm;
+            gap: 0.3cm;
            
           }
           .qr-item {
@@ -114,7 +114,7 @@ const EventList = forwardRef<EventListRef>((props, ref) => {
           }
           .page-header {
             text-align: center;
-         
+            margin-bottom: 0.5cm;
             font-size: 12pt;
             font-weight: bold;
           }
