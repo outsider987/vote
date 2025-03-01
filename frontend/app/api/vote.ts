@@ -104,5 +104,22 @@ export function getVoteInfo() {
         data: toBeFormData(payload),
       });
     },
+    GET_EXCEL_TEMPLATE: () => {
+      return request({
+        method: "GET",
+        url: "/events/template",
+        headers: {
+          Authorization: `Bearer ${getToken()}`,
+        },
+        responseType: "blob",
+      });
+    },
+    UPLOAD_EXCEL: (payload: any) => {
+      return request({
+        method: "POST",
+        url: "/events/upload",
+        data: payload,
+      });
+    },
   };
 }

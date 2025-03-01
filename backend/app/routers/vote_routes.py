@@ -41,9 +41,9 @@ async def submit_vote(vote: Vote = Form(...), db: Session = Depends(get_db)):
     )  # Use existing instance
 
     # Get updated vote counts and broadcast to websocket clients
-    vote_counts = vote_service.get_vote_counts(db, vote.vote_code)
-    for ws in active_websockets:
-        await ws.send_json(vote_counts)
+    # vote_counts = vote_service.get_vote_counts(db, vote.vote_code)
+    # for ws in active_websockets:
+    #     await ws.send_json(vote_counts)
 
     return JSONResponse({"message": "投票成功"})
 

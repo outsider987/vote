@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Depends, Header
+from fastapi import APIRouter, Depends, Header, UploadFile, File
 from sqlalchemy.orm import Session
 from app.db.database import get_db
 from app.schemas.vote import EventCreate
@@ -8,6 +8,7 @@ from app.services.ticket_service import TicketService
 from app.utils.case_utils import to_camel_case
 from app.services.auth_service import require_auth
 from typing import Optional
+from io import BytesIO
 
 router = APIRouter(prefix="/events", tags=["events"])
 event_service = EventService()
@@ -68,3 +69,24 @@ async def delete_event(
 ):
     event_service.delete_event(db, event_id)
     return JSONResponse({"message": "活動刪除成功"})
+
+
+@router.get("/template")
+# @require_auth()
+async def download_template(
+    # authorization: Optional[str] = Header(None)
+):
+    """Download Excel template for event creation"""
+    return event_service.generate_excel_template()
+
+
+@router.post("/upload")
+@require_auth()
+async def upload_excel(
+    file: UploadFile = File(...),
+    authorization: Optional[str] = Header(None)
+):
+    """Upload Excel file and return processed options"""
+    contents = await file.read()
+    options = event_service.process_excel_upload(BytesIO(contents))
+    return JSONResponse({"options": options})

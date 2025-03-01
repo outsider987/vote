@@ -10,3 +10,5 @@ alembic
 jwt
 jose
 python-jose
+pandas>=2.0.0
+xlsxwriter>=3.1.0

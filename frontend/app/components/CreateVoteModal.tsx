@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { useForm, Controller, SubmitHandler } from "react-hook-form";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
@@ -17,6 +17,7 @@ import { getVoteInfo } from "../api/vote";
 import { mockVoteData } from "../mock/voteData";
 import { DateTimePicker } from "@/components/ui/date-time-picker";
 import { useSnackbar } from "notistack";
+import * as XLSX from "xlsx";
 
 interface Option {
   number: number;
@@ -42,21 +43,23 @@ export default function CreateVoteModal({ onSuccess }: CreateVoteModalProps) {
     handleSubmit,
     reset,
     control,
+    setValue,
     formState: { errors },
   } = useForm<FormValues>({
     defaultValues: {
-      event_date: mockVoteData.eventBasicInfo.eventDate,
-      member_count: mockVoteData.memberStats.totalMembers,
-      title: mockVoteData.eventBasicInfo.eventTitle,
-      votes_per_user: mockVoteData.sampleVoteEvents[0].votesPerUser,
-      show_count: mockVoteData.sampleVoteEvents[0].showCount,
-      options: mockVoteData.sampleVoteEvents[0].options,
+      event_date: moment().toDate(),
+      member_count: 0,
+      title: "",
+      votes_per_user: 0,
+      show_count: 0,
+      options: [],
     },
   });
 
   const [isOpen, setIsOpen] = useState(false);
   const voteApi = getVoteInfo();
   const { enqueueSnackbar } = useSnackbar();
+  const uploadInputRef = useRef<HTMLInputElement>(null);
 
   const onSubmit: SubmitHandler<FormValues> = async (data) => {
     try {
@@ -85,6 +88,63 @@ export default function CreateVoteModal({ onSuccess }: CreateVoteModalProps) {
     setIsOpen(open);
   };
 
+  const handleFileUpload = async (
+    event: React.ChangeEvent<HTMLInputElement>
+  ) => {
+    const file = event.target.files?.[0];
+    if (!file) return;
+
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      const data = new Uint8Array(e.target?.result as ArrayBuffer);
+      const workbook = XLSX.read(data, { type: "array" });
+      // Assuming data is in the first sheet
+      const firstSheetName = workbook.SheetNames[0];
+      const worksheet = workbook.Sheets[firstSheetName];
+      // Convert the worksheet to JSON (assuming first row is header)
+      const jsonData = XLSX.utils.sheet_to_json(worksheet, { header: 1 });
+      // Parse the JSON data into options
+      // For example, if each row is: [number, text] and the first row is headers
+      const parsedOptions = jsonData.slice(1).map((row: any) => ({
+        number: row[0],
+        text: row[1],
+      }));
+      // Update the DynamicOptionsInput with parsed options
+      setValue("options", parsedOptions);
+      enqueueSnackbar("Excel 檔案上傳成功", { variant: "success" });
+    };
+
+    reader.onerror = () => {
+      enqueueSnackbar("Excel 檔案上傳失敗，請確認格式是否正確", {
+        variant: "error",
+      });
+    };
+
+    reader.readAsArrayBuffer(file);
+  };
+
+  const handleDownloadTemplate = async () => {
+    try {
+      const response = await voteApi.GET_EXCEL_TEMPLATE();
+      if (response.status !== 200) {
+        throw new Error("Download failed");
+      }
+
+      // Create a blob from the response
+      const blob = await response.data;
+      const url = window.URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = "vote_template.xlsx";
+      document.body.appendChild(a);
+      a.click();
+      window.URL.revokeObjectURL(url);
+      document.body.removeChild(a);
+    } catch (error) {
+      enqueueSnackbar("範本下載失敗，請稍後再試", { variant: "error" });
+    }
+  };
+
   return (
     <Dialog open={isOpen} onOpenChange={handleOpenChange}>
       <DialogTrigger asChild>
@@ -97,7 +157,8 @@ export default function CreateVoteModal({ onSuccess }: CreateVoteModalProps) {
         <form
           onSubmit={(e) => {
             e.preventDefault();
-            const submitter = (e.nativeEvent as SubmitEvent).submitter as HTMLButtonElement | null;
+            const submitter = (e.nativeEvent as SubmitEvent)
+              .submitter as HTMLButtonElement | null;
             if (submitter?.type === "button") return;
             handleSubmit(onSubmit)(e);
           }}
@@ -122,7 +183,7 @@ export default function CreateVoteModal({ onSuccess }: CreateVoteModalProps) {
               )}
             />
             {errors.event_date && (
-              <p className="text-red-600">{errors.event_date.message}</p>
+              <p className="text-red">{errors.event_date.message}</p>
             )}
           </div>
 
@@ -137,7 +198,7 @@ export default function CreateVoteModal({ onSuccess }: CreateVoteModalProps) {
               })}
             />
             {errors.member_count && (
-              <p className="text-red-600">{errors.member_count.message}</p>
+              <p className="text-red">{errors.member_count.message}</p>
             )}
           </div>
 
@@ -149,7 +210,7 @@ export default function CreateVoteModal({ onSuccess }: CreateVoteModalProps) {
               {...register("title", { required: "請輸入投票標題" })}
             />
             {errors.title && (
-              <p className="text-red-600">{errors.title.message}</p>
+              <p className="text-red">{errors.title.message}</p>
             )}
           </div>
 
@@ -164,7 +225,7 @@ export default function CreateVoteModal({ onSuccess }: CreateVoteModalProps) {
               })}
             />
             {errors.votes_per_user && (
-              <p className="text-red-600">{errors.votes_per_user.message}</p>
+              <p className="text-red">{errors.votes_per_user.message}</p>
             )}
           </div>
 
@@ -179,8 +240,40 @@ export default function CreateVoteModal({ onSuccess }: CreateVoteModalProps) {
               })}
             />
             {errors.show_count && (
-              <p className="text-red-600">{errors.show_count.message}</p>
+              <p className="text-red">{errors.show_count.message}</p>
             )}
+          </div>
+
+          {/* Excel Upload Section */}
+          <div className="space-y-2">
+            <label className="block font-medium">Excel 上傳:</label>
+            <div className="flex gap-2">
+              <Button
+                type="button"
+                variant="success"
+                onClick={handleDownloadTemplate}
+              >
+                下載範本
+              </Button>
+              <label className="cursor-pointer">
+                <Input
+                  ref={uploadInputRef as React.RefObject<HTMLInputElement>}
+                  type="file"
+                  accept=".xlsx,.xls"
+                  onChange={handleFileUpload}
+                  className="hidden"
+                />
+                <Button
+                  onClick={() => uploadInputRef.current?.click()}
+                  type="button"
+                  className=""
+                  variant="success"
+                >
+                  上傳 Excel
+                </Button>
+              </label>
+            </div>
+            <p className="text-sm text-gray-500">請先下載範本，填寫後再上傳</p>
           </div>
 
           {/* Dynamic Options */}
@@ -198,7 +291,9 @@ export default function CreateVoteModal({ onSuccess }: CreateVoteModalProps) {
               )}
             />
             {errors.options && (
-              <p className="text-red-600">{errors.options.message?.toString()}</p>
+              <p className="text-red">
+                {errors.options.message?.toString()}
+              </p>
             )}
           </div>
 
