@@ -132,7 +132,7 @@ const CandidateCard = ({
   <Card
     className={`cursor-pointer transition-all p-3 ${
       isSelected
-        ? "border-2 border-solid border-orange-500 bg-orange-50"
+        ? "border-2 border-solid border-orange-800 bg-primary "
         : "hover:bg-gray-100"
     } ${disabled ? "opacity-50 cursor-not-allowed" : ""}`}
     onClick={() => {

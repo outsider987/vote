@@ -216,9 +216,7 @@ function LiveVoteContent() {
                           }
                           className="mr-2"
                         />
-                        <span className="font-medium">
-                          {`${v.candidate.number} - ${v.candidate.text}`}
-                        </span>
+                        
                         {/* Checkbox for marking as "備選" */}
                         <input
                           type="checkbox"
@@ -228,8 +226,12 @@ function LiveVoteContent() {
                           }
                           className="ml-4 mr-2"
                         />
+
                         <span className="font-medium">備選</span>
                       </div>
+                      <span className="font-medium">
+                          {`${v.candidate.number} - ${v.candidate.text}`}
+                        </span>
                       <div className="flex items-center gap-2">
                         <span className="text-lg font-bold text-blue-600">
                           {v.count} 票{" "}
