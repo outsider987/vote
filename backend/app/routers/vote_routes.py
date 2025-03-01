@@ -66,5 +66,5 @@ async def submit_vote(vote: Vote = Form(...), db: Session = Depends(get_db)):
 
 @router.get("/counts/{event_id}")
 async def get_event_vote_counts(event_id: str, db: Session = Depends(get_db)):
-    vote_counts = vote_service.get_vote_counts(db, event_id)
-    return JSONResponse(vote_counts)
+    vote_counts, event = vote_service.get_vote_counts(db, event_id)
+    return {"vote_counts": vote_counts, "event": event}

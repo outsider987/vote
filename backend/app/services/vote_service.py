@@ -3,7 +3,7 @@ from sqlalchemy.orm import Session
 from sqlalchemy import String, cast, func
 from app.models.models import Vote, Ticket, Event
 from app.errors.handlers import VotingError, ErrorCodes
-from typing import Dict, List
+from typing import Any, Dict, List,Tuple
 import uuid
 
 
@@ -68,32 +68,47 @@ class VoteService:
             )
 
     @staticmethod
-    def get_vote_counts(db: Session, event_id: str) -> Dict[str, int]:
+    def get_vote_counts(db: Session, event_id: str) -> Tuple[List[Dict[str, Any]], Event]:
         try:
+            # Query vote counts grouped by candidate (stored as JSON strings)
             vote_counts = (
                 db.query(cast(Vote.candidate, String), func.count(Vote.id).label("count"))
                 .filter(Vote.event_id == event_id)
                 .group_by(cast(Vote.candidate, String))
                 .all()
             )
+            event = db.query(Event).filter(Event.id == event_id).first()
 
-            result = []
-            for v in vote_counts:
+            # Build a mapping from candidate identifier (using candidate number) to vote count
+            vote_mapping = {}
+            for candidate_str, count in vote_counts:
                 try:
-                    candidate_data = json.loads(v[0])
-                    result.append({
-                        "candidate": {
-                            "text": candidate_data['text'],
-                            "number": candidate_data['number']
-                        },
-                        "count": v[1]
-                    })
-                except:
-                    result.append({
-                        "candidate": v[0],
-                        "count": v[1]
-                    })
-            return result
+                    candidate_data = json.loads(candidate_str)
+                    candidate_number = candidate_data.get("number")
+                    if candidate_number is not None:
+                        vote_mapping[candidate_number] = count
+                    else:
+                        # Fallback: use the entire candidate string if no number is provided
+                        vote_mapping[candidate_str] = count
+                except Exception:
+                    vote_mapping[candidate_str] = count
+
+            # Ensure event.options is a list (parse it if it's stored as a JSON string)
+            options = event.options
+            if isinstance(options, str):
+                options = json.loads(options)
+
+            # Map each candidate from event.options with its vote count (default to 0 if not found)
+            result = []
+            for candidate in options:
+                candidate_number = candidate.get("number")
+                count = vote_mapping.get(candidate_number, 0)
+                result.append({
+                    "candidate": candidate,
+                    "count": count
+                })
+
+            return result, event
         except Exception as e:
             raise VotingError(
                 status_code=500,
@@ -101,4 +116,5 @@ class VoteService:
                 error_code="VOTE_COUNT_FAILED",
                 details={"error": str(e)},
             )
+
                 

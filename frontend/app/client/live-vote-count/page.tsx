@@ -12,6 +12,7 @@ import {
 import { Bar } from "react-chartjs-2";
 import { getVoteInfo } from "@/app/api/vote";
 import { useSearchParams } from "next/navigation";
+import clsx from "clsx";
 
 // Register ChartJS components
 ChartJS.register(
@@ -33,23 +34,29 @@ export default function LiveVoteCount() {
 
 function LiveVoteContent() {
   const [voteCounts, setVoteCounts] = useState([]);
+  const [event, setEvent] = useState(null);
   const [isConnecting, setIsConnecting] = useState(false);
+  // State to track which candidate is marked as "當選"
+  const [elected, setElected] = useState({});
+  // New state to track which candidate is marked as "備選"
+  const [backup, setBackup] = useState({});
   const searchParams = useSearchParams();
   const eventId = searchParams.get("eventId");
   const voteApi = getVoteInfo();
 
-  // Function to fetch current vote counts
+  // Fetch current vote counts
   const fetchVoteCounts = async () => {
     if (!eventId) return;
     try {
       const response = await voteApi.GET_VOTE_COUNTS(eventId);
-      setVoteCounts(response.data);
+      setVoteCounts(response.data.vote_counts);
+      setEvent(response.data.event);
     } catch (error) {
       console.error("Failed to fetch vote counts:", error);
     }
   };
 
-  // Function to setup WebSocket connection
+  // Setup WebSocket connection
   const setupWebSocket = () => {
     if (!eventId || isConnecting) return;
 
@@ -87,13 +94,9 @@ function LiveVoteContent() {
   useEffect(() => {
     if (!eventId) return;
 
-    // Fetch initial data
+    // Fetch initial data and setup WebSocket
     fetchVoteCounts();
-
-    // Setup WebSocket connection
     const cleanup = setupWebSocket();
-
-    // Cleanup function
     return () => {
       if (cleanup) cleanup();
     };
@@ -134,6 +137,28 @@ function LiveVoteContent() {
     },
   };
 
+  // Build a frequency map of vote counts to detect ties.
+  const countFrequency = {};
+  voteCounts.forEach((v) => {
+    countFrequency[v.count] = (countFrequency[v.count] || 0) + 1;
+  });
+
+  // Toggle elected status for a candidate
+  const handleElectedChange = (candidateNumber: number) => {
+    setElected((prev) => ({
+      ...prev,
+      [candidateNumber]: !prev[candidateNumber],
+    }));
+  };
+
+  // Toggle backup status for a candidate
+  const handleBackupChange = (candidateNumber: number) => {
+    setBackup((prev) => ({
+      ...prev,
+      [candidateNumber]: !prev[candidateNumber],
+    }));
+  };
+
   return (
     <div className="max-w-4xl mx-auto p-6">
       {!eventId ? (
@@ -154,20 +179,61 @@ function LiveVoteContent() {
             <h3 className="text-xl font-semibold mb-4">詳細票數</h3>
             <div className="grid grid-cols-2 gap-4">
               {voteCounts
-                .sort((a, b) => {
-                  return b.count - a.count;
-                })
-                .map((v) => (
-                  <div
-                    key={v.candidate.text}
-                    className="flex justify-between items-center p-2 bg-primary rounded"
-                  >
-                    <span className="font-medium">{`${v.candidate.number} - ${v.candidate.text}`}</span>
-                    <span className="text-lg font-bold text-blue-600">
-                      {v.count} 票
-                    </span>
-                  </div>
-                ))}
+                .sort((a, b) => b.count - a.count)
+                .map((v) => {
+                  // Check if the candidate's vote count is tied with another candidate.
+                  const isTie = countFrequency[v.count] > 1;
+                  let rowClass =
+                    "flex justify-between items-center p-2 rounded transition-colors duration-200";
+                  if (elected[v.candidate.number]) {
+                    rowClass += " bg-green text-black";
+                  } else if (backup[v.candidate.number]) {
+                    rowClass += " bg-yellow text-black";
+                  } else {
+                    rowClass += " bg-gray-200 text-black";
+                  }
+                  return (
+                    <div key={v.candidate.text} className={rowClass}>
+                      <div className="flex items-center gap-2">
+                        {/* Checkbox for marking as "當選" */}
+                        <input
+                          type="checkbox"
+                          checked={elected[v.candidate.number] || false}
+                          onChange={() =>
+                            handleElectedChange(v.candidate.number)
+                          }
+                          className="mr-2"
+                        />
+                        <span className="font-medium">
+                          {`${v.candidate.number} - ${v.candidate.text}`}
+                        </span>
+                        {/* Checkbox for marking as "備選" */}
+                        <input
+                          type="checkbox"
+                          checked={backup[v.candidate.number] || false}
+                          onChange={() =>
+                            handleBackupChange(v.candidate.number)
+                          }
+                          className="ml-4 mr-2"
+                        />
+                        <span className="font-medium">備選</span>
+                      </div>
+                      <div className="flex items-center gap-2">
+                        <span className="text-lg font-bold text-blue-600">
+                          {v.count} 票{" "}
+                        </span>
+                        <span
+                          className={clsx(
+                            "text-error border border-error rounded-full px-2 py-1",
+                            elected[v.candidate.number] && "border-solid"
+                          )}
+                        >
+                          {elected[v.candidate.number] && "當選"}
+                        </span>
+                      </div>
+                    </div>
+                  );
+                })}
             </div>
           </div>
         </>
