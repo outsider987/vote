@@ -191,7 +191,14 @@ function LiveVoteContent() {
             <h3 className="text-xl font-semibold mb-4">詳細票數</h3>
             <div className="grid grid-cols-2 gap-4">
               {voteCounts
-                .sort((a, b) => b.count - a.count)
+                .sort((a, b) => {
+                  // First, sort descending by count.
+                  if (b.count !== a.count) {
+                    return b.count - a.count;
+                  }
+                  // If counts are equal, sort ascending by candidate number.
+                  return a.candidate.number - b.candidate.number;
+                })
                 .map((v) => {
                   // Check if the candidate's vote count is tied with another candidate.
                   const isTie = countFrequency[v.count] > 1;
@@ -216,7 +223,8 @@ function LiveVoteContent() {
                           }
                           className="mr-2"
                         />
-                        
+                        <span className="font-medium">當選</span>
+
                         {/* Checkbox for marking as "備選" */}
                         <input
                           type="checkbox"
@@ -230,8 +238,8 @@ function LiveVoteContent() {
                         <span className="font-medium">備選</span>
                       </div>
                       <span className="font-medium">
-                          {`${v.candidate.number} - ${v.candidate.text}`}
-                        </span>
+                        {`${v.candidate.number} - ${v.candidate.text}`}
+                      </span>
                       <div className="flex items-center gap-2">
                         <span className="text-lg font-bold text-blue-600">
                           {v.count} 票{" "}

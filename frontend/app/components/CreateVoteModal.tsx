@@ -25,7 +25,7 @@ interface Option {
 }
 
 type FormValues = {
-  event_date: string;
+  event_date: Date;
   member_count: number;
   title: string;
   votes_per_user: number;
