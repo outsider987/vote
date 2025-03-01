@@ -17,6 +17,7 @@ import { useEvents } from "../data/queries/events";
 import { useTickets } from "../data/queries/tickets";
 import { useDeleteEvent, useToggleVoting } from "../data/mutations/events";
 import ReactDOM from "react-dom/client";
+import Link from "next/link";
 
 export interface EventListRef {
   fetchEvents: () => Promise<void>;
@@ -32,7 +33,9 @@ const EventList = forwardRef<EventListRef>((props, ref) => {
 
   const { data: events = [], error, refetch } = useEvents();
   // Note: useTickets depends on selectedEvent?.id so it updates when selectedEvent changes.
-  const { data: tickets = [], refetch: refetchTickets } = useTickets(selectedEvent?.id);
+  const { data: tickets = [], refetch: refetchTickets } = useTickets(
+    selectedEvent?.id
+  );
   const deleteMutation = useDeleteEvent();
   const toggleVotingMutation = useToggleVoting();
 
@@ -46,14 +49,14 @@ const EventList = forwardRef<EventListRef>((props, ref) => {
   useImperativeHandle(ref, () => ({
     fetchEvents: async () => {
       await refetch();
-    }
+    },
   }));
 
   const handleDeleteEvent = async (eventId: string) => {
     try {
       await deleteMutation.mutateAsync(eventId);
     } catch (err) {
-      console.error('刪除失敗，請稍後再試', err);
+      console.error("刪除失敗，請稍後再試", err);
     }
   };
 
@@ -61,7 +64,7 @@ const EventList = forwardRef<EventListRef>((props, ref) => {
     try {
       await toggleVotingMutation.mutateAsync({ eventId, startVoting });
     } catch (err) {
-      console.error('操作失敗，請稍後再試', err);
+      console.error("操作失敗，請稍後再試", err);
     }
   };
 
@@ -73,7 +76,7 @@ const EventList = forwardRef<EventListRef>((props, ref) => {
 
   // Printing logic moved into a separate function.
   const doPrint = (event: Event, currentTickets: typeof tickets) => {
-    const printWindow = window.open('', '_blank');
+    const printWindow = window.open("", "_blank");
     if (!printWindow) return;
 
     const styles = `
@@ -123,13 +126,17 @@ const EventList = forwardRef<EventListRef>((props, ref) => {
     `;
 
     // Create a temporary container to render QR codes and capture their SVG markup.
-    const tempDiv = document.createElement('div');
+    const tempDiv = document.createElement("div");
     const root = ReactDOM.createRoot(tempDiv);
     root.render(
-      <div style={{ display: 'none' }}>
-        {currentTickets.map(ticket => (
+      <div style={{ display: "none" }}>
+        {currentTickets.map((ticket) => (
           <div key={ticket.voteCode} id={`qr-${ticket.voteCode}`}>
-            <QRCode value={getVoteCodeURL(ticket.voteCode)} size={256} level="M" />
+            <QRCode
+              value={getVoteCodeURL(ticket.voteCode)}
+              size={256}
+              level="M"
+            />
           </div>
         ))}
       </div>
@@ -148,27 +155,36 @@ const EventList = forwardRef<EventListRef>((props, ref) => {
           </head>
           <body>
             ${Array.from({ length: pages }, (_, pageIndex) => {
-              const pageTickets = currentTickets.slice(pageIndex * itemsPerPage, (pageIndex + 1) * itemsPerPage);
+              const pageTickets = currentTickets.slice(
+                pageIndex * itemsPerPage,
+                (pageIndex + 1) * itemsPerPage
+              );
               return `
                 <div class="page">
                   <div class="page-header">
-                    ${event.title} - 投票券 (第 ${pageIndex + 1} 頁，共 ${pages} 頁)
+                    ${event.title} - 投票券 (第 ${
+                pageIndex + 1
+              } 頁，共 ${pages} 頁)
                   </div>
                   <div class="qr-grid">
-                    ${pageTickets.map(ticket => {
-                      const qrElement = tempDiv.querySelector(`#qr-${ticket.voteCode}`);
-                      const qrSvg = qrElement?.innerHTML || '';
-                      return `
+                    ${pageTickets
+                      .map((ticket) => {
+                        const qrElement = tempDiv.querySelector(
+                          `#qr-${ticket.voteCode}`
+                        );
+                        const qrSvg = qrElement?.innerHTML || "";
+                        return `
                         <div class="qr-item">
                           <div class="qr-code">${qrSvg}</div>
                           <div class="vote-code">${ticket.voteCode}</div>
                         </div>
                       `;
-                    }).join('')}
+                      })
+                      .join("")}
                   </div>
                 </div>
               `;
-            }).join('')}
+            }).join("")}
           </body>
         </html>
       `;
@@ -231,21 +247,34 @@ const EventList = forwardRef<EventListRef>((props, ref) => {
           >
             <div className="flex justify-between items-start gpa-2">
               <h3 className="text-xl font-semibold mb-2">{event.title}</h3>
-              <Button onClick={() => handleOpenTicketsModal(event)} variant="secondary">
+              <Button
+                onClick={() => handleOpenTicketsModal(event)}
+                variant="secondary"
+              >
                 查看票券
               </Button>
             </div>
 
             <div className="flex justify-between gap-2">
               <div className="text-sm text-gray-300">
-                <p>投票日期: {moment(event.eventDate).format("YYYY-MM-DD HH:mm:ss")}</p>
-                <p>建立時間: {moment(event.createdAt).format("YYYY-MM-DD HH:mm:ss")}</p>
+                <p>
+                  投票日期:{" "}
+                  {moment(event.eventDate).format("YYYY-MM-DD HH:mm:ss")}
+                </p>
+                <p>
+                  建立時間:{" "}
+                  {moment(event.createdAt).format("YYYY-MM-DD HH:mm:ss")}
+                </p>
                 <p>會員人數: {event.memberCount}</p>
                 <p>每人可投票數: {event.votesPerUser}</p>
                 <p>候選人數: {event.options.length}</p>
                 <p>事件 ID: {event.id}</p>
               </div>
-              <Button className="min-h-[80px]" onClick={() => handlePrint(event)} type="button">
+              <Button
+                className="min-h-[80px]"
+                onClick={() => handlePrint(event)}
+                type="button"
+              >
                 列印票卷
               </Button>
             </div>
@@ -267,7 +296,10 @@ const EventList = forwardRef<EventListRef>((props, ref) => {
               >
                 {event.isVotingStarted ? "停止投票" : "開始投票"}
               </Button>
-              <Button onClick={() => handleDeleteEvent(event.id)} variant="destructive">
+              <Button
+                onClick={() => handleDeleteEvent(event.id)}
+                variant="destructive"
+              >
                 刪除
               </Button>
             </div>
@@ -280,8 +312,12 @@ const EventList = forwardRef<EventListRef>((props, ref) => {
           <DialogHeader>
             <DialogTitle>{selectedEvent?.title} - 票券列表</DialogTitle>
             <div className="flex gap-4 mt-2 text-sm text-gray-500">
-              <p className="text-red">已使用票券: {tickets?.filter((ticket) => ticket.used).length}</p>
-              <p className="text-green">未使用票券: {tickets?.filter((ticket) => !ticket.used).length}</p>
+              <p className="text-red">
+                已使用票券: {tickets?.filter((ticket) => ticket.used).length}
+              </p>
+              <p className="text-green">
+                未使用票券: {tickets?.filter((ticket) => !ticket.used).length}
+              </p>
               <p className="text-gray-100">總票券數: {tickets.length}</p>
             </div>
           </DialogHeader>
@@ -291,7 +327,9 @@ const EventList = forwardRef<EventListRef>((props, ref) => {
                 tickets.map((ticket) => (
                   <div
                     key={ticket.id}
-                    className={`p-4 border rounded ${ticket.used ? "bg-gray-100" : "bg-white"}`}
+                    className={`p-4 border rounded ${
+                      ticket.used ? "bg-gray-100" : "bg-white"
+                    }`}
                   >
                     <div className="flex flex-col items-center gap-2">
                       <QRCode
@@ -300,35 +338,45 @@ const EventList = forwardRef<EventListRef>((props, ref) => {
                         className="mb-2"
                       />
                       <div className="flex items-center gap-2">
-                        <p className="font-mono text-sm text-gray-900">
+                        <p className=" w-1/2 font-mono text-sm text-gray-900">
                           {ticket.voteCode.length > 12
                             ? `${ticket.voteCode.substring(0, 12)}...`
                             : ticket.voteCode}
                         </p>
-                        <Button
-                          variant="ghost"
-                          size="icon"
-                          className="h-6 w-6"
-                          onClick={() =>
-                            navigator.clipboard.writeText(getVoteCodeURL(ticket.voteCode))
-                          }
+                        <Link
+                          className="w-1/2 bg-blue text-center text-white text-xs rounded-full p-1"
+                          // onClick={() =>
+                          //   window.open(
+                          //     getVoteCodeURL(ticket.voteCode),
+                          //     "_blank"
+                          //   )
+                          // }
+                          target="_blank"
+                          href={getVoteCodeURL(ticket.voteCode)}
                         >
-                          <Copy className="h-4 w-4 text-blue" />
-                        </Button>
+                          連結
+                        </Link>
                       </div>
-                      <p className={`text-sm font-bold ${ticket.used ? "text-red" : "text-green"}`}>
+                      <p
+                        className={`text-sm font-bold ${
+                          ticket.used ? "text-red" : "text-green"
+                        }`}
+                      >
                         {ticket.used ? "已使用" : "未使用"}
                       </p>
                       {ticket.usedAt && (
                         <p className="text-xs text-gray-400">
-                          使用時間: {moment(ticket.usedAt).format("YYYY-MM-DD HH:mm")}
+                          使用時間:{" "}
+                          {moment(ticket.usedAt).format("YYYY-MM-DD HH:mm")}
                         </p>
                       )}
                     </div>
                   </div>
                 ))
               ) : (
-                <div className="col-span-3 text-center text-gray-500">無票券資料</div>
+                <div className="col-span-3 text-center text-gray-500">
+                  無票券資料
+                </div>
               )}
             </div>
           </div>

@@ -50,6 +50,7 @@ request.interceptors.response.use(
       removeToken();
       // You might want to redirect to login page here
     }
+    window.location.href = "/login";
     return Promise.reject(error);
   }
 );

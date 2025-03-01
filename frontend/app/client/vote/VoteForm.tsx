@@ -5,6 +5,7 @@ import { Card, CardContent, CardFooter } from "@/components/ui/card";
 import { getVoteInfo } from "../../api/vote";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
+import { useSnackbar } from "notistack";
 
 interface VoteFormProps {
   voteInfo: {
@@ -35,7 +36,7 @@ export function VoteForm({
       candidates: [],
     },
   });
-
+  const { enqueueSnackbar } = useSnackbar();
   const selectedCount = watch("candidates").length;
 
   const toggleCandidate = (candidate: { text: string; number: number }) => {
@@ -54,21 +55,26 @@ export function VoteForm({
     } else if (currentCandidates.length < voteInfo.event.votesPerUser) {
       setValue("candidates", [...currentCandidates, candidate]);
     } else {
-      onMessage(`最多只能選擇 ${voteInfo.event.votesPerUser} 人`);
+      enqueueSnackbar(`最多只能選擇 ${voteInfo.event.votesPerUser} 人`, {
+        variant: "error",
+      });
     }
   };
 
   const onSubmit = async (data: VoteFormData) => {
     // Ensure exactly votesPerUser candidates are selected
     if (data.candidates.length !== voteInfo.event.votesPerUser) {
-      onMessage(`請選擇 ${voteInfo.event.votesPerUser} 人`);
+      enqueueSnackbar(`請選擇 ${voteInfo.event.votesPerUser} 人`, {
+        variant: "error",
+      });
       return;
     }
 
     const res = await POST_VOTE({ vote_code, candidate: data.candidates });
-    onMessage(res.data.message);
+    enqueueSnackbar(res.data.message, {
+      variant: res.status === 200 ? "success" : "error",
+    });
     if (res.status === 200) {
-      alert("投票成功");
       setIsSuccess(true); // Disable further interactions
       // router.push(`/client/live-vote-count?eventId=${voteInfo.event.id}`);
     }

@@ -188,7 +188,7 @@ function LiveVoteContent() {
 
           {/* Table display */}
           <div className="bg-white p-4 rounded-lg shadow">
-            <h3 className="text-xl font-semibold mb-4">詳細票數</h3>
+            <h3 className="text-xl font-semibold mb-4 text-black">詳細票數</h3>
             <div className="grid grid-cols-2 gap-4">
               {voteCounts
                 .sort((a, b) => {
