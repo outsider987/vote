@@ -32,7 +32,7 @@ export default function LiveVoteCount() {
 }
 
 function LiveVoteContent() {
-  const [voteCounts, setVoteCounts] = useState<{ [key: string]: number }>({});
+  const [voteCounts, setVoteCounts] = useState([]);
   const [isConnecting, setIsConnecting] = useState(false);
   const searchParams = useSearchParams();
   const eventId = searchParams.get("eventId");
@@ -101,11 +101,11 @@ function LiveVoteContent() {
 
   // Prepare data for the chart
   const chartData = {
-    labels: Object.keys(voteCounts),
+    labels: voteCounts.map((v) => v.candidate.number),
     datasets: [
       {
         label: "得票數",
-        data: Object.values(voteCounts),
+        data: voteCounts.map((v) => v.count),
         backgroundColor: "rgba(75, 192, 192, 0.6)",
         borderColor: "rgba(75, 192, 192, 1)",
         borderWidth: 1,
@@ -153,18 +153,18 @@ function LiveVoteContent() {
           <div className="bg-white p-4 rounded-lg shadow">
             <h3 className="text-xl font-semibold mb-4">詳細票數</h3>
             <div className="grid grid-cols-2 gap-4">
-              {Object.entries(voteCounts)
-                .sort(([a, aCount], [b, bCount]) => {
-                  return bCount - aCount;
+              {voteCounts
+                .sort((a, b) => {
+                  return b.count - a.count;
                 })
-                .map(([candidate, count]) => (
+                .map((v) => (
                   <div
-                    key={candidate}
+                    key={v.candidate.text}
                     className="flex justify-between items-center p-2 bg-primary rounded"
                   >
-                    <span className="font-medium">{candidate}</span>
+                    <span className="font-medium">{`${v.candidate.number} - ${v.candidate.text}`}</span>
                     <span className="text-lg font-bold text-blue-600">
-                      {count} 票
+                      {v.count} 票
                     </span>
                   </div>
                 ))}

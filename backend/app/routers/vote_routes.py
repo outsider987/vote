@@ -33,7 +33,7 @@ async def submit_vote(
     vote: Vote = Form(...),
     db: Session = Depends(get_db)
 ):
-    candidate_list = [{"text": c.text, "number": c.number} for c in vote.candidate]
+    candidate_list = [{"text": c, "number": i} for i, c in enumerate(vote.candidate)]
     vote_service.submit_vote(db, vote.vote_code, candidate_list)  # Use existing instance
     
     # Get updated vote counts and broadcast to websocket clients

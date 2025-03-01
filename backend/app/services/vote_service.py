@@ -1,3 +1,4 @@
+import json
 from sqlalchemy.orm import Session
 from sqlalchemy import String, cast, func
 from app.models.models import Vote, Ticket, Event
@@ -10,6 +11,7 @@ class VoteService:
     @staticmethod
     def submit_vote(db: Session, vote_code: str, candidates: List[str]) -> None:
         ticket = db.query(Ticket).filter(Ticket.vote_code == vote_code).first()
+
         if not ticket:
             raise VotingError(
                 status_code=400,
@@ -75,7 +77,24 @@ class VoteService:
                 .all()
             )
 
-            return {v[0]: v[1] for v in vote_counts}  # Ensure JSON is stringified
+            result = []
+            for v in vote_counts:
+                try:
+                    candidate_data = json.loads(v[0])
+                    candidate  = json.loads(candidate_data["text"])
+                    result.append({
+                        "candidate": {
+                            "text": candidate['text'],
+                            "number": candidate['number']
+                        },
+                        "count": v[1]
+                    })
+                except:
+                    result.append({
+                        "candidate": v[0],
+                        "count": v[1]
+                    })
+            return result
         except Exception as e:
             raise VotingError(
                 status_code=500,

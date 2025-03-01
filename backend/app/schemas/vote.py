@@ -56,4 +56,4 @@ class VoteInfo(BaseModel):
     
 class Vote(BaseModel):
     candidate: List[str]
-    vote_code: UUID
+    vote_code: str
