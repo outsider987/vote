@@ -212,8 +212,14 @@ function LiveVoteContent() {
                     rowClass += " bg-gray-200 text-black";
                   }
                   return (
-                    <div key={v.candidate.text} className={rowClass}>
-                      <div className="flex flex-col items-center gap-2">
+                    <div
+                      key={v.candidate.text}
+                      className={clsx(
+                        rowClass,
+                        "flex justify-between items-center p-2 rounded transition-colors duration-200 gap-2"
+                      )}
+                    >
+                      <div className="flex-[1] flex flex-col items-center gap-2">
                         {/* Checkbox for marking as "當選" */}
                         <div>
                           <input
@@ -240,20 +246,26 @@ function LiveVoteContent() {
                           <span className="font-medium">備選</span>
                         </div>
                       </div>
-                      <span className="font-medium">
-                        {`${v.candidate.number} - ${v.candidate.text}`}
-                      </span>
-                      <div className="flex items-center gap-2">
-                        <span className="text-lg font-bold text-blue-600">
-                          {v.count} 票{" "}
+                      <div className="flex font-medium flex-[3]">
+                        <span>{`${v.candidate.text}`}</span>
+                        <span className=" min-w-[30px] text-lg font-bold ">
+                          {v.candidate.number}號
                         </span>
+                      </div>
+
+                      <div className="flex items-center gap-2 flex-[1] justify-end">
                         <span
                           className={clsx(
-                            "text-error border border-error rounded-full px-2 py-1",
-                            elected[v.candidate.number] && "border-solid"
+                            "text-error  border-2 border-error rounded-full px-2 py-1 w-[38px] h-[38px] flex items-center justify-center",
+                            elected[v.candidate.number] &&
+                              "border-solid font-extrabold",
+                            !elected[v.candidate.number] && "hidden"
                           )}
                         >
                           {elected[v.candidate.number] && "當選"}
+                        </span>
+                        <span className="text-lg font-bold text-blue-600 ">
+                          {v.count} 票{" "}
                         </span>
                       </div>
                     </div>

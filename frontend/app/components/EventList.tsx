@@ -85,9 +85,9 @@ const EventList = forwardRef<EventListRef>((props, ref) => {
           .page:last-child { break-after: auto; }
           .qr-grid {
             display: grid;
-            grid-template-columns: repeat(5, 1fr);
-            gap: 0.3cm;
-            height: calc(100% - 1cm);
+            grid-template-columns: repeat(6, 1fr);
+            gap: 0.2cm;
+           
           }
           .qr-item {
             display: flex;
@@ -114,7 +114,7 @@ const EventList = forwardRef<EventListRef>((props, ref) => {
           }
           .page-header {
             text-align: center;
-            margin-bottom: 0.5cm;
+         
             font-size: 12pt;
             font-weight: bold;
           }
@@ -137,7 +137,7 @@ const EventList = forwardRef<EventListRef>((props, ref) => {
 
     // Wait briefly to allow QR codes to render.
     setTimeout(() => {
-      const itemsPerPage = 25;
+      const itemsPerPage = 30;
       const pages = Math.ceil(currentTickets.length / itemsPerPage);
 
       const content = `
