@@ -213,29 +213,32 @@ function LiveVoteContent() {
                   }
                   return (
                     <div key={v.candidate.text} className={rowClass}>
-                      <div className="flex items-center gap-2">
+                      <div className="flex flex-col items-center gap-2">
                         {/* Checkbox for marking as "當選" */}
-                        <input
-                          type="checkbox"
-                          checked={elected[v.candidate.number] || false}
-                          onChange={() =>
-                            handleElectedChange(v.candidate.number)
-                          }
-                          className="mr-2"
-                        />
-                        <span className="font-medium">當選</span>
+                        <div>
+                          <input
+                            type="checkbox"
+                            checked={elected[v.candidate.number] || false}
+                            onChange={() =>
+                              handleElectedChange(v.candidate.number)
+                            }
+                            className="mr-2"
+                          />
+                          <span className="font-medium">當選</span>
+                        </div>
+                        <div>
+                          {/* Checkbox for marking as "備選" */}
+                          <input
+                            type="checkbox"
+                            checked={backup[v.candidate.number] || false}
+                            onChange={() =>
+                              handleBackupChange(v.candidate.number)
+                            }
+                            className=" mr-2"
+                          />
 
-                        {/* Checkbox for marking as "備選" */}
-                        <input
-                          type="checkbox"
-                          checked={backup[v.candidate.number] || false}
-                          onChange={() =>
-                            handleBackupChange(v.candidate.number)
-                          }
-                          className="ml-4 mr-2"
-                        />
-
-                        <span className="font-medium">備選</span>
+                          <span className="font-medium">備選</span>
+                        </div>
                       </div>
                       <span className="font-medium">
                         {`${v.candidate.number} - ${v.candidate.text}`}
