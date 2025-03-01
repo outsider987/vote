@@ -2,15 +2,18 @@ import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { getVoteInfo } from '@/app/api/vote';
 import { eventsKeys } from '../queries/events';
 import type { ToggleVotingParams } from '../types';
+import { useSnackbar } from 'notistack';
 
 export const useDeleteEvent = () => {
   const queryClient = useQueryClient();
   const { DELETE_EVENT } = getVoteInfo();
+  const { enqueueSnackbar } = useSnackbar();
 
   return useMutation({
     mutationFn: (eventId: string) => DELETE_EVENT(eventId),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: eventsKeys.all });
+      enqueueSnackbar('活動已刪除', { variant: 'success' });
     },
   });
 };

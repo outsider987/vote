@@ -81,11 +81,10 @@ class VoteService:
             for v in vote_counts:
                 try:
                     candidate_data = json.loads(v[0])
-                    candidate  = json.loads(candidate_data["text"])
                     result.append({
                         "candidate": {
-                            "text": candidate['text'],
-                            "number": candidate['number']
+                            "text": candidate_data['text'],
+                            "number": candidate_data['number']
                         },
                         "count": v[1]
                     })

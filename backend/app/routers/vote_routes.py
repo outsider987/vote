@@ -1,3 +1,4 @@
+import json
 from fastapi import APIRouter, Depends, WebSocket, WebSocketDisconnect, Form
 from sqlalchemy.orm import Session
 from app.db.database import get_db
@@ -14,55 +15,56 @@ ticket_service = TicketService()
 vote_service = VoteService()  # Create single instance at module level
 
 
-
 @router.get("/info/{vote_code}")
-async def get_vote_info(
-    vote_code: str,
-    db: Session = Depends(get_db)
-):
+async def get_vote_info(vote_code: str, db: Session = Depends(get_db)):
     ticket = ticket_service.get_vote_info(db, vote_code)
-    return JSONResponse({
-        "event_id": ticket.event.id,
-        "title": ticket.event.title,
-        "options": ticket.event.options,
-        "votes_per_user": ticket.event.votes_per_user
-    })
+    return JSONResponse(
+        {
+            "event_id": ticket.event.id,
+            "title": ticket.event.title,
+            "options": ticket.event.options,
+            "votes_per_user": ticket.event.votes_per_user,
+        }
+    )
+
 
 @router.post("")
-async def submit_vote(
-    vote: Vote = Form(...),
-    db: Session = Depends(get_db)
-):
-    candidate_list = [{"text": c, "number": i} for i, c in enumerate(vote.candidate)]
-    vote_service.submit_vote(db, vote.vote_code, candidate_list)  # Use existing instance
+async def submit_vote(vote: Vote = Form(...), db: Session = Depends(get_db)):
     
+
+    candidate_list = [json.loads(candidate) for candidate in vote.candidate]
+
+    print(candidate_list)
+
+    vote_service.submit_vote(
+        db, vote.vote_code, candidate_list
+    )  # Use existing instance
+
     # Get updated vote counts and broadcast to websocket clients
     vote_counts = vote_service.get_vote_counts(db, vote.vote_code)
     for ws in active_websockets:
         await ws.send_json(vote_counts)
-        
+
     return JSONResponse({"message": "投票成功"})
 
-@router.websocket("/ws/vote-updates")
-async def vote_updates(
-    websocket: WebSocket,
-    db: Session = Depends(get_db)
-):
-    await websocket.accept()
-    active_websockets.append(websocket)
-    
-    try:
-        while True:
-            vote_counts = vote_service.get_vote_counts(db, None)  # Use existing instance
-            await websocket.send_json(vote_counts)
-            await asyncio.sleep(2)
-    except WebSocketDisconnect:
-        active_websockets.remove(websocket)
+
+# @router.websocket("/ws/vote-updates")
+# async def vote_updates(websocket: WebSocket, db: Session = Depends(get_db)):
+#     await websocket.accept()
+#     active_websockets.append(websocket)
+
+#     try:
+#         while True:
+#             vote_counts = vote_service.get_vote_counts(
+#                 db, None
+#             )  # Use existing instance
+#             await websocket.send_json(vote_counts)
+#             await asyncio.sleep(2)
+#     except WebSocketDisconnect:
+#         active_websockets.remove(websocket)
+
 
 @router.get("/counts/{event_id}")
-async def get_event_vote_counts(
-    event_id: str,
-    db: Session = Depends(get_db)
-):
+async def get_event_vote_counts(event_id: str, db: Session = Depends(get_db)):
     vote_counts = vote_service.get_vote_counts(db, event_id)
-    return JSONResponse(vote_counts) 
+    return JSONResponse(vote_counts)

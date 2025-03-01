@@ -151,7 +151,12 @@ const CandidateCard = ({
         }}
         className="w-5 h-5 hidden"
       />
-      <div className="text-lg font-medium">{option.text}</div>
+      <div className="flex flex-col items-center gap-2">
+        <span className="text-lg font-medium rounded-full border-2 border-solid border-red p-1">
+          {option.number}
+        </span>
+        <span className="text-lg font-medium">{option.text}</span>
+      </div>
     </CardContent>
   </Card>
 );
