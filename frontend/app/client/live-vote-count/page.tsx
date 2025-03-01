@@ -159,6 +159,10 @@ function LiveVoteContent() {
     }));
   };
 
+  // Calculate total counts for elected and backup candidates.
+  const electedCount = Object.values(elected).filter(Boolean).length;
+  const backupCount = Object.values(backup).filter(Boolean).length;
+
   return (
     <div className="max-w-4xl mx-auto p-6">
       {!eventId ? (
@@ -167,11 +171,19 @@ function LiveVoteContent() {
         </div>
       ) : (
         <>
+          <h1 className="text-3xl font-bold mb-6">{event?.title}</h1>
           <h2 className="text-3xl font-bold mb-6">投票結果</h2>
 
           {/* Chart display */}
           <div className="mb-8 bg-white p-4 rounded-lg shadow">
             <Bar data={chartData} options={chartOptions} />
+          </div>
+
+          {/* Display selected and backup counts */}
+          <div className="mb-4 p-4 bg-primary rounded shadow">
+            <p className="text-lg font-semibold ">
+              當選數: {electedCount} | 備選數: {backupCount}
+            </p>
           </div>
 
           {/* Table display */}
