@@ -246,8 +246,10 @@ function LiveVoteContent() {
                           <span className="font-medium">備選</span>
                         </div>
                       </div>
-                      <div className="flex font-medium flex-[3]">
-                        <span>{`${v.candidate.text}`}</span>
+                      <div className="flex justify-between font-medium flex-[3]">
+                        <span className="text-lg font-bold ">
+                          {v.candidate.text}
+                        </span>
                         <span className=" min-w-[30px] text-lg font-bold ">
                           {v.candidate.number}號
                         </span>
@@ -264,7 +266,7 @@ function LiveVoteContent() {
                         >
                           {elected[v.candidate.number] && "當選"}
                         </span>
-                        <span className="text-lg font-bold text-blue-600 ">
+                        <span className="text-lg font-bold text-blue-600 min-w-[33px]">
                           {v.count} 票{" "}
                         </span>
                       </div>
