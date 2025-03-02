@@ -104,11 +104,29 @@ function LiveVoteContent() {
 
   // Prepare data for the chart
   const chartData = {
-    labels: voteCounts.map((v) => v.candidate.number),
+    labels: voteCounts
+      .sort((a, b) => {
+        // First, sort descending by count.
+        if (b.count !== a.count) {
+          return b.count - a.count;
+        }
+        // If counts are equal, sort ascending by candidate number.
+        return a.candidate.number - b.candidate.number;
+      })
+      .map((v) => v.candidate.number),
     datasets: [
       {
         label: "得票數",
-        data: voteCounts.map((v) => v.count),
+        data: voteCounts
+          .sort((a, b) => {
+            // First, sort descending by count.
+            if (b.count !== a.count) {
+              return b.count - a.count;
+            }
+            // If counts are equal, sort ascending by candidate number.
+            return a.candidate.number - b.candidate.number;
+          })
+          .map((v) => v.count),
         backgroundColor: "rgba(75, 192, 192, 0.6)",
         borderColor: "rgba(75, 192, 192, 1)",
         borderWidth: 1,
