@@ -136,7 +136,7 @@ const CandidateCard = ({
   disabled?: boolean;
 }) => (
   <Card
-    className={`cursor-pointer transition-all p-3 ${
+    className={`cursor-pointer transition-all p-3  ${
       isSelected
         ? "border-2 border-solid border-orange-800 bg-primary "
         : "hover:bg-gray-100"
@@ -145,7 +145,7 @@ const CandidateCard = ({
       if (!disabled) onToggle(option); // Pass the whole object instead of just text
     }}
   >
-    <CardContent className="flex items-center gap-3">
+    <CardContent className="flex items-center gap-3 ">
       <input
         type="checkbox"
         {...register("candidates")}
@@ -157,8 +157,8 @@ const CandidateCard = ({
         }}
         className="w-5 h-5 hidden"
       />
-      <div className="flex flex-col items-center gap-2">
-        <span className="text-lg font-medium rounded-full border-2 border-solid border-red p-1">
+      <div className="flex flex-col items-center gap-2 m-auto">
+        <span className="text-lg min-w-[33px] min-h-[33px] flex items-center justify-center font-medium rounded-full border-2 border-solid border-red p-1">
           {option.number}
         </span>
         <span className="text-lg font-medium">{option.text}</span>
