@@ -38,14 +38,14 @@ jobs:
 
             # Stop and rebuild containers
 
-            echo "${{ secrets.SUDO_PASSWORD }}" | sudo -S docker-compose build
-            echo "${{ secrets.SUDO_PASSWORD }}" | sudo -S docker-compose down
+            echo "${{ secrets.SUDO_PASSWORD }}" | sudo -S docker-compose pull
+            
             
             # Start new containers with updated images
 
 
-            echo "${{ secrets.SUDO_PASSWORD }}" | sudo -S docker-compose up -d 
+            echo "${{ secrets.SUDO_PASSWORD }}" | sudo -S docker-compose up -d --no-deps --build
             # Remove old, unused images
-            echo "${{ secrets.SUDO_PASSWORD }}" | sudo -S docker image prune -af
+            echo "${{ secrets.SUDO_PASSWORD }}" | sudo -S docker image prune -f
 
           EOF
