@@ -3,6 +3,7 @@ import { GameProvider } from "./GameContext";
 import { WalletProvider } from "./Wallet";
 import { AuthProvider } from "./Auth";
 import { SnackbarProvider } from "notistack";
+import { VoteProvider } from "./VoteContext";
 
 type RootContextProviderProps = {
   children?: React.ReactNode;
@@ -15,11 +16,13 @@ const RootContextProvider: React.FC<RootContextProviderProps> = ({
       maxSnack={3}
       anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
     >
-      <AuthProvider>
-        <WalletProvider>
-          <GameProvider>{children}</GameProvider>
-        </WalletProvider>
-      </AuthProvider>
+      <VoteProvider>
+        <AuthProvider>
+          <WalletProvider>
+            <GameProvider>{children}</GameProvider>
+          </WalletProvider>
+        </AuthProvider>
+      </VoteProvider>
     </SnackbarProvider>
   );
 };

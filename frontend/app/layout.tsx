@@ -7,6 +7,7 @@ import NavBar from "./layouts/NavBar";
 import MyWagmiProvider from "./Provide/MyWagmiProvider";
 import 'react-datepicker/dist/react-datepicker.css';
 import { SnackbarProvider } from 'notistack';
+import { VoteProvider } from "./store/VoteContext";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -31,16 +32,20 @@ export default function RootLayout({
       </head>
       <MyWagmiProvider>
         <RootContextProvider>
-          <body
-            suppressHydrationWarning
-            className={clsx(inter.className, "h-[100dvh]")}
-          >
-            {/* <Header className="z-20" /> */}
-            <NavBar className={"z-20"} />
-            <div className="w-full overflow-x-hidden max-w-[1920px] mx-auto min-h-[calc(100dvh)] pt-[76px]">
-              {children}
-            </div>
-          </body>
+          <VoteProvider>
+            <SnackbarProvider>
+              <body
+                suppressHydrationWarning
+                className={clsx(inter.className, "h-[100dvh]")}
+              >
+                {/* <Header className="z-20" /> */}
+                <NavBar className={"z-20"} />
+                <div className="w-full overflow-x-hidden max-w-[1920px] mx-auto min-h-[calc(100dvh)] pt-[76px]">
+                  {children}
+                </div>
+              </body>
+            </SnackbarProvider>
+          </VoteProvider>
         </RootContextProvider>
       </MyWagmiProvider>
     </html>

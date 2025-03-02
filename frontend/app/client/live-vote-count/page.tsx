@@ -14,6 +14,7 @@ import { getVoteInfo } from "@/app/api/vote";
 import { useSearchParams } from "next/navigation";
 import clsx from "clsx";
 import { useTickets } from "@/app/data/queries/tickets";
+import { useVoteContext } from "@/app/store/VoteContext";
 
 // Register ChartJS components
 ChartJS.register(
@@ -37,14 +38,28 @@ function LiveVoteContent() {
   const [voteCounts, setVoteCounts] = useState([]);
   const [event, setEvent] = useState(null);
   const [isConnecting, setIsConnecting] = useState(false);
-  // State to track which candidate is marked as "當選"
-  const [elected, setElected] = useState({});
-  // New state to track which candidate is marked as "備選"
-  const [backup, setBackup] = useState({});
   const searchParams = useSearchParams();
   const eventId = searchParams.get("eventId");
   const voteApi = getVoteInfo();
   const { data: tickets = [] } = useTickets(eventId);
+  
+  // Use VoteContext instead of local state
+  const { 
+    elected, 
+    backup, 
+    setElected, 
+    setBackup, 
+    currentEventId, 
+    setCurrentEventId 
+  } = useVoteContext();
+
+  // Set current event ID when component mounts or eventId changes
+  useEffect(() => {
+    if (eventId) {
+      setCurrentEventId(eventId);
+    }
+  }, [eventId, setCurrentEventId]);
+
   // Fetch current vote counts
   const fetchVoteCounts = async () => {
     if (!eventId) return;
@@ -164,21 +179,17 @@ function LiveVoteContent() {
 
   // Toggle elected status for a candidate
   const handleElectedChange = (candidateNumber: number) => {
-    setElected((prev) => ({
-      ...prev,
-      [candidateNumber]: !prev[candidateNumber],
-    }));
+    if (!eventId) return;
+    setElected(eventId, candidateNumber, !elected[candidateNumber]);
   };
 
   // Toggle backup status for a candidate
   const handleBackupChange = (candidateNumber: number) => {
-    setBackup((prev) => ({
-      ...prev,
-      [candidateNumber]: !prev[candidateNumber],
-    }));
+    if (!eventId) return;
+    setBackup(eventId, candidateNumber, !backup[candidateNumber]);
   };
 
-  // Calculate total counts for elected and backup candidates.
+  // Calculate total counts for elected and backup candidates
   const electedCount = Object.values(elected).filter(Boolean).length;
   const backupCount = Object.values(backup).filter(Boolean).length;
 
