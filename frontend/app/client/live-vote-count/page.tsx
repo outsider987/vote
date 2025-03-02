@@ -13,6 +13,7 @@ import { Bar } from "react-chartjs-2";
 import { getVoteInfo } from "@/app/api/vote";
 import { useSearchParams } from "next/navigation";
 import clsx from "clsx";
+import { useTickets } from "@/app/data/queries/tickets";
 
 // Register ChartJS components
 ChartJS.register(
@@ -43,7 +44,7 @@ function LiveVoteContent() {
   const searchParams = useSearchParams();
   const eventId = searchParams.get("eventId");
   const voteApi = getVoteInfo();
-
+  const { data: tickets = [] } = useTickets(eventId);
   // Fetch current vote counts
   const fetchVoteCounts = async () => {
     if (!eventId) return;
@@ -61,32 +62,32 @@ function LiveVoteContent() {
     if (!eventId || isConnecting) return;
 
     setIsConnecting(true);
-    const ws = new WebSocket(`ws://localhost:8000/ws/vote-updates`);
+    // const ws = new WebSocket(`ws://localhost:8000/ws/vote-updates`);
 
-    ws.onopen = () => {
-      console.log("WebSocket 已連線");
-      setIsConnecting(false);
-    };
+    // ws.onopen = () => {
+    //   console.log("WebSocket 已連線");
+    //   setIsConnecting(false);
+    // };
 
-    ws.onmessage = (event) => {
-      const data = JSON.parse(event.data);
-      setVoteCounts(data);
-    };
+    // ws.onmessage = (event) => {
+    //   const data = JSON.parse(event.data);
+    //   setVoteCounts(data);
+    // };
 
-    ws.onerror = (error) => {
-      console.error("WebSocket 錯誤:", error);
-      setIsConnecting(false);
-    };
+    // ws.onerror = (error) => {
+    //   console.error("WebSocket 錯誤:", error);
+    //   setIsConnecting(false);
+    // };
 
-    ws.onclose = () => {
-      console.log("WebSocket 已關閉");
-      setIsConnecting(false);
-      // Try to reconnect after 5 seconds
-      setTimeout(() => setupWebSocket(), 5000);
-    };
+    // ws.onclose = () => {
+    //   console.log("WebSocket 已關閉");
+    //   setIsConnecting(false);
+    //   // Try to reconnect after 5 seconds
+    //   setTimeout(() => setupWebSocket(), 5000);
+    // };
 
     return () => {
-      ws.close();
+      // ws.close();
       setIsConnecting(false);
     };
   };
@@ -142,7 +143,7 @@ function LiveVoteContent() {
       },
       title: {
         display: true,
-        text: "即時投票結果",
+        text: `${event?.title} 即時投票結果 `,
       },
     },
     scales: {
@@ -190,7 +191,10 @@ function LiveVoteContent() {
       ) : (
         <>
           <h1 className="text-3xl font-bold mb-6">{event?.title}</h1>
-          <h2 className="text-3xl font-bold mb-6">投票結果</h2>
+          <div className="flex gap-2">
+            {/* <h2 className="text-3xl font-bold mb-6">投票結果</h2> */}
+            <p className="text-lg font-semibold ">活動ID: {event?.id}</p>
+          </div>
 
           {/* Chart display */}
           <div className="mb-8 bg-white p-4 rounded-lg shadow">
@@ -198,10 +202,19 @@ function LiveVoteContent() {
           </div>
 
           {/* Display selected and backup counts */}
-          <div className="mb-4 p-4 bg-primary rounded shadow">
-            <p className="text-lg font-semibold ">
+          <div className="flex  justify-between mb-4 p-4 bg-primary rounded shadow">
+            <p className="text-lg flex items-center font-semibold ">
               當選數: {electedCount} | 備選數: {backupCount}
             </p>
+            <div className="flex p-2 bg-black gap-4 mt-2 text-sm text-gray-500">
+              <p className="text-red">
+                已使用票券: {tickets?.filter((ticket) => ticket.used).length}
+              </p>
+              <p className="text-green">
+                未使用票券: {tickets?.filter((ticket) => !ticket.used).length}
+              </p>
+              <p className="text-gray-100">總票券數: {tickets.length}</p>
+            </div>
           </div>
 
           {/* Table display */}
@@ -264,12 +277,12 @@ function LiveVoteContent() {
                           <span className="font-medium">備選</span>
                         </div>
                       </div>
-                      <div className="flex justify-between font-medium flex-[3]">
+                      <div className="flex justify-between font-medium gap-2 flex-[3]">
+                        <span className="flex items-center min-w-[30px] text-lg font-bold ">
+                          {v.candidate.number}號
+                        </span>
                         <span className="text-lg font-bold ">
                           {v.candidate.text}
-                        </span>
-                        <span className=" min-w-[30px] text-lg font-bold ">
-                          {v.candidate.number}號
                         </span>
                       </div>
 

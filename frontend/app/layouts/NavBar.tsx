@@ -1,18 +1,24 @@
 // components/Navbar.tsx
 "use client";
 import Link from "next/link";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button"; // 根據 shadcn/ui 設定引入 Button
 import { X, Menu } from "lucide-react"; // 使用 lucide-react 做圖示，可自行替換
 import clsx from "clsx";
 import { useAuth } from "../store/Auth";
+import { usePathname } from "next/navigation";
+
 export default function Navbar({ className = "" }) {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const { token, logout } = useAuth();
-
+  const pathname = usePathname();
   const toggleMenu = () => {
     setMobileMenuOpen(!mobileMenuOpen);
   };
+
+  useEffect(() => {
+    setMobileMenuOpen(false);
+  }, [pathname]);
 
   return (
     <nav
@@ -37,9 +43,9 @@ export default function Navbar({ className = "" }) {
               票券產生
             </Button>
           </Link> */}
-              <Link href="/live-vote-count">
+              {/* <Link href="/live-vote-count">
                 <Button className="hover:bg-gray-700">投票結果</Button>
-              </Link>
+              </Link> */}
 
               <Button onClick={logout} className="hover:bg-gray-700">
                 登出
@@ -70,14 +76,14 @@ export default function Navbar({ className = "" }) {
                 票券產生
               </Button>
             </Link> */}
-                <Link
+                {/* <Link
                   href="/live-vote-count"
                   onClick={() => setMobileMenuOpen(false)}
                 >
                   <Button variant="ghost" className="w-full text-left">
                     投票結果
                   </Button>
-                </Link>
+                </Link> */}
                 <Button onClick={logout} className="hover:bg-gray-700">
                   登出
                 </Button>

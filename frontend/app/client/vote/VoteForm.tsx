@@ -80,7 +80,7 @@ export function VoteForm({
     }
   };
 
-  return (
+  return !isSuccess ? (
     <div className="shadow-lg p-4">
       <p className="mb-4 text-gray-100">
         請選擇候選人 (最多 {voteInfo.event.votesPerUser} 人):
@@ -119,6 +119,10 @@ export function VoteForm({
         <span className="text-primary">已選擇 {selectedCount} 人</span>
       </div>
     </div>
+  ) : (
+    <div className="shadow-lg p-4">
+      <p className="mb-4 text-gray-100 font-bold text-2xl">已完成投票</p>
+    </div>
   );
 }
 
@@ -138,7 +142,7 @@ const CandidateCard = ({
   <Card
     className={`cursor-pointer transition-all p-3  ${
       isSelected
-        ? "border-2 border-solid border-orange-800 bg-primary "
+        ? "border-2 border-solid border-orange-800 bg-orange-400  "
         : "hover:bg-gray-100"
     } ${disabled ? "opacity-50 cursor-not-allowed" : ""}`}
     onClick={() => {
