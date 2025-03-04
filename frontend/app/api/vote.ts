@@ -69,17 +69,15 @@ export function getVoteInfo() {
         url: `/tickets/${voteCode}`,
       });
     },
-    POST_VOTE: (param: {
-      vote_code: string;
-      candidate: any;
-    }) => {
+    POST_VOTE: (param: { vote_code: string; candidate: any }) => {
       return request({
         method: "POST",
         url: "/votes",
         headers: {
           "Content-Type": "application/x-www-form-urlencoded",
         },
-        data: toBeFormData(param,true),
+
+        data: toBeFormData(param, true),
       });
     },
     POST_TOGGLE_EVENT_VOTING: (eventId: string, startVoting: boolean) => {
@@ -119,6 +117,26 @@ export function getVoteInfo() {
         method: "POST",
         url: "/events/upload",
         data: payload,
+      });
+    },
+    ARCHIVE_VOTE_RESULT: (eventId: string, voteResult: any) => {
+      return request({
+        method: "POST",
+        url: `/votes/archive/${eventId}`,
+        headers: {
+          Authorization: `Bearer ${getToken()}`,
+          // "Content-Type": "application/x-www-form-urlencoded",
+        },
+        data: { vote_result: voteResult },
+      });
+    },
+    GET_ARCHIVED_RESULT: (eventId: string) => {
+      return request({
+        method: "GET",
+        url: `/votes/archive/${eventId}`,
+        headers: {
+          Authorization: `Bearer ${getToken()}`,
+        },
       });
     },
   };

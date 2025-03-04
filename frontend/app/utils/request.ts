@@ -49,8 +49,9 @@ request.interceptors.response.use(
     if (error.response?.status === 401) {
       removeToken();
       // You might want to redirect to login page here
+      window.location.href = "/login";
     }
-    window.location.href = "/login";
+ 
     return Promise.reject(error);
   }
 );

@@ -2,9 +2,9 @@
 import { GameProvider } from "./GameContext";
 import { WalletProvider } from "./Wallet";
 import { AuthProvider } from "./Auth";
-import { SnackbarProvider } from "notistack";
+// import { SnackbarProvider } from "notistack";
 import { VoteProvider } from "./VoteContext";
-
+import MySnackbarProvider from "../Provide/SnackbarProvider";
 type RootContextProviderProps = {
   children?: React.ReactNode;
 };
@@ -12,10 +12,7 @@ const RootContextProvider: React.FC<RootContextProviderProps> = ({
   children,
 }) => {
   return (
-    <SnackbarProvider
-      maxSnack={3}
-      anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
-    >
+    <MySnackbarProvider>
       <VoteProvider>
         <AuthProvider>
           <WalletProvider>
@@ -23,7 +20,7 @@ const RootContextProvider: React.FC<RootContextProviderProps> = ({
           </WalletProvider>
         </AuthProvider>
       </VoteProvider>
-    </SnackbarProvider>
+    </MySnackbarProvider>
   );
 };
 export default RootContextProvider;

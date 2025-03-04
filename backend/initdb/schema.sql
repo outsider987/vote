@@ -8,6 +8,7 @@ CREATE TABLE IF NOT EXISTS events (
   votes_per_user INT NOT NULL,
   show_count INT NOT NULL,
   is_voting_started BOOLEAN DEFAULT FALSE,
+  is_archived BOOLEAN DEFAULT FALSE,
   start_time TIME,
   end_time TIME,
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
@@ -39,6 +40,18 @@ CREATE TABLE IF NOT EXISTS votes (
       REFERENCES tickets(vote_code) ON DELETE CASCADE
 );
 
+-- 建立封存記錄資料表
+CREATE TABLE IF NOT EXISTS archived (
+  id VARCHAR(36) PRIMARY KEY,
+  event_id VARCHAR(36) NOT NULL,
+  vote_result JSON NOT NULL,
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  CONSTRAINT fk_event_archived
+    FOREIGN KEY(event_id)
+      REFERENCES events(id) ON DELETE CASCADE
+);
+
+
 -- 建立管理員資料表
 CREATE TABLE IF NOT EXISTS admins (
   id VARCHAR(36) PRIMARY KEY,
@@ -46,3 +59,4 @@ CREATE TABLE IF NOT EXISTS admins (
   password VARCHAR(255) NOT NULL,
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
+

@@ -56,4 +56,25 @@ class TicketService:
                 message="Failed to generate tickets",
                 error_code="TICKET_GENERATION_FAILED",
                 details={"error": str(e)}
-            ) 
+            )
+    @staticmethod
+    def get_ticket_by_vote_code(db: Session, vote_code: str) -> Ticket:
+        return db.query(Ticket).filter(Ticket.vote_code == vote_code).first()
+    
+    @staticmethod
+    def get_ticket_by_event_id(db: Session, event_id: str) -> Ticket:
+        return db.query(Ticket).filter(Ticket.event_id == event_id).all()
+    
+
+    @staticmethod
+    def get_remaining_tickets(db: Session, event_id: str) -> int:
+        try:
+            tickets = db.query(Ticket).filter(Ticket.event_id == event_id).filter(Ticket.used == False).all()
+            return tickets
+        except Exception as e:
+            raise VotingError(
+                status_code=500,
+                message="Failed to get remaining tickets",
+                error_code="TICKET_GET_FAILED",
+                details={"error": str(e)}
+            )

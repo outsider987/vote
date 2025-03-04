@@ -1,13 +1,15 @@
 import json
-from fastapi import APIRouter, Depends, WebSocket, WebSocketDisconnect, Form
+from fastapi import APIRouter, Depends, Header, WebSocket, WebSocketDisconnect, Form
 from sqlalchemy.orm import Session
 from app.db.database import get_db
 from app.services.vote_service import VoteService
 from app.services.ticket_service import TicketService
 from fastapi.responses import JSONResponse
-from typing import List
+from typing import List, Optional
 import asyncio
-from app.schemas.vote import Vote
+from app.schemas.vote import Vote, ArchivedCreate
+from app.errors.handlers import VotingError
+from app.services.auth_service import require_auth
 
 router = APIRouter(prefix="/votes", tags=["votes"])
 active_websockets: List[WebSocket] = []
@@ -30,7 +32,6 @@ async def get_vote_info(vote_code: str, db: Session = Depends(get_db)):
 
 @router.post("")
 async def submit_vote(vote: Vote = Form(...), db: Session = Depends(get_db)):
-    
 
     candidate_list = [json.loads(candidate) for candidate in vote.candidate]
 
@@ -68,3 +69,43 @@ async def submit_vote(vote: Vote = Form(...), db: Session = Depends(get_db)):
 async def get_event_vote_counts(event_id: str, db: Session = Depends(get_db)):
     vote_counts, event = vote_service.get_vote_counts(db, event_id)
     return {"vote_counts": vote_counts, "event": event}
+
+
+@router.post("/archive/{event_id}")
+@require_auth()
+async def archive_vote_result(
+    event_id: str,
+    vote_result: dict,
+    db: Session = Depends(get_db),
+    authorization: Optional[str] = Header(None),
+):
+    # Get current vote counts
+
+    remaining_tickets = ticket_service.get_remaining_tickets(db, event_id)
+    if len(remaining_tickets) != 0:
+        raise VotingError(
+            status_code=400,
+            message=f"投票尚未結束,剩餘票數: {len(remaining_tickets)}",
+            details={"remaining_tickets": [ticket.vote_code for ticket in remaining_tickets]},
+            error_code="VOTE_NOT_ENDED",
+        )
+
+    # Create archived record
+    vote_service.create_archived_record(db, event_id, vote_result)
+
+    return JSONResponse({"message": "投票結果已封存"})
+
+
+@router.get("/archive/{event_id}")
+@require_auth()
+async def get_archived_result(
+    event_id: str,
+    db: Session = Depends(get_db),
+    authorization: Optional[str] = Header(None),
+):
+    archived_result = vote_service.get_archived_record(db, event_id)
+    if not archived_result:
+        raise VotingError(
+            status_code=404, message="找不到封存記錄", error_code="ARCHIVE_NOT_FOUND"
+        )
+    return archived_result

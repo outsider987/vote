@@ -17,12 +17,14 @@ class Event(Base):
     votes_per_user = Column(Integer, nullable=False)
     show_count = Column(Integer, nullable=False)
     is_voting_started = Column(Boolean, default=False)
+    is_archived = Column(Boolean, default=False)
     start_time = Column(Time, nullable=False)
     end_time = Column(Time, nullable=False)
     created_at = Column(TIMESTAMP, server_default=func.now())
 
     tickets = relationship("Ticket", back_populates="event", cascade="all, delete-orphan")
     votes = relationship("Vote", back_populates="event", cascade="all, delete-orphan")
+    archived = relationship("Archived", back_populates="event", cascade="all, delete-orphan")
 
 class Ticket(Base):
     __tablename__ = "tickets"
@@ -56,3 +58,14 @@ class Admin(Base):
     id = Column(String(36), primary_key=True, default=lambda: str(uuid4()))
     username = Column(String(255), nullable=False)
     password = Column(String(255), nullable=False)
+
+class Archived(Base):
+    __tablename__ = "archived"
+    __table_args__ = {'extend_existing': True}
+
+    id = Column(String(36), primary_key=True, default=lambda: str(uuid4()))
+    event_id = Column(String(36), ForeignKey("events.id", ondelete="CASCADE"), nullable=False)
+    vote_result = Column(JSON, nullable=False)
+    created_at = Column(TIMESTAMP, server_default=func.now())
+
+    event = relationship("Event", back_populates="archived")

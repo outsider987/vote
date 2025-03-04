@@ -1,7 +1,7 @@
 import json
 from sqlalchemy.orm import Session
 from sqlalchemy import String, cast, func
-from app.models.models import Vote, Ticket, Event
+from app.models.models import Vote, Ticket, Event, Archived
 from app.errors.handlers import VotingError, ErrorCodes
 from typing import Any, Dict, List,Tuple
 import uuid
@@ -116,5 +116,38 @@ class VoteService:
                 error_code="VOTE_COUNT_FAILED",
                 details={"error": str(e)},
             )
+
+    @staticmethod
+    def create_archived_record(db: Session, event_id: str, vote_result: dict) -> None:
+        try:
+            # Create archived record
+            archived = Archived(
+                id=str(uuid.uuid4()),
+                event_id=event_id,
+                vote_result=vote_result
+            )
+            db.add(archived)
+
+            # Update event to archived
+            event = db.query(Event).filter(Event.id == event_id).first()
+            if event:
+                event.is_archived = True
+
+            db.commit()
+        except Exception as e:
+            db.rollback()
+            raise VotingError(
+                status_code=500,
+                message="封存記錄失敗",
+                error_code="ARCHIVE_FAILED",
+                details={"error": str(e)},
+            )
+
+    @staticmethod
+    def get_archived_record(db: Session, event_id: str) -> dict:
+        archived = db.query(Archived).filter(Archived.event_id == event_id).first()
+        if not archived:
+            return None
+        return archived.vote_result
 
                 

@@ -16,6 +16,7 @@ class EventCreate(EventBase):
 
 class EventResponse(EventBase):
     id: UUID
+    is_archived: bool = False
 
     class Config:
         from_attributes = True
@@ -57,3 +58,16 @@ class VoteInfo(BaseModel):
 class Vote(BaseModel):
     candidate: List[str]
     vote_code: str
+
+class ArchivedCreate(BaseModel):
+    event_id: UUID
+    vote_result: dict
+
+class ArchivedResponse(BaseModel):
+    id: UUID
+    event_id: UUID
+    vote_result: dict
+    created_at: datetime
+
+    class Config:
+        from_attributes = True

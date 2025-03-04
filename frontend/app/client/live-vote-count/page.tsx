@@ -15,6 +15,7 @@ import { useSearchParams } from "next/navigation";
 import clsx from "clsx";
 import { useTickets } from "@/app/data/queries/tickets";
 import { useVoteContext } from "@/app/store/VoteContext";
+import { Button } from "@/components/ui/button";
 
 // Register ChartJS components
 ChartJS.register(
@@ -42,15 +43,15 @@ function LiveVoteContent() {
   const eventId = searchParams.get("eventId");
   const voteApi = getVoteInfo();
   const { data: tickets = [] } = useTickets(eventId);
-  
+
   // Use VoteContext instead of local state
-  const { 
-    elected, 
-    backup, 
-    setElected, 
-    setBackup, 
-    currentEventId, 
-    setCurrentEventId 
+  const {
+    selected: selected,
+    backup,
+    setElected,
+    setBackup,
+    currentEventId,
+    setCurrentEventId,
   } = useVoteContext();
 
   // Set current event ID when component mounts or eventId changes
@@ -60,15 +61,65 @@ function LiveVoteContent() {
     }
   }, [eventId, setCurrentEventId]);
 
-  // Fetch current vote counts
+  // Fetch current vote counts and check if event is archived
   const fetchVoteCounts = async () => {
     if (!eventId) return;
     try {
       const response = await voteApi.GET_VOTE_COUNTS(eventId);
       setVoteCounts(response.data.vote_counts);
       setEvent(response.data.event);
+      
+      // If event is archived, fetch archived results
+      if (response.data.event.is_archived) {
+        const archivedResponse = await voteApi.GET_ARCHIVED_RESULT(eventId);
+        const archivedData = archivedResponse.data;
+
+        // Set elected and backup from archived data
+        const archivedElected = {};
+        const archivedBackup = {};
+
+        archivedData.vote_result.forEach((vote) => {
+          if (vote.candidate) {
+            archivedElected[vote.candidate.number] = true;
+          }
+          // if (vote.candidate) {
+          //   archivedBackup[vote.candidate.number] = true;
+          // }
+        });
+      
+
+        // Update context with archived data
+        Object.keys(archivedElected).forEach((num) => {
+          setElected(eventId, parseInt(num), true);
+        });
+        Object.keys(archivedBackup).forEach((num) => {
+          setBackup(eventId, parseInt(num), true);
+        });
+      }
     } catch (error) {
       console.error("Failed to fetch vote counts:", error);
+    }
+  };
+
+  // Handle archive button click
+  const handleArchive = async () => {
+    if (!eventId) return;
+    try {
+      const selectedData = Object.keys(selected).map((key) => ({
+        candidate: {
+          number: parseInt(key),
+          text: voteCounts.find((v) => v.candidate.number === parseInt(key))
+            ?.candidate.text,
+        },
+      }));
+      await voteApi.ARCHIVE_VOTE_RESULT(eventId, selectedData);
+
+      alert("投票結果已封存");
+      // Refresh data
+      fetchVoteCounts();
+    } catch (error) {
+      console.error("Failed to archive vote result:", error);
+      alert("封存失敗");
     }
   };
 
@@ -123,9 +174,9 @@ function LiveVoteContent() {
     labels: voteCounts
       .sort((a, b) => {
         // First, sort descending by count.
-        if (b.count !== a.count) {
-          return b.count - a.count;
-        }
+        // if (b.count !== a.count) {
+        //   return b.count - a.count;
+        // }
         // If counts are equal, sort ascending by candidate number.
         return a.candidate.number - b.candidate.number;
       })
@@ -136,9 +187,9 @@ function LiveVoteContent() {
         data: voteCounts
           .sort((a, b) => {
             // First, sort descending by count.
-            if (b.count !== a.count) {
-              return b.count - a.count;
-            }
+            // if (b.count !== a.count) {
+            //   return b.count - a.count;
+            // }
             // If counts are equal, sort ascending by candidate number.
             return a.candidate.number - b.candidate.number;
           })
@@ -180,7 +231,7 @@ function LiveVoteContent() {
   // Toggle elected status for a candidate
   const handleElectedChange = (candidateNumber: number) => {
     if (!eventId) return;
-    setElected(eventId, candidateNumber, !elected[candidateNumber]);
+    setElected(eventId, candidateNumber, !selected[candidateNumber]);
   };
 
   // Toggle backup status for a candidate
@@ -190,7 +241,7 @@ function LiveVoteContent() {
   };
 
   // Calculate total counts for elected and backup candidates
-  const electedCount = Object.values(elected).filter(Boolean).length;
+  const electedCount = Object.values(selected).filter(Boolean).length;
   const backupCount = Object.values(backup).filter(Boolean).length;
 
   return (
@@ -202,9 +253,8 @@ function LiveVoteContent() {
       ) : (
         <>
           <h1 className="text-3xl font-bold mb-6">{event?.title}</h1>
-          <div className="flex gap-2">
-            {/* <h2 className="text-3xl font-bold mb-6">投票結果</h2> */}
-            <p className="text-lg font-semibold ">活動ID: {event?.id}</p>
+          <div className="flex gap-2 justify-between items-center">
+            <p className="text-lg font-semibold">活動ID: {event?.id}</p>
           </div>
 
           {/* Chart display */}
@@ -230,7 +280,22 @@ function LiveVoteContent() {
 
           {/* Table display */}
           <div className="bg-white p-4 rounded-lg shadow">
-            <h3 className="text-xl font-semibold mb-4 text-black">詳細票數</h3>
+            <div className="flex mb-4 items-center justify-between">
+              <h3 className="text-xl font-semibold  text-black">
+                詳細票數
+              </h3>
+              <span className="text-sm text-gray-500">
+                {!event?.is_archived && (
+                  <Button
+                    onClick={handleArchive}
+                    variant="success"
+                    className=" text-white px-4 py-2 rounded hover:bg-blue-600"
+                  >
+                    封存投票結果
+                  </Button>
+                )}{" "}
+              </span>
+            </div>
             <div className="grid grid-cols-2 gap-4">
               {voteCounts
                 .sort((a, b) => {
@@ -246,7 +311,7 @@ function LiveVoteContent() {
                   const isTie = countFrequency[v.count] > 1;
                   let rowClass =
                     "flex justify-between items-center p-2 rounded transition-colors duration-200";
-                  if (elected[v.candidate.number]) {
+                  if (selected[v.candidate.number]) {
                     rowClass += " bg-green text-black";
                   } else if (backup[v.candidate.number]) {
                     rowClass += " bg-yellow text-black";
@@ -266,11 +331,12 @@ function LiveVoteContent() {
                         <div>
                           <input
                             type="checkbox"
-                            checked={elected[v.candidate.number] || false}
+                            checked={selected[v.candidate.number] || false}
                             onChange={() =>
                               handleElectedChange(v.candidate.number)
                             }
                             className="mr-2"
+                            disabled={event?.is_archived}
                           />
                           <span className="font-medium">當選</span>
                         </div>
@@ -282,9 +348,9 @@ function LiveVoteContent() {
                             onChange={() =>
                               handleBackupChange(v.candidate.number)
                             }
-                            className=" mr-2"
+                            className="mr-2"
+                            disabled={event?.is_archived}
                           />
-
                           <span className="font-medium">備選</span>
                         </div>
                       </div>
@@ -301,12 +367,12 @@ function LiveVoteContent() {
                         <span
                           className={clsx(
                             "text-error  border-2 border-error rounded-full px-2 py-1 w-[38px] h-[38px] flex items-center justify-center",
-                            elected[v.candidate.number] &&
+                            selected[v.candidate.number] &&
                               "border-solid font-extrabold",
-                            !elected[v.candidate.number] && "hidden"
+                            !selected[v.candidate.number] && "hidden"
                           )}
                         >
-                          {elected[v.candidate.number] && "當選"}
+                          {selected[v.candidate.number] && "當選"}
                         </span>
                         <span className="text-lg font-bold text-blue-600 min-w-[33px]">
                           {v.count} 票{" "}

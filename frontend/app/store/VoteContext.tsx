@@ -3,12 +3,12 @@
 import { createContext, useContext, useState, useEffect } from "react";
 
 interface VoteState {
-  elected: Record<string, Record<number, boolean>>;
+  selected: Record<string, Record<number, boolean>>;
   backup: Record<string, Record<number, boolean>>;
 }
 
 interface VoteContextType {
-  elected: Record<number, boolean>;
+  selected: Record<number, boolean>;
   backup: Record<number, boolean>;
   setElected: (eventId: string, candidateNumber: number, value: boolean) => void;
   setBackup: (eventId: string, candidateNumber: number, value: boolean) => void;
@@ -28,7 +28,7 @@ export function useVoteContext() {
 
 export function VoteProvider({ children }: { children: React.ReactNode }) {
   const [voteState, setVoteState] = useState<VoteState>({
-    elected: {},
+    selected: {},
     backup: {},
   });
   const [currentEventId, setCurrentEventId] = useState<string | null>(null);
@@ -49,10 +49,10 @@ export function VoteProvider({ children }: { children: React.ReactNode }) {
   const setElected = (eventId: string, candidateNumber: number, value: boolean) => {
     setVoteState((prev) => ({
       ...prev,
-      elected: {
-        ...prev.elected,
+      selected: {
+        ...prev.selected,
         [eventId]: {
-          ...(prev.elected[eventId] || {}),
+          ...(prev.selected[eventId] || {}),
           [candidateNumber]: value,
         },
       },
@@ -75,7 +75,7 @@ export function VoteProvider({ children }: { children: React.ReactNode }) {
   return (
     <VoteContext.Provider
       value={{
-        elected: currentEventId ? (voteState.elected[currentEventId] || {}) : {},
+        selected: currentEventId ? (voteState.selected[currentEventId] || {}) : {},
         backup: currentEventId ? (voteState.backup[currentEventId] || {}) : {},
         setElected,
         setBackup,
