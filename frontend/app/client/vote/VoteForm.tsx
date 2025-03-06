@@ -87,7 +87,7 @@ export function VoteForm({
       </p>
       <form onSubmit={handleSubmit(onSubmit)}>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
-          {voteInfo.event.options.map((option, index) => (
+          {voteInfo.event.options.sort((a, b) => a.number - b.number).map((option, index) => (
             <CandidateCard
               key={index}
               option={option}
@@ -149,7 +149,7 @@ const CandidateCard = ({
       if (!disabled) onToggle(option); // Pass the whole object instead of just text
     }}
   >
-    <CardContent className="flex items-center gap-3 ">
+    <CardContent className="flex  items-center gap-3 ">
       <input
         type="checkbox"
         {...register("candidates")}
@@ -162,7 +162,7 @@ const CandidateCard = ({
         className="w-5 h-5 hidden"
       />
       <div className="flex flex-col items-center gap-2 m-auto">
-        <span className="text-lg min-w-[33px] min-h-[33px] flex items-center justify-center font-medium rounded-full border-2 border-solid border-red p-1">
+        <span className="text-lg min-w-[50px] min-h-[50px] flex items-center justify-center font-medium rounded-full border-2 border-solid border-red p-1">
           {option.number}
         </span>
         <span className="text-lg font-medium">{option.text}</span>

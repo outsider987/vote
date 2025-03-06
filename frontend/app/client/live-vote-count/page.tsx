@@ -46,7 +46,7 @@ function LiveVoteContent() {
 
   // Use VoteContext instead of local state
   const {
-    selected: selected,
+    selected,
     backup,
     setElected,
     setBackup,
@@ -82,6 +82,7 @@ function LiveVoteContent() {
           if (vote.candidate) {
             archivedElected[vote.candidate.number] = true;
           }
+          // If needed, add backup logic here
           // if (vote.candidate) {
           //   archivedBackup[vote.candidate.number] = true;
           // }
@@ -173,33 +174,46 @@ function LiveVoteContent() {
     };
   }, [eventId]);
 
-  // Prepare data for the chart
+  // Prepare data for the chart with dynamic colors
+  const sortedVoteCounts = [...voteCounts].sort(
+    (a, b) => a.candidate.number - b.candidate.number
+  );
+
+  // Build an array of background colors matching rowClass logic
+  const backgroundColors = sortedVoteCounts.map((v) => {
+    const candidateNumber = v.candidate.number;
+    if (selected[candidateNumber]) {
+      // For "當選"
+      return "rgba(16, 185, 129, 0.6)"; // Tailwind green-500
+    } else if (backup[candidateNumber]) {
+      // For "備選"
+      return "rgba(234, 179, 8, 0.6)"; // Tailwind yellow-500
+    } else {
+      // Default
+      return "rgba(229, 231, 235, 0.6)"; // Tailwind gray-200
+    }
+  });
+
+  // Similarly, build border colors
+  const borderColors = sortedVoteCounts.map((v) => {
+    const candidateNumber = v.candidate.number;
+    if (selected[candidateNumber]) {
+      return "rgba(16, 185, 129, 1)";
+    } else if (backup[candidateNumber]) {
+      return "rgba(234, 179, 8, 1)";
+    } else {
+      return "rgba(156, 163, 175, 1)"; // a darker gray
+    }
+  });
+
   const chartData = {
-    labels: voteCounts
-      .sort((a, b) => {
-        // First, sort descending by count.
-        // if (b.count !== a.count) {
-        //   return b.count - a.count;
-        // }
-        // If counts are equal, sort ascending by candidate number.
-        return a.candidate.number - b.candidate.number;
-      })
-      .map((v) => v.candidate.number),
+    labels: sortedVoteCounts.map((v) => v.candidate.number),
     datasets: [
       {
         label: "得票數",
-        data: voteCounts
-          .sort((a, b) => {
-            // First, sort descending by count.
-            // if (b.count !== a.count) {
-            //   return b.count - a.count;
-            // }
-            // If counts are equal, sort ascending by candidate number.
-            return a.candidate.number - b.candidate.number;
-          })
-          .map((v) => v.count),
-        backgroundColor: "rgba(75, 192, 192, 0.6)",
-        borderColor: "rgba(75, 192, 192, 1)",
+        data: sortedVoteCounts.map((v) => v.count),
+        backgroundColor: backgroundColors,
+        borderColor: borderColors,
         borderWidth: 1,
       },
     ],
@@ -233,13 +247,13 @@ function LiveVoteContent() {
   });
 
   // Toggle elected status for a candidate
-  const handleElectedChange = (candidateNumber: number) => {
+  const handleElectedChange = (candidateNumber) => {
     if (!eventId) return;
     setElected(eventId, candidateNumber, !selected[candidateNumber]);
   };
 
   // Toggle backup status for a candidate
-  const handleBackupChange = (candidateNumber: number) => {
+  const handleBackupChange = (candidateNumber) => {
     if (!eventId) return;
     setBackup(eventId, candidateNumber, !backup[candidateNumber]);
   };
@@ -267,16 +281,18 @@ function LiveVoteContent() {
           </div>
 
           {/* Display selected and backup counts */}
-          <div className="flex  justify-between mb-4 p-4 bg-primary rounded shadow">
-            <p className="text-lg flex items-center font-semibold ">
+          <div className="flex justify-between mb-4 p-4 bg-primary rounded shadow">
+            <p className="text-lg flex items-center font-semibold">
               當選數: {electedCount} | 備選數: {backupCount}
             </p>
             <div className="flex p-2 bg-black gap-4 mt-2 text-sm text-gray-500">
               <p className="text-red">
-                已使用票券: {tickets?.filter((ticket) => ticket.used).length}
+                已使用票券:{" "}
+                {tickets?.filter((ticket) => ticket.used).length}
               </p>
               <p className="text-green">
-                未使用票券: {tickets?.filter((ticket) => !ticket.used).length}
+                未使用票券:{" "}
+                {tickets?.filter((ticket) => !ticket.used).length}
               </p>
               <p className="text-gray-100">總票券數: {tickets.length}</p>
             </div>
@@ -285,17 +301,19 @@ function LiveVoteContent() {
           {/* Table display */}
           <div className="bg-white p-4 rounded-lg shadow">
             <div className="flex mb-4 items-center justify-between">
-              <h3 className="text-xl font-semibold  text-black">詳細票數</h3>
+              <h3 className="text-xl font-semibold text-black">
+                詳細票數
+              </h3>
               <span className="text-sm text-gray-500">
                 {!event?.is_archived && (
                   <Button
                     onClick={handleArchive}
                     variant="success"
-                    className=" text-white px-4 py-2 rounded hover:bg-blue-600"
+                    className="text-white px-4 py-2 rounded hover:bg-blue-600"
                   >
                     封存投票結果
                   </Button>
-                )}{" "}
+                )}
               </span>
             </div>
             <div className="grid grid-cols-2 gap-4">
@@ -357,18 +375,17 @@ function LiveVoteContent() {
                         </div>
                       </div>
                       <div className="flex justify-between font-medium gap-2 flex-[3]">
-                        <span className="flex items-center min-w-[30px] text-lg font-bold ">
+                        <span className="flex items-center min-w-[30px] text-lg font-bold">
                           {v.candidate.number}號
                         </span>
-                        <span className="text-lg font-bold ">
+                        <span className="text-lg font-bold">
                           {v.candidate.text}
                         </span>
                       </div>
-
                       <div className="flex items-center gap-2 flex-[1] justify-end">
                         <span
                           className={clsx(
-                            "text-error  border-2 border-error rounded-full px-2 py-1 w-[38px] h-[38px] flex items-center justify-center",
+                            "text-error border-2 border-error rounded-full px-2 py-1 w-[38px] h-[38px] flex items-center justify-center",
                             selected[v.candidate.number] &&
                               "border-solid font-extrabold",
                             !selected[v.candidate.number] && "hidden"
