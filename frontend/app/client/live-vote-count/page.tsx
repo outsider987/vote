@@ -231,7 +231,7 @@ function LiveVoteContent() {
       title: {
         display: true,
         text: `${event?.title} 即時投票結果                                                           總票數 ${event?.member_count}票 應選${event?.required_count}票 備選${event?.backup_count}票`,
-        align: "end", // This aligns the title to the right
+        align: "end" as const,
       },
     },
     scales: {
