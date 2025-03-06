@@ -358,7 +358,10 @@ function LiveVoteContent() {
                               type="checkbox"
                               checked={selected[v.candidate.number] || false}
                               onChange={() => {
-                                if (event?.required_count === selectedCount) {
+                                if (
+                                  event?.required_count === selectedCount &&
+                                  !selected[v.candidate.number]
+                                ) {
                                   alert("當選人數已達上限");
                                   return;
                                 }
