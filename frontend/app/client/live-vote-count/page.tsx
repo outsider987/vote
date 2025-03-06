@@ -104,6 +104,11 @@ function LiveVoteContent() {
   // Handle archive button click
   const handleArchive = async () => {
     if (!eventId) return;
+    
+    // Add confirmation dialog
+    const confirmed = window.confirm("確定要封存投票結果嗎？封存後將無法修改。");
+    if (!confirmed) return;
+
     try {
       const selectedData = Object.keys(selected).map((key) => ({
         candidate: {
@@ -372,7 +377,7 @@ function LiveVoteContent() {
                           </label>
                         </div>
                       </div>
-                      <div className="flex justify-between font-medium gap-2 flex-[3]">
+                      <div className="flex  font-medium gap-2 flex-[3]">
                         <span className="flex items-center min-w-[30px] text-lg font-bold">
                           {v.candidate.number}號
                         </span>
