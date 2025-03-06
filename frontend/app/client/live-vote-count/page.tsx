@@ -121,9 +121,7 @@ function LiveVoteContent() {
       console.error("Failed to archive vote result:", error);
       alert(
         `封存失敗: ${error.response.data.error.message} 
-        清單: ${JSON.stringify(
-          error.response.data.error.details.remaining_tickets
-        )}`
+       `
       );
     }
   };
@@ -259,7 +257,7 @@ function LiveVoteContent() {
   };
 
   // Calculate total counts for elected and backup candidates
-  const electedCount = Object.values(selected).filter(Boolean).length;
+  const selectedCount = Object.values(selected).filter(Boolean).length;
   const backupCount = Object.values(backup).filter(Boolean).length;
 
   return (
@@ -283,16 +281,14 @@ function LiveVoteContent() {
           {/* Display selected and backup counts */}
           <div className="flex justify-between mb-4 p-4 bg-primary rounded shadow">
             <p className="text-lg flex items-center font-semibold">
-              當選數: {electedCount} | 備選數: {backupCount}
+              當選數: {selectedCount} | 備選數: {backupCount}
             </p>
             <div className="flex p-2 bg-black gap-4 mt-2 text-sm text-gray-500">
               <p className="text-red">
-                已使用票券:{" "}
-                {tickets?.filter((ticket) => ticket.used).length}
+                已使用票券: {tickets?.filter((ticket) => ticket.used).length}
               </p>
               <p className="text-green">
-                未使用票券:{" "}
-                {tickets?.filter((ticket) => !ticket.used).length}
+                未使用票券: {tickets?.filter((ticket) => !ticket.used).length}
               </p>
               <p className="text-gray-100">總票券數: {tickets.length}</p>
             </div>
@@ -301,9 +297,7 @@ function LiveVoteContent() {
           {/* Table display */}
           <div className="bg-white p-4 rounded-lg shadow">
             <div className="flex mb-4 items-center justify-between">
-              <h3 className="text-xl font-semibold text-black">
-                詳細票數
-              </h3>
+              <h3 className="text-xl font-semibold text-black">詳細票數</h3>
               <span className="text-sm text-gray-500">
                 {!event?.is_archived && (
                   <Button
@@ -349,29 +343,33 @@ function LiveVoteContent() {
                       <div className="flex-[1] flex flex-col items-center gap-2">
                         {/* Checkbox for marking as "當選" */}
                         <div>
-                          <input
-                            type="checkbox"
-                            checked={selected[v.candidate.number] || false}
-                            onChange={() =>
-                              handleElectedChange(v.candidate.number)
-                            }
-                            className="mr-2"
-                            disabled={event?.is_archived}
-                          />
-                          <span className="font-medium">當選</span>
+                          <label className="font-medium">
+                            <input
+                              type="checkbox"
+                              checked={selected[v.candidate.number] || false}
+                              onChange={() =>
+                                handleElectedChange(v.candidate.number)
+                              }
+                              className="mr-2"
+                              disabled={event?.is_archived}
+                            />
+                            當選
+                          </label>
                         </div>
                         <div>
                           {/* Checkbox for marking as "備選" */}
-                          <input
-                            type="checkbox"
-                            checked={backup[v.candidate.number] || false}
-                            onChange={() =>
-                              handleBackupChange(v.candidate.number)
-                            }
-                            className="mr-2"
-                            disabled={event?.is_archived}
-                          />
-                          <span className="font-medium">備選</span>
+                          <label className="font-medium">
+                            <input
+                              type="checkbox"
+                              checked={backup[v.candidate.number] || false}
+                              onChange={() =>
+                                handleBackupChange(v.candidate.number)
+                              }
+                              className="mr-2"
+                              disabled={event?.is_archived}
+                            />
+                            備選
+                          </label>
                         </div>
                       </div>
                       <div className="flex justify-between font-medium gap-2 flex-[3]">

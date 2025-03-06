@@ -1,4 +1,4 @@
-from sqlalchemy import Column, String, Date, Integer, Boolean, JSON, ForeignKey, TIMESTAMP, DateTime, Time
+from sqlalchemy import Column, String, Date, Integer, Boolean, JSON, ForeignKey, TIMESTAMP, DateTime, Time, text
 from sqlalchemy.orm import relationship
 from sqlalchemy.sql import func
 from app.db.database import Base
@@ -20,7 +20,7 @@ class Event(Base):
     is_archived = Column(Boolean, default=False)
     start_time = Column(Time, nullable=False)
     end_time = Column(Time, nullable=False)
-    created_at = Column(TIMESTAMP, server_default=func.now())
+    created_at = Column(TIMESTAMP, server_default=func.now() + text("interval '8 hours'"))
 
     tickets = relationship("Ticket", back_populates="event", cascade="all, delete-orphan")
     votes = relationship("Vote", back_populates="event", cascade="all, delete-orphan")

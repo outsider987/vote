@@ -81,14 +81,14 @@ async def archive_vote_result(
 ):
     # Get current vote counts
 
-    remaining_tickets = ticket_service.get_remaining_tickets(db, event_id)
-    if len(remaining_tickets) != 0:
-        raise VotingError(
-            status_code=400,
-            message=f"投票尚未結束,剩餘票數: {len(remaining_tickets)}",
-            details={"remaining_tickets": [ticket.vote_code for ticket in remaining_tickets]},
-            error_code="VOTE_NOT_ENDED",
-        )
+    # remaining_tickets = ticket_service.get_remaining_tickets(db, event_id)
+    # if len(remaining_tickets) != 0:
+    #     raise VotingError(
+    #         status_code=400,
+    #         message=f"投票尚未結束,剩餘票數: {len(remaining_tickets)}",
+    #         details={"remaining_tickets": [ticket.vote_code for ticket in remaining_tickets]},
+    #         error_code="VOTE_NOT_ENDED",
+    #     )
 
     # Create archived record
     vote_service.create_archived_record(db, event_id, vote_result)
