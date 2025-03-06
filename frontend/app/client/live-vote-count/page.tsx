@@ -104,9 +104,11 @@ function LiveVoteContent() {
   // Handle archive button click
   const handleArchive = async () => {
     if (!eventId) return;
-    
+
     // Add confirmation dialog
-    const confirmed = window.confirm("確定要封存投票結果嗎？封存後將無法修改。");
+    const confirmed = window.confirm(
+      "確定要封存投票結果嗎？封存後將無法修改。"
+    );
     if (!confirmed) return;
 
     try {
@@ -210,7 +212,9 @@ function LiveVoteContent() {
   });
 
   const chartData = {
-    labels: sortedVoteCounts.map((v) => `${v.candidate.number}號 ${v.candidate.text}`),
+    labels: sortedVoteCounts.map(
+      (v) => `${v.candidate.number}號 ${v.candidate.text}`
+    ),
     datasets: [
       {
         label: "得票數",
@@ -351,14 +355,17 @@ function LiveVoteContent() {
                         <div>
                           <label className="font-medium">
                             <input
-                            
                               type="checkbox"
                               checked={selected[v.candidate.number] || false}
-                              onChange={() =>
-                                handleElectedChange(v.candidate.number)
-                              }
+                              onChange={() => {
+                                if (event?.required_count === selectedCount) {
+                                  alert("當選人數已達上限");
+                                  return;
+                                }
+                                handleElectedChange(v.candidate.number);
+                              }}
                               className="mr-2"
-                              disabled={event?.is_archived || event?.required_count === selectedCount}
+                              disabled={event?.is_archived}
                             />
                             當選
                           </label>
