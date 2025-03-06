@@ -5,7 +5,12 @@ export interface Event {
   createdAt: string;
   isVotingStarted: boolean;
   memberCount: number;
-  options: string[];
+  options: Array<{
+    number: number;
+    text: string;
+  }>;
+  requiredCount: number;
+  backupCount: number;
   showCount: number;
   votesPerUser: number;
 }

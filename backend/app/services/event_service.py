@@ -156,4 +156,41 @@ class EventService:
                 error_code="EXCEL_PROCESSING_FAILED",
                 details={"error": str(e)}
             )
+
+    @staticmethod
+    def update_event(db: Session, event_id: str, event_data: dict) -> Event:
+        """Update an existing event"""
+        try:
+            event = db.query(Event).filter(Event.id == event_id).first()
+            if not event:
+                raise VotingError(
+                    status_code=404,
+                    message="活動不存在",
+                    error_code=ErrorCodes.EVENT_NOT_FOUND
+                )
+            
+            if event.is_voting_started:
+                raise VotingError(
+                    status_code=400,
+                    message="投票已開始，無法修改活動",
+                    error_code="VOTING_STARTED"
+                )
+
+            # Update only provided fields
+            for field, value in event_data.items():
+                if value is not None:
+                    setattr(event, field, value)
+
+            db.commit()
+            db.refresh(event)
+            return event
+        except Exception as e:
+            db.rollback()
+            logger.error(f"Failed to update event: {str(e)}")
+            raise VotingError(
+                status_code=500,
+                message="Failed to update event",
+                error_code="EVENT_UPDATE_FAILED",
+                details={"error": str(e)}
+            )
     

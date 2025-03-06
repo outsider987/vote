@@ -9,14 +9,25 @@ class EventBase(BaseModel):
     title: str = Field(min_length=1, max_length=255)
     options: List[dict[str, str | int]] = Field(default_factory=list)
     votes_per_user: int = Field(gt=0)
-    show_count: int = Field(gt=0)
+    required_count: int = Field(gt=0)
+    backup_count: int = Field(gt=0)
 
 class EventCreate(EventBase):
     pass
 
+class EventUpdate(BaseModel):
+    title: str | None = None
+    options: List[dict[str, str | int]] | None = None
+    required_count: int | None = None
+    backup_count: int | None = None
+    votes_per_user: int | None = None
+
 class EventResponse(EventBase):
     id: UUID
     is_archived: bool = False
+    is_voting_started: bool = False
+    start_time: datetime | None = None
+    end_time: datetime | None = None
 
     class Config:
         from_attributes = True

@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef, useState } from "react";
+import { useRef, useState, useEffect } from "react";
 import { useForm, Controller, SubmitHandler } from "react-hook-form";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
@@ -14,10 +14,10 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { getVoteInfo } from "../api/vote";
-import { mockVoteData } from "../mock/voteData";
 import { DateTimePicker } from "@/components/ui/date-time-picker";
 import { useSnackbar } from "notistack";
 import * as XLSX from "xlsx";
+import type { Event } from "../data/types";
 
 interface Option {
   number: number;
@@ -30,14 +30,20 @@ type FormValues = {
   title: string;
   votes_per_user: number;
   show_count: number;
+  required_count: number;
+  backup_count: number;
   options: any;
 };
 
 interface CreateVoteModalProps {
   onSuccess?: () => void;
+  event?: Event;
+  isOpen: boolean;
+  onClose: () => void;
+  mode: 'create' | 'edit';
 }
 
-export default function CreateVoteModal({ onSuccess }: CreateVoteModalProps) {
+export default function CreateVoteModal({ onSuccess, event, isOpen, onClose, mode }: CreateVoteModalProps) {
   const {
     register,
     handleSubmit,
@@ -46,30 +52,84 @@ export default function CreateVoteModal({ onSuccess }: CreateVoteModalProps) {
     setValue,
     formState: { errors },
   } = useForm<FormValues>({
-    defaultValues: {
+    defaultValues: mode === 'edit' && event ? {
+      title: event.title,
+      votes_per_user: event.votesPerUser,
+      required_count: event.requiredCount,
+      backup_count: event.backupCount,
+      options: event.options.map(option => ({
+        number: option.number,
+        text: option.text
+      })),
+      event_date: moment(event.eventDate).toDate(),
+      member_count: event.memberCount,
+      show_count: event.showCount,
+    } : {
       event_date: moment().toDate(),
       member_count: 0,
       title: "",
       votes_per_user: 0,
       show_count: 0,
+      required_count: 0,
+      backup_count: 0,
       options: [],
     },
   });
 
-  const [isOpen, setIsOpen] = useState(false);
+  // Reset form when event or mode changes
+  useEffect(() => {
+    if (mode === 'edit' && event) {
+      reset({
+        title: event.title,
+        votes_per_user: event.votesPerUser,
+        required_count: event.requiredCount,
+        backup_count: event.backupCount,
+        options: event.options.map(option => ({
+          number: option.number,
+          text: option.text
+        })),
+        event_date: moment(event.eventDate).toDate(),
+        member_count: event.memberCount,
+        show_count: event.showCount,
+      });
+    } else {
+      reset({
+        event_date: moment().toDate(),
+        member_count: 0,
+        title: "",
+        votes_per_user: 0,
+        show_count: 0,
+        required_count: 0,
+        backup_count: 0,
+        options: [],
+      });
+    }
+  }, [event, mode, reset]);
+
   const voteApi = getVoteInfo();
   const { enqueueSnackbar } = useSnackbar();
   const uploadInputRef = useRef<HTMLInputElement>(null);
 
   const onSubmit: SubmitHandler<FormValues> = async (data) => {
     try {
-      const res = await voteApi.CREATE_EVENT(data);
+      if (mode === 'edit' && event) {
+        // For edit mode, only send the fields that can be edited
+        const editData = {
+          title: data.title,
+          votes_per_user: data.votes_per_user,
+          required_count: data.required_count,
+          backup_count: data.backup_count,
+          options: data.options,
+        };
+        await voteApi.UPDATE_EVENT(event.id, editData);
+        enqueueSnackbar("活動更新成功", { variant: "success" });
+      } else {
+        await voteApi.CREATE_EVENT(data);
+        enqueueSnackbar("活動建立成功", { variant: "success" });
+      }
 
       // Close modal after successful submission
-      setIsOpen(false);
-
-      // Show success message
-      enqueueSnackbar("活動建立成功", { variant: "success" });
+      onClose();
 
       // Call onSuccess callback if provided
       onSuccess?.();
@@ -77,7 +137,7 @@ export default function CreateVoteModal({ onSuccess }: CreateVoteModalProps) {
       // Reset form when reopening
       reset();
     } catch (error) {
-      enqueueSnackbar("活動建立失敗，請重試", { variant: "error" });
+      enqueueSnackbar(mode === 'edit' ? "活動更新失敗，請重試" : "活動建立失敗，請重試", { variant: "error" });
     }
   };
 
@@ -85,12 +145,10 @@ export default function CreateVoteModal({ onSuccess }: CreateVoteModalProps) {
     if (!open) {
       reset(); // Reset form when closing
     }
-    setIsOpen(open);
+    onClose();
   };
 
-  const handleFileUpload = async (
-    event: React.ChangeEvent<HTMLInputElement>
-  ) => {
+  const handleFileUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
     if (!file) return;
 
@@ -98,18 +156,13 @@ export default function CreateVoteModal({ onSuccess }: CreateVoteModalProps) {
     reader.onload = (e) => {
       const data = new Uint8Array(e.target?.result as ArrayBuffer);
       const workbook = XLSX.read(data, { type: "array" });
-      // Assuming data is in the first sheet
       const firstSheetName = workbook.SheetNames[0];
       const worksheet = workbook.Sheets[firstSheetName];
-      // Convert the worksheet to JSON (assuming first row is header)
       const jsonData = XLSX.utils.sheet_to_json(worksheet, { header: 1 });
-      // Parse the JSON data into options
-      // For example, if each row is: [number, text] and the first row is headers
       const parsedOptions = jsonData.slice(1).map((row: any) => ({
         number: row[0],
         text: row[1],
       }));
-      // Update the DynamicOptionsInput with parsed options
       setValue("options", parsedOptions);
       enqueueSnackbar("Excel 檔案上傳成功", { variant: "success" });
     };
@@ -130,7 +183,6 @@ export default function CreateVoteModal({ onSuccess }: CreateVoteModalProps) {
         throw new Error("Download failed");
       }
 
-      // Create a blob from the response
       const blob = await response.data;
       const url = window.URL.createObjectURL(blob);
       const a = document.createElement("a");
@@ -147,12 +199,9 @@ export default function CreateVoteModal({ onSuccess }: CreateVoteModalProps) {
 
   return (
     <Dialog open={isOpen} onOpenChange={handleOpenChange}>
-      <DialogTrigger asChild>
-        <Button>建立新投票</Button>
-      </DialogTrigger>
       <DialogContent className="sm:max-w-[600px] max-h-[80vh] overflow-y-auto">
         <DialogHeader>
-          <DialogTitle>建立投票事件</DialogTitle>
+          <DialogTitle>{mode === 'edit' ? '編輯投票事件' : '建立投票事件'}</DialogTitle>
         </DialogHeader>
         <form
           onSubmit={(e) => {
@@ -165,42 +214,46 @@ export default function CreateVoteModal({ onSuccess }: CreateVoteModalProps) {
           className="space-y-4"
         >
           {/* Event Date */}
-          <div>
-            <label className="block font-medium pb-2 w-full">活動日期:</label>
-            <Controller
-              control={control}
-              name="event_date"
-              rules={{ required: "請選擇活動日期" }}
-              render={({ field }) => (
-                <DateTimePicker
-                  value={field.value ? new Date(field.value) : undefined}
-                  onChange={(date) =>
-                    field.onChange(
-                      date ? moment(date).format("YYYY-MM-DD HH:mm:ss") : ""
-                    )
-                  }
-                />
+          {mode === 'create' && (
+            <div>
+              <label className="block font-medium pb-2 w-full">活動日期:</label>
+              <Controller
+                control={control}
+                name="event_date"
+                rules={{ required: "請選擇活動日期" }}
+                render={({ field }) => (
+                  <DateTimePicker
+                    value={field.value ? new Date(field.value) : undefined}
+                    onChange={(date) =>
+                      field.onChange(
+                        date ? moment(date).format("YYYY-MM-DD HH:mm:ss") : ""
+                      )
+                    }
+                  />
+                )}
+              />
+              {errors.event_date && (
+                <p className="text-red">{errors.event_date.message}</p>
               )}
-            />
-            {errors.event_date && (
-              <p className="text-red">{errors.event_date.message}</p>
-            )}
-          </div>
+            </div>
+          )}
 
           {/* Member Count */}
-          <div>
-            <label className="block font-medium pb-2">會員人數:</label>
-            <Input
-              type="number"
-              {...register("member_count", {
-                required: "請輸入會員人數",
-                valueAsNumber: true,
-              })}
-            />
-            {errors.member_count && (
-              <p className="text-red">{errors.member_count.message}</p>
-            )}
-          </div>
+          {mode === 'create' && (
+            <div>
+              <label className="block font-medium pb-2">會員人數:</label>
+              <Input
+                type="number"
+                {...register("member_count", {
+                  required: "請輸入會員人數",
+                  valueAsNumber: true,
+                })}
+              />
+              {errors.member_count && (
+                <p className="text-red">{errors.member_count.message}</p>
+              )}
+            </div>
+          )}
 
           {/* Vote Title */}
           <div>
@@ -229,55 +282,78 @@ export default function CreateVoteModal({ onSuccess }: CreateVoteModalProps) {
             )}
           </div>
 
-          {/* Show Count */}
+          
+
+          {/* Required Count */}
           <div>
-            <label className="block font-medium pb-2">結果顯示人數:</label>
+            <label className="block font-medium pb-2">應選數:</label>
             <Input
               type="number"
-              {...register("show_count", {
-                required: "請輸入結果顯示人數",
+              {...register("required_count", {
+                required: "請輸入應選數",
                 valueAsNumber: true,
+                min: { value: 1, message: "應選數必須大於0" }
               })}
             />
-            {errors.show_count && (
-              <p className="text-red">{errors.show_count.message}</p>
+            {errors.required_count && (
+              <p className="text-red">{errors.required_count.message}</p>
+            )}
+          </div>
+
+          {/* Backup Count */}
+          <div>
+            <label className="block font-medium pb-2">備選數:</label>
+            <Input
+              type="number"
+              {...register("backup_count", {
+                required: "請輸入備選數",
+                valueAsNumber: true,
+                min: { value: 0, message: "備選數必須大於或等於0" }
+              })}
+            />
+            {errors.backup_count && (
+              <p className="text-red">{errors.backup_count.message}</p>
             )}
           </div>
 
           {/* Excel Upload Section */}
-          <div className="space-y-2">
-            <label className="block font-medium">Excel 上傳:</label>
-            <div className="flex gap-2">
-              <Button
-                type="button"
-                variant="success"
-                onClick={handleDownloadTemplate}
-              >
-                下載範本
-              </Button>
-              <label className="cursor-pointer">
-                <Input
-                  ref={uploadInputRef as React.RefObject<HTMLInputElement>}
-                  type="file"
-                  accept=".xlsx,.xls"
-                  onChange={handleFileUpload}
-                  className="hidden"
-                />
+          {mode === 'create' && (
+            <div className="space-y-2">
+              <label className="block font-medium">Excel 上傳:</label>
+              <div className="flex gap-2">
                 <Button
-                  onClick={() => uploadInputRef.current?.click()}
                   type="button"
-                  className=""
                   variant="success"
+                  onClick={handleDownloadTemplate}
                 >
-                  上傳 Excel
+                  下載範本
                 </Button>
-              </label>
+                <label className="cursor-pointer">
+                  <Input
+                    ref={uploadInputRef as React.RefObject<HTMLInputElement>}
+                    type="file"
+                    accept=".xlsx,.xls"
+                    onChange={handleFileUpload}
+                    className="hidden"
+                  />
+                  <Button
+                    onClick={() => uploadInputRef.current?.click()}
+                    type="button"
+                    className=""
+                    variant="success"
+                  >
+                    上傳 Excel
+                  </Button>
+                </label>
+              </div>
+              <p className="text-sm text-gray-500">請先下載範本，填寫後再上傳</p>
             </div>
-            <p className="text-sm text-gray-500">請先下載範本，填寫後再上傳</p>
-          </div>
+          )}
 
           {/* Dynamic Options */}
-          <div>
+          
+            {mode === 'create' && (
+              <div>
             <label className="block font-medium">投票選項:</label>
             <Controller
               control={control}
@@ -296,17 +372,20 @@ export default function CreateVoteModal({ onSuccess }: CreateVoteModalProps) {
               </p>
             )}
           </div>
+            )
+          }
+        
 
           {/* Buttons */}
           <div className="flex justify-end gap-2">
             <Button
               type="button"
               variant="outline"
-              onClick={() => setIsOpen(false)}
+              onClick={onClose}
             >
               取消
             </Button>
-            <Button type="submit">建立活動</Button>
+            <Button type="submit">{mode === 'edit' ? '更新活動' : '建立活動'}</Button>
           </div>
         </form>
       </DialogContent>

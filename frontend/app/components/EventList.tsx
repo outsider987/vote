@@ -18,6 +18,7 @@ import { useTickets } from "../data/queries/tickets";
 import { useDeleteEvent, useToggleVoting } from "../data/mutations/events";
 import ReactDOM from "react-dom/client";
 import Link from "next/link";
+import CreateVoteModal from "./CreateVoteModal";
 
 export interface EventListRef {
   fetchEvents: () => Promise<void>;
@@ -25,6 +26,7 @@ export interface EventListRef {
 
 const EventList = forwardRef<EventListRef>((props, ref) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isVoteModalOpen, setIsVoteModalOpen] = useState(false);
   const [selectedEvent, setSelectedEvent] = useState<Event | null>(null);
   // States for printing
   const [printEvent, setPrintEvent] = useState<Event | null>(null);
@@ -72,6 +74,11 @@ const EventList = forwardRef<EventListRef>((props, ref) => {
     setSelectedEvent(event);
     setIsModalOpen(true);
     await refetchTickets();
+  };
+
+  const handleOpenVoteModal = (event?: Event) => {
+    setSelectedEvent(event || null);
+    setIsVoteModalOpen(true);
   };
 
   // Printing logic moved into a separate function.
@@ -239,6 +246,7 @@ const EventList = forwardRef<EventListRef>((props, ref) => {
 
   return (
     <div className="space-y-4">
+   
       <div className="space-y-4">
         {events.map((event) => (
           <div
@@ -268,6 +276,8 @@ const EventList = forwardRef<EventListRef>((props, ref) => {
                 <p>會員人數: {event.memberCount}</p>
                 <p>每人可投票數: {event.votesPerUser}</p>
                 <p>候選人數: {event.options.length}</p>
+                <p>應選數: {event.requiredCount}</p>
+                <p>備選數: {event.backupCount}</p>
                 <p>事件 ID: {event.id}</p>
               </div>
               <Button
@@ -288,6 +298,14 @@ const EventList = forwardRef<EventListRef>((props, ref) => {
               >
                 查看投票結果
               </Button>
+              {!event.isVotingStarted && (
+                <Button
+                  variant="secondary"
+                  onClick={() => handleOpenVoteModal(event)}
+                >
+                  編輯
+                </Button>
+              )}
               <Button
                 onClick={() =>
                   handleToggleVoting(event.id, !event.isVotingStarted)
@@ -382,6 +400,17 @@ const EventList = forwardRef<EventListRef>((props, ref) => {
           </div>
         </DialogContent>
       </Dialog>
+
+      <CreateVoteModal
+        event={selectedEvent || undefined}
+        isOpen={isVoteModalOpen}
+        onClose={() => {
+          setIsVoteModalOpen(false);
+          setSelectedEvent(null);
+        }}
+        onSuccess={refetch}
+        mode={selectedEvent ? 'edit' : 'create'}
+      />
     </div>
   );
 });

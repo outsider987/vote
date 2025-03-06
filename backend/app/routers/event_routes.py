@@ -1,7 +1,7 @@
 from fastapi import APIRouter, Depends, Header, UploadFile, File
 from sqlalchemy.orm import Session
 from app.db.database import get_db
-from app.schemas.vote import EventCreate
+from app.schemas.vote import EventCreate, EventUpdate
 from fastapi.responses import JSONResponse
 from app.services.event_service import EventService
 from app.services.ticket_service import TicketService
@@ -90,3 +90,16 @@ async def upload_excel(
     contents = await file.read()
     options = event_service.process_excel_upload(BytesIO(contents))
     return JSONResponse({"options": options})
+
+
+@router.put("/{event_id}")
+@require_auth()
+async def update_event(
+    event_id: str,
+    data: EventUpdate,
+    db: Session = Depends(get_db),
+    authorization: Optional[str] = Header(None)
+):
+    """Update an existing event"""
+    event = event_service.update_event(db, event_id, data.model_dump(exclude_unset=True))
+    return JSONResponse({"message": "活動更新成功"})

@@ -210,11 +210,11 @@ function LiveVoteContent() {
   });
 
   const chartData = {
-    labels: sortedVoteCounts.map((v) => v.candidate.number),
+    labels: sortedVoteCounts.map((v) => `${v.candidate.number}號 ${v.candidate.text}`),
     datasets: [
       {
         label: "得票數",
-        data: sortedVoteCounts.map((v) => v.count),
+        data: sortedVoteCounts.map((v) => `${v.count}票`),
         backgroundColor: backgroundColors,
         borderColor: borderColors,
         borderWidth: 1,
@@ -230,7 +230,8 @@ function LiveVoteContent() {
       },
       title: {
         display: true,
-        text: `${event?.title} 即時投票結果 `,
+        text: `${event?.title} 即時投票結果                                                           總票數 ${event?.member_count}票 應選${event?.required_count}票 備選${event?.backup_count}票`,
+        align: "end", // This aligns the title to the right
       },
     },
     scales: {
@@ -350,13 +351,14 @@ function LiveVoteContent() {
                         <div>
                           <label className="font-medium">
                             <input
+                            
                               type="checkbox"
                               checked={selected[v.candidate.number] || false}
                               onChange={() =>
                                 handleElectedChange(v.candidate.number)
                               }
                               className="mr-2"
-                              disabled={event?.is_archived}
+                              disabled={event?.is_archived || event?.required_count === selectedCount}
                             />
                             當選
                           </label>

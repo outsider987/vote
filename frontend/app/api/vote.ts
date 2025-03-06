@@ -139,5 +139,15 @@ export function getVoteInfo() {
         },
       });
     },
+    UPDATE_EVENT: (eventId: string, data: any) => {
+      return request({
+        method: "PUT",
+        url: `/events/${eventId}`,
+        headers: {
+          Authorization: `Bearer ${getToken()}`,
+        },
+        data,
+      });
+    },
   };
 }
