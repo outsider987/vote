@@ -33,6 +33,12 @@ async def get_vote_info(vote_code: str, db: Session = Depends(get_db)):
 @router.post("")
 async def submit_vote(vote: Vote = Form(...), db: Session = Depends(get_db)):
 
+    if len(vote.candidate) != vote.event.votes_per_user:
+        raise VotingError(
+            status_code=400,
+            message=f"請選擇 {vote.event.votes_per_user} 人",
+            error_code="INVALID_VOTE_COUNT",
+        )
     candidate_list = [json.loads(candidate) for candidate in vote.candidate]
 
     print(candidate_list)

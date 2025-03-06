@@ -40,53 +40,63 @@ interface CreateVoteModalProps {
   event?: Event;
   isOpen: boolean;
   onClose: () => void;
-  mode: 'create' | 'edit';
+  mode: "create" | "edit";
 }
 
-export default function CreateVoteModal({ onSuccess, event, isOpen, onClose, mode }: CreateVoteModalProps) {
+export default function CreateVoteModal({
+  onSuccess,
+  event,
+  isOpen,
+  onClose,
+  mode,
+}: CreateVoteModalProps) {
   const {
     register,
     handleSubmit,
     reset,
     control,
     setValue,
+    watch,
     formState: { errors },
   } = useForm<FormValues>({
-    defaultValues: mode === 'edit' && event ? {
-      title: event.title,
-      votes_per_user: event.votesPerUser,
-      required_count: event.requiredCount,
-      backup_count: event.backupCount,
-      options: event.options.map(option => ({
-        number: option.number,
-        text: option.text
-      })),
-      event_date: moment(event.eventDate).toDate(),
-      member_count: event.memberCount,
-      show_count: event.showCount,
-    } : {
-      event_date: moment().toDate(),
-      member_count: 0,
-      title: "",
-      votes_per_user: 0,
-      show_count: 0,
-      required_count: 0,
-      backup_count: 0,
-      options: [],
-    },
+    defaultValues:
+      mode === "edit" && event
+        ? {
+            title: event.title,
+            votes_per_user: event.votesPerUser,
+            required_count: event.requiredCount,
+            backup_count: event.backupCount,
+            options: event.options.map((option) => ({
+              number: option.number,
+              text: option.text,
+            })),
+            event_date: moment(event.eventDate).toDate(),
+            member_count: event.memberCount,
+            show_count: event.showCount,
+          }
+        : {
+            event_date: moment().toDate(),
+            member_count: 0,
+            title: "",
+            votes_per_user: 0,
+            show_count: 0,
+            required_count: 0,
+            backup_count: 0,
+            options: [],
+          },
   });
 
   // Reset form when event or mode changes
   useEffect(() => {
-    if (mode === 'edit' && event) {
+    if (mode === "edit" && event) {
       reset({
         title: event.title,
         votes_per_user: event.votesPerUser,
         required_count: event.requiredCount,
         backup_count: event.backupCount,
-        options: event.options.map(option => ({
+        options: event.options.map((option) => ({
           number: option.number,
-          text: option.text
+          text: option.text,
         })),
         event_date: moment(event.eventDate).toDate(),
         member_count: event.memberCount,
@@ -112,7 +122,7 @@ export default function CreateVoteModal({ onSuccess, event, isOpen, onClose, mod
 
   const onSubmit: SubmitHandler<FormValues> = async (data) => {
     try {
-      if (mode === 'edit' && event) {
+      if (mode === "edit" && event) {
         // For edit mode, only send the fields that can be edited
         const editData = {
           title: data.title,
@@ -137,7 +147,10 @@ export default function CreateVoteModal({ onSuccess, event, isOpen, onClose, mod
       // Reset form when reopening
       reset();
     } catch (error) {
-      enqueueSnackbar(mode === 'edit' ? "活動更新失敗，請重試" : "活動建立失敗，請重試", { variant: "error" });
+      enqueueSnackbar(
+        mode === "edit" ? "活動更新失敗，請重試" : "活動建立失敗，請重試",
+        { variant: "error" }
+      );
     }
   };
 
@@ -148,7 +161,9 @@ export default function CreateVoteModal({ onSuccess, event, isOpen, onClose, mod
     onClose();
   };
 
-  const handleFileUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
+  const handleFileUpload = async (
+    event: React.ChangeEvent<HTMLInputElement>
+  ) => {
     const file = event.target.files?.[0];
     if (!file) return;
 
@@ -201,7 +216,9 @@ export default function CreateVoteModal({ onSuccess, event, isOpen, onClose, mod
     <Dialog open={isOpen} onOpenChange={handleOpenChange}>
       <DialogContent className="sm:max-w-[600px] max-h-[80vh] overflow-y-auto">
         <DialogHeader>
-          <DialogTitle>{mode === 'edit' ? '編輯投票事件' : '建立投票事件'}</DialogTitle>
+          <DialogTitle>
+            {mode === "edit" ? "編輯投票事件" : "建立投票事件"}
+          </DialogTitle>
         </DialogHeader>
         <form
           onSubmit={(e) => {
@@ -214,7 +231,7 @@ export default function CreateVoteModal({ onSuccess, event, isOpen, onClose, mod
           className="space-y-4"
         >
           {/* Event Date */}
-          {mode === 'create' && (
+          {mode === "create" && (
             <div>
               <label className="block font-medium pb-2 w-full">活動日期:</label>
               <Controller
@@ -239,7 +256,7 @@ export default function CreateVoteModal({ onSuccess, event, isOpen, onClose, mod
           )}
 
           {/* Member Count */}
-          {mode === 'create' && (
+          {mode === "create" && (
             <div>
               <label className="block font-medium pb-2">會員人數:</label>
               <Input
@@ -262,9 +279,7 @@ export default function CreateVoteModal({ onSuccess, event, isOpen, onClose, mod
               type="text"
               {...register("title", { required: "請輸入投票標題" })}
             />
-            {errors.title && (
-              <p className="text-red">{errors.title.message}</p>
-            )}
+            {errors.title && <p className="text-red">{errors.title.message}</p>}
           </div>
 
           {/* Votes Per User */}
@@ -272,6 +287,13 @@ export default function CreateVoteModal({ onSuccess, event, isOpen, onClose, mod
             <label className="block font-medium pb-2">每人可投票數:</label>
             <Input
               type="number"
+              max={watch("member_count")}
+              onInput={(e) => {
+                const value = parseInt(e.currentTarget.value);
+                if (value > watch("member_count")) {
+                  setValue("votes_per_user", watch("member_count"));
+                }
+              }}
               {...register("votes_per_user", {
                 required: "請輸入每人可投票數",
                 valueAsNumber: true,
@@ -282,8 +304,6 @@ export default function CreateVoteModal({ onSuccess, event, isOpen, onClose, mod
             )}
           </div>
 
-          
-
           {/* Required Count */}
           <div>
             <label className="block font-medium pb-2">應選數:</label>
@@ -292,7 +312,7 @@ export default function CreateVoteModal({ onSuccess, event, isOpen, onClose, mod
               {...register("required_count", {
                 required: "請輸入應選數",
                 valueAsNumber: true,
-                min: { value: 1, message: "應選數必須大於0" }
+                min: { value: 1, message: "應選數必須大於0" },
               })}
             />
             {errors.required_count && (
@@ -308,7 +328,7 @@ export default function CreateVoteModal({ onSuccess, event, isOpen, onClose, mod
               {...register("backup_count", {
                 required: "請輸入備選數",
                 valueAsNumber: true,
-                min: { value: 0, message: "備選數必須大於或等於0" }
+                min: { value: 0, message: "備選數必須大於或等於0" },
               })}
             />
             {errors.backup_count && (
@@ -317,7 +337,7 @@ export default function CreateVoteModal({ onSuccess, event, isOpen, onClose, mod
           </div>
 
           {/* Excel Upload Section */}
-          {mode === 'create' && (
+          {mode === "create" && (
             <div className="space-y-2">
               <label className="block font-medium">Excel 上傳:</label>
               <div className="flex gap-2">
@@ -346,46 +366,42 @@ export default function CreateVoteModal({ onSuccess, event, isOpen, onClose, mod
                   </Button>
                 </label>
               </div>
-              <p className="text-sm text-gray-500">請先下載範本，填寫後再上傳</p>
+              <p className="text-sm text-gray-500">
+                請先下載範本，填寫後再上傳
+              </p>
             </div>
           )}
 
           {/* Dynamic Options */}
-          
-            {mode === 'create' && (
-              <div>
-            <label className="block font-medium">投票選項:</label>
-            <Controller
-              control={control}
-              name="options"
-              rules={{ required: "請至少添加一個選項" }}
-              render={({ field }) => (
-                <DynamicOptionsInput
-                  value={field.value}
-                  onChange={field.onChange}
-                />
+
+          {mode === "create" && (
+            <div>
+              <label className="block font-medium">投票選項:</label>
+              <Controller
+                control={control}
+                name="options"
+                rules={{ required: "請至少添加一個選項" }}
+                render={({ field }) => (
+                  <DynamicOptionsInput
+                    value={field.value}
+                    onChange={field.onChange}
+                  />
+                )}
+              />
+              {errors.options && (
+                <p className="text-red">{errors.options.message?.toString()}</p>
               )}
-            />
-            {errors.options && (
-              <p className="text-red">
-                {errors.options.message?.toString()}
-              </p>
-            )}
-          </div>
-            )
-          }
-        
+            </div>
+          )}
 
           {/* Buttons */}
           <div className="flex justify-end gap-2">
-            <Button
-              type="button"
-              variant="outline"
-              onClick={onClose}
-            >
+            <Button type="button" variant="outline" onClick={onClose}>
               取消
             </Button>
-            <Button type="submit">{mode === 'edit' ? '更新活動' : '建立活動'}</Button>
+            <Button type="submit">
+              {mode === "edit" ? "更新活動" : "建立活動"}
+            </Button>
           </div>
         </form>
       </DialogContent>

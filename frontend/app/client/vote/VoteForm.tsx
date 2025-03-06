@@ -63,7 +63,10 @@ export function VoteForm({
 
   const onSubmit = async (data: VoteFormData) => {
     // Ensure exactly votesPerUser candidates are selected
-    if (data.candidates.length !== voteInfo.event.votesPerUser) {
+    if (
+      data.candidates.length !== voteInfo.event.votesPerUser ||
+      voteInfo.event.votesPerUser != data.candidates.length
+    ) {
       enqueueSnackbar(`請選擇 ${voteInfo.event.votesPerUser} 人`, {
         variant: "error",
       });
@@ -87,18 +90,20 @@ export function VoteForm({
       </p>
       <form onSubmit={handleSubmit(onSubmit)}>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
-          {voteInfo.event.options.sort((a, b) => a.number - b.number).map((option, index) => (
-            <CandidateCard
-              key={index}
-              option={option}
-              isSelected={watch("candidates").some(
-                (c) => c.number === option.number
-              )} // Compare by number
-              onToggle={toggleCandidate}
-              register={register}
-              disabled={isSuccess}
-            />
-          ))}
+          {voteInfo.event.options
+            .sort((a, b) => a.number - b.number)
+            .map((option, index) => (
+              <CandidateCard
+                key={index}
+                option={option}
+                isSelected={watch("candidates").some(
+                  (c) => c.number === option.number
+                )} // Compare by number
+                onToggle={toggleCandidate}
+                register={register}
+                disabled={isSuccess}
+              />
+            ))}
         </div>
         <CardFooter className="flex justify-center mt-4">
           <Button

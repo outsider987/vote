@@ -214,7 +214,7 @@ function LiveVoteContent() {
     datasets: [
       {
         label: "得票數",
-        data: sortedVoteCounts.map((v) => `${v.count}票`),
+        data: sortedVoteCounts.map((v) => v.count),
         backgroundColor: backgroundColors,
         borderColor: borderColors,
         borderWidth: 1,
