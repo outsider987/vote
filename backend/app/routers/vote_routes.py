@@ -10,6 +10,7 @@ import asyncio
 from app.schemas.vote import Vote, ArchivedCreate
 from app.errors.handlers import VotingError
 from app.services.auth_service import require_auth
+from app.models.models import Event
 
 router = APIRouter(prefix="/votes", tags=["votes"])
 active_websockets: List[WebSocket] = []
@@ -95,6 +96,14 @@ async def archive_vote_result(
     #         details={"remaining_tickets": [ticket.vote_code for ticket in remaining_tickets]},
     #         error_code="VOTE_NOT_ENDED",
     #     )
+    
+    event = db.query(Event).filter(Event.id == event_id).first()
+    if len(vote_result['vote_result']) != event.required_count  :
+        raise VotingError(
+            status_code=400,
+            message=f"請選擇 {event.required_count } 人",
+            error_code="INVALID_VOTE_COUNT",
+        )
 
     # Create archived record
     vote_service.create_archived_record(db, event_id, vote_result)

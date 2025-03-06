@@ -230,7 +230,7 @@ function LiveVoteContent() {
       },
       title: {
         display: true,
-        text: `${event?.title} 即時投票結果                                                           總票數 ${event?.member_count}票 應選${event?.required_count}票 備選${event?.backup_count}票`,
+        text: `${event?.title} 即時投票結果                                                           應選${event?.required_count}人 備選${event?.backup_count}人`,
         align: "end" as const,
       },
     },
