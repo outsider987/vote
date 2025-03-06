@@ -68,7 +68,7 @@ function LiveVoteContent() {
       const response = await voteApi.GET_VOTE_COUNTS(eventId);
       setVoteCounts(response.data.vote_counts);
       setEvent(response.data.event);
-      
+
       // If event is archived, fetch archived results
       if (response.data.event.is_archived) {
         const archivedResponse = await voteApi.GET_ARCHIVED_RESULT(eventId);
@@ -86,7 +86,6 @@ function LiveVoteContent() {
           //   archivedBackup[vote.candidate.number] = true;
           // }
         });
-      
 
         // Update context with archived data
         Object.keys(archivedElected).forEach((num) => {
@@ -119,7 +118,12 @@ function LiveVoteContent() {
       fetchVoteCounts();
     } catch (error) {
       console.error("Failed to archive vote result:", error);
-      alert("封存失敗");
+      alert(
+        `封存失敗: ${error.response.data.error.message} 
+        清單: ${JSON.stringify(
+          error.response.data.error.details.remaining_tickets
+        )}`
+      );
     }
   };
 
@@ -281,9 +285,7 @@ function LiveVoteContent() {
           {/* Table display */}
           <div className="bg-white p-4 rounded-lg shadow">
             <div className="flex mb-4 items-center justify-between">
-              <h3 className="text-xl font-semibold  text-black">
-                詳細票數
-              </h3>
+              <h3 className="text-xl font-semibold  text-black">詳細票數</h3>
               <span className="text-sm text-gray-500">
                 {!event?.is_archived && (
                   <Button
