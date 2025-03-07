@@ -69,6 +69,7 @@ class VoteInfo(BaseModel):
 class Vote(BaseModel):
     candidate: List[str]
     vote_code: str
+    event_id: str
 
 class ArchivedCreate(BaseModel):
     event_id: UUID

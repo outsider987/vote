@@ -73,7 +73,11 @@ export function VoteForm({
       return;
     }
 
-    const res = await POST_VOTE({ vote_code, candidate: data.candidates });
+    const res = await POST_VOTE({
+      vote_code,
+      candidate: data.candidates,
+      event_id: voteInfo.event.id,
+    });
     enqueueSnackbar(res.data.message, {
       variant: res.status === 200 ? "success" : "error",
     });

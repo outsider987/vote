@@ -69,7 +69,7 @@ export function getVoteInfo() {
         url: `/tickets/${voteCode}`,
       });
     },
-    POST_VOTE: (param: { vote_code: string; candidate: any }) => {
+    POST_VOTE: (param: { vote_code: string; candidate: any; event_id: string }) => {
       return request({
         method: "POST",
         url: "/votes",
