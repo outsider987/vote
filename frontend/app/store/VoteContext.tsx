@@ -47,17 +47,28 @@ export function VoteProvider({ children }: { children: React.ReactNode }) {
   }, [voteState]);
 
   const setElected = (eventId: string, candidateNumber: number, value: boolean) => {
-    setVoteState((prev) => ({
-      ...prev,
-      selected: {
-        ...prev.selected,
-        [eventId]: {
-          ...(prev.selected[eventId] || {}),
-          [candidateNumber]: value,
+    setVoteState((prev) => {
+      // Copy current candidates for the event (or start with an empty object)
+      const eventCandidates = { ...(prev.selected[eventId] || {}) };
+  
+      if (value === false) {
+        // Remove the candidate if value is false
+        delete eventCandidates[candidateNumber];
+      } else {
+        // Otherwise, set the candidate value
+        eventCandidates[candidateNumber] = value;
+      }
+  
+      return {
+        ...prev,
+        selected: {
+          ...prev.selected,
+          [eventId]: eventCandidates,
         },
-      },
-    }));
+      };
+    });
   };
+  
 
   const setBackup = (eventId: string, candidateNumber: number, value: boolean) => {
     setVoteState((prev) => ({
