@@ -246,7 +246,6 @@ const EventList = forwardRef<EventListRef>((props, ref) => {
 
   return (
     <div className="space-y-4">
-   
       <div className="space-y-4">
         {events.map((event) => (
           <div
@@ -306,14 +305,16 @@ const EventList = forwardRef<EventListRef>((props, ref) => {
                   編輯
                 </Button>
               )}
-              <Button
-                onClick={() =>
-                  handleToggleVoting(event.id, !event.isVotingStarted)
-                }
-                variant={event.isVotingStarted ? "destructive" : "default"}
-              >
-                {event.isVotingStarted ? "停止投票" : "開始投票"}
-              </Button>
+              {event.isArchived && (
+                <Button
+                  onClick={() =>
+                    handleToggleVoting(event.id, !event.isVotingStarted)
+                  }
+                  variant={event.isVotingStarted ? "destructive" : "default"}
+                >
+                  {event.isVotingStarted ? "停止投票" : "開始投票"}
+                </Button>
+              )}
               <Button
                 onClick={() => handleDeleteEvent(event.id)}
                 variant="destructive"
@@ -409,7 +410,7 @@ const EventList = forwardRef<EventListRef>((props, ref) => {
           setSelectedEvent(null);
         }}
         onSuccess={refetch}
-        mode={selectedEvent ? 'edit' : 'create'}
+        mode={selectedEvent ? "edit" : "create"}
       />
     </div>
   );

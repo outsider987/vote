@@ -63,11 +63,17 @@ export function VoteForm({
 
   const onSubmit = async (data: VoteFormData) => {
     // Ensure exactly votesPerUser candidates are selected
-    if (
-      data.candidates.length !== voteInfo.event.votesPerUser ||
-      voteInfo.event.votesPerUser != data.candidates.length
-    ) {
-      enqueueSnackbar(`請選擇 ${voteInfo.event.votesPerUser} 人`, {
+    // if (
+    //   data.candidates.length !== voteInfo.event.votesPerUser ||
+    //   voteInfo.event.votesPerUser != data.candidates.length
+    // ) {
+    //   enqueueSnackbar(`請選擇 ${voteInfo.event.votesPerUser} 人`, {
+    //     variant: "error",
+    //   });
+    //   return;
+    // }
+    if (data.candidates.length === 0) {
+      enqueueSnackbar("請至少選擇 1 人", {
         variant: "error",
       });
       return;
@@ -113,9 +119,7 @@ export function VoteForm({
           <Button
             type="submit"
             className="w-full py-2 text-lg"
-            disabled={
-              selectedCount !== voteInfo.event.votesPerUser || isSuccess
-            }
+            disabled={isSuccess}
           >
             送出投票
           </Button>

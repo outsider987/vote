@@ -35,12 +35,18 @@ async def get_vote_info(vote_code: str, db: Session = Depends(get_db)):
 async def submit_vote(vote: Vote = Form(...), db: Session = Depends(get_db)):
 
     event = db.query(Event).filter(Event.id == vote.event_id).first()
-    if len(vote.candidate) != event.votes_per_user:
+    if len(vote.candidate) == 0:
         raise VotingError(
             status_code=400,
-            message=f"請選擇 {event.votes_per_user} 人",
+            message="請至少選擇 1 人",
             error_code="INVALID_VOTE_COUNT",
         )
+    # if len(vote.candidate) != event.votes_per_user:
+    #     raise VotingError(
+    #         status_code=400,
+    #         message=f"請選擇 {event.votes_per_user} 人",
+    #         error_code="INVALID_VOTE_COUNT",
+    #     )
     candidate_list = [json.loads(candidate) for candidate in vote.candidate]
 
     print(candidate_list)

@@ -13,6 +13,7 @@ export interface Event {
   backupCount: number;
   showCount: number;
   votesPerUser: number;
+  isArchived: boolean;
 }
 
 export interface Ticket {
