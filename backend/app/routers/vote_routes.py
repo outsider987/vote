@@ -105,10 +105,17 @@ async def archive_vote_result(
     #     )
 
     event = db.query(Event).filter(Event.id == event_id).first()
-    if len(vote_result["vote_result"]) != event.required_count:
+    if len(vote_result["vote_result"]["selected"]) != event.required_count:
         raise VotingError(
             status_code=400,
             message=f"請選擇 {event.required_count } 人",
+            error_code="INVALID_VOTE_COUNT",
+        )
+
+    if len(vote_result["vote_result"]["backup"]) != event.backup_count:
+        raise VotingError(
+            status_code=400,
+            message=f"請選擇 {event.backup_count} 人",
             error_code="INVALID_VOTE_COUNT",
         )
 

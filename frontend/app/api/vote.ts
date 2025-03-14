@@ -127,7 +127,7 @@ export function getVoteInfo() {
           Authorization: `Bearer ${getToken()}`,
           // "Content-Type": "application/x-www-form-urlencoded",
         },
-        data: { vote_result: voteResult },
+        data: voteResult,
       });
     },
     GET_ARCHIVED_RESULT: (eventId: string) => {
