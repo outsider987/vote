@@ -10,7 +10,6 @@ import {
 } from "@/components/ui/dialog";
 import moment from "moment";
 import QRCode from "react-qr-code";
-import { Copy } from "lucide-react";
 import { useRouter } from "next/navigation";
 import type { Event } from "../data/types";
 import { useEvents } from "../data/queries/events";
@@ -28,6 +27,9 @@ const EventList = forwardRef<EventListRef>((props, ref) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isVoteModalOpen, setIsVoteModalOpen] = useState(false);
   const [selectedEvent, setSelectedEvent] = useState<Event | null>(null);
+  // New state for delete confirmation modal
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+  const [eventToDelete, setEventToDelete] = useState<Event | null>(null);
   // States for printing
   const [printEvent, setPrintEvent] = useState<Event | null>(null);
   const [isPrinting, setIsPrinting] = useState(false);
@@ -97,7 +99,6 @@ const EventList = forwardRef<EventListRef>((props, ref) => {
             display: grid;
             grid-template-columns: repeat(5, 1fr);
             gap: 0.3cm;
-           
           }
           .qr-item {
             display: flex;
@@ -323,7 +324,10 @@ const EventList = forwardRef<EventListRef>((props, ref) => {
                 </Button>
               )}
               <Button
-                onClick={() => handleDeleteEvent(event.id)}
+                onClick={() => {
+                  setEventToDelete(event);
+                  setIsDeleteModalOpen(true);
+                }}
                 variant="destructive"
               >
                 刪除
@@ -333,6 +337,7 @@ const EventList = forwardRef<EventListRef>((props, ref) => {
         ))}
       </div>
 
+      {/* Tickets Modal */}
       <Dialog open={isModalOpen} onOpenChange={setIsModalOpen}>
         <DialogContent className="max-w-2xl max-h-[80vh] overflow-y-auto">
           <DialogHeader>
@@ -364,19 +369,13 @@ const EventList = forwardRef<EventListRef>((props, ref) => {
                         className="mb-2"
                       />
                       <div className="flex items-center gap-2">
-                        <p className=" w-1/2 font-mono text-sm text-gray-900">
+                        <p className="w-1/2 font-mono text-sm text-gray-900">
                           {ticket.voteCode.length > 12
                             ? `${ticket.voteCode.substring(0, 12)}...`
                             : ticket.voteCode}
                         </p>
                         <Link
                           className="w-1/2 bg-blue text-center text-white text-xs rounded-full p-1"
-                          // onClick={() =>
-                          //   window.open(
-                          //     getVoteCodeURL(ticket.voteCode),
-                          //     "_blank"
-                          //   )
-                          // }
                           target="_blank"
                           href={getVoteCodeURL(ticket.voteCode)}
                         >
@@ -405,6 +404,39 @@ const EventList = forwardRef<EventListRef>((props, ref) => {
                 </div>
               )}
             </div>
+          </div>
+        </DialogContent>
+      </Dialog>
+
+      {/* Delete Confirmation Modal */}
+      <Dialog open={isDeleteModalOpen} onOpenChange={setIsDeleteModalOpen}>
+        <DialogContent className="max-w-md">
+          <DialogHeader>
+            <DialogTitle>確認刪除</DialogTitle>
+          </DialogHeader>
+          <div className="mt-4">
+            <p>
+              確定要刪除事件 "{eventToDelete?.title}" 嗎？此操作無法恢復。
+            </p>
+          </div>
+          <div className="flex justify-end gap-2 mt-4">
+            <Button
+              variant="secondary"
+              onClick={() => setIsDeleteModalOpen(false)}
+            >
+              取消
+            </Button>
+            <Button
+              variant="destructive"
+              onClick={async () => {
+                if (eventToDelete) {
+                  await handleDeleteEvent(eventToDelete.id);
+                  setIsDeleteModalOpen(false);
+                }
+              }}
+            >
+              確認刪除
+            </Button>
           </div>
         </DialogContent>
       </Dialog>
