@@ -304,7 +304,7 @@ const EventList = forwardRef<EventListRef>((props, ref) => {
               >
                 查看投票結果
               </Button>
-              {!event.isVotingStarted && (
+              {!event.isVotingStarted && !event.isArchived && (
                 <Button
                   variant="secondary"
                   onClick={() => handleOpenVoteModal(event)}
