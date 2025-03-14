@@ -278,6 +278,13 @@ const EventList = forwardRef<EventListRef>((props, ref) => {
                 <p>應選數: {event.requiredCount}</p>
                 <p>備選數: {event.backupCount}</p>
                 <p>事件 ID: {event.id}</p>
+                <p
+                  className={`${
+                    event.isArchived ? "text-red" : "text-green"
+                  }`}
+                >
+                  已封存: {event.isArchived ? "是" : "否"}
+                </p>
               </div>
               <Button
                 className="min-h-[80px]"
@@ -305,7 +312,7 @@ const EventList = forwardRef<EventListRef>((props, ref) => {
                   編輯
                 </Button>
               )}
-              {event.isArchived && (
+              {!event.isArchived && (
                 <Button
                   onClick={() =>
                     handleToggleVoting(event.id, !event.isVotingStarted)
