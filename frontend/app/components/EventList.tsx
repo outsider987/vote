@@ -250,7 +250,7 @@ const EventList = forwardRef<EventListRef>((props, ref) => {
         {events.map((event) => (
           <div
             key={event.id}
-            className="p-4 border border-solid rounded-lg shadow-sm hover:shadow-md transition-shadow"
+            className="flex flex-col gap-2 p-4 border border-solid rounded-lg shadow-sm hover:shadow-md transition-shadow"
           >
             <div className="flex justify-between items-start gpa-2">
               <h3 className="text-xl font-semibold mb-2">{event.title}</h3>
