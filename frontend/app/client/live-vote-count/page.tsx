@@ -78,7 +78,7 @@ function LiveVoteContent() {
         const archivedElected = {};
         const archivedBackup = {};
 
-        archivedData.vote_result.forEach((vote) => {
+        archivedData.vote_result?.selected?.forEach((vote) => {
           if (vote.candidate) {
             archivedElected[vote.candidate.number] = true;
           }
@@ -87,9 +87,9 @@ function LiveVoteContent() {
           //   archivedBackup[vote.candidate.number] = true;
           // }
         });
-        archivedData.vote_result.backup.forEach((vote) => {
+        archivedData.vote_result?.backup?.forEach((vote) => {
           if (vote.candidate) {
-            setBackup(eventId, vote.candidate.number, true);
+            archivedBackup[vote.candidate.number] = true;
           }
         });
 
