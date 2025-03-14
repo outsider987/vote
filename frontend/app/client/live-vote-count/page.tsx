@@ -87,6 +87,11 @@ function LiveVoteContent() {
           //   archivedBackup[vote.candidate.number] = true;
           // }
         });
+        archivedData.vote_result.backup.forEach((vote) => {
+          if (vote.candidate) {
+            setBackup(eventId, vote.candidate.number, true);
+          }
+        });
 
         // Update context with archived data
         Object.keys(archivedElected).forEach((num) => {
@@ -105,13 +110,13 @@ function LiveVoteContent() {
   const handleArchive = async () => {
     if (!eventId) return;
 
-    // Add confirmation dialog
     const confirmed = window.confirm(
       "確定要封存投票結果嗎？封存後將無法修改。"
     );
     if (!confirmed) return;
 
     try {
+      // Prepare elected candidate data
       const selectedData = Object.keys(selected).map((key) => ({
         candidate: {
           number: parseInt(key),
@@ -119,17 +124,33 @@ function LiveVoteContent() {
             ?.candidate.text,
         },
       }));
-      await voteApi.ARCHIVE_VOTE_RESULT(eventId, selectedData);
 
+      // Prepare backup candidate data
+      const backupData = Object.keys(backup).map((key) => ({
+        candidate: {
+          number: parseInt(key),
+          text: voteCounts.find((v) => v.candidate.number === parseInt(key))
+            ?.candidate.text,
+        },
+      }));
+
+      // Combine both elected and backup data in the payload.
+      // Adjust the structure as needed to match what your API expects.
+      const archivePayload = {
+        vote_result: {
+          elected: selectedData,
+          backup: backupData,
+        },
+      };
+
+      await voteApi.ARCHIVE_VOTE_RESULT(eventId, archivePayload);
       alert("投票結果已封存");
-      // Refresh data
+
+      // Refresh data after archiving
       fetchVoteCounts();
     } catch (error) {
       console.error("Failed to archive vote result:", error);
-      alert(
-        `封存失敗: ${error.response.data.error.message} 
-       `
-      );
+      alert(`封存失敗: ${error.response.data.error.message}`);
     }
   };
 
