@@ -138,7 +138,7 @@ function LiveVoteContent() {
       // Adjust the structure as needed to match what your API expects.
       const archivePayload = {
         vote_result: {
-          elected: selectedData,
+          selected: selectedData,
           backup: backupData,
         },
       };
