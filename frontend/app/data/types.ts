@@ -27,4 +27,26 @@ export interface Ticket {
 export interface ToggleVotingParams {
   eventId: string;
   startVoting: boolean;
+}
+
+export interface Vote {
+  vote_id: string;
+  vote_code: string;
+  candidate: {
+    text: string;
+    number: number;
+  };
+  created_at: string;
+  event: {
+    id: string;
+    title: string;
+  };
+  ticket: {
+    vote_code: string;
+    used: boolean;
+  };
+}
+
+export interface VoteListResponse {
+  votes: Vote[];
 } 

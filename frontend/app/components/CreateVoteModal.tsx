@@ -13,7 +13,7 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import { getVoteInfo } from "../api/vote";
+import { useVote } from "../api/vote";
 import { DateTimePicker } from "@/components/ui/date-time-picker";
 import { useSnackbar } from "notistack";
 import * as XLSX from "xlsx";
@@ -116,7 +116,7 @@ export default function CreateVoteModal({
     }
   }, [event, mode, reset]);
 
-  const voteApi = getVoteInfo();
+  const voteApi = useVote();
   const { enqueueSnackbar } = useSnackbar();
   const uploadInputRef = useRef<HTMLInputElement>(null);
 

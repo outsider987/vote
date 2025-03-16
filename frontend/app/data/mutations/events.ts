@@ -1,12 +1,12 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { getVoteInfo } from '@/app/api/vote';
+import { useVote } from '@/app/api/vote';
 import { eventsKeys } from '../queries/events';
 import type { ToggleVotingParams } from '../types';
 import { useSnackbar } from 'notistack';
 
 export const useDeleteEvent = () => {
   const queryClient = useQueryClient();
-  const { DELETE_EVENT } = getVoteInfo();
+  const { DELETE_EVENT } = useVote();
   const { enqueueSnackbar } = useSnackbar();
 
   return useMutation({
@@ -20,7 +20,7 @@ export const useDeleteEvent = () => {
 
 export const useToggleVoting = () => {
   const queryClient = useQueryClient();
-  const { POST_TOGGLE_EVENT_VOTING } = getVoteInfo();
+  const { POST_TOGGLE_EVENT_VOTING } = useVote();
 
   return useMutation({
     mutationFn: ({ eventId, startVoting }: ToggleVotingParams) =>

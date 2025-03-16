@@ -2,7 +2,7 @@
 import { useForm } from "react-hook-form";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardFooter } from "@/components/ui/card";
-import { getVoteInfo } from "../../api/vote";
+import { useVote } from "../../api/vote";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { useSnackbar } from "notistack";
@@ -28,7 +28,7 @@ export function VoteForm({
   voteCode: vote_code,
   onMessage,
 }: VoteFormProps) {
-  const { POST_VOTE } = getVoteInfo();
+  const { POST_VOTE } = useVote();
   const [isSuccess, setIsSuccess] = useState(false);
   const router = useRouter();
   const { register, handleSubmit, watch, setValue } = useForm<VoteFormData>({

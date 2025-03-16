@@ -3,7 +3,7 @@ import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardFooter } from "@/components/ui/card";
-import { getVoteInfo } from "../../api/vote";
+import { useVote } from "../../api/vote";
 import { useForm } from "react-hook-form";
 import { VoteForm } from "./VoteForm";
 import { Alert } from "@/components/ui/alert";
@@ -31,7 +31,7 @@ export default function VotePage() {
   const [voteCode, setVoteCode] = useState<string | null>(null);
   const [voteInfo, setVoteInfo] = useState<VoteInfo | null>(null);
   const [message, setMessage] = useState("");
-  const { GET_TICKET_VOTE_INFO } = getVoteInfo();
+  const { GET_TICKET_VOTE_INFO } = useVote();
 
   useEffect(() => {
     const searchParams = new URLSearchParams(window.location.search);

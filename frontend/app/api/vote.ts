@@ -1,7 +1,7 @@
 import { toBeFormData } from "../utils/other";
 import { getToken, request } from "../utils/request";
 
-export function getVoteInfo() {
+export function useVote() {
   return {
     CREATE_EVENT: (payload: any) => {
       return request({
@@ -147,6 +147,22 @@ export function getVoteInfo() {
           Authorization: `Bearer ${getToken()}`,
         },
         data,
+      });
+    },
+    GET_VOTE_LIST: (eventId: string) => {
+      return request({
+        method: "GET",
+        url: `/votes/candidates/${eventId}`,
+      });
+    },
+    EXPORT_VOTE_DATA: (eventId: string) => {
+      return request({
+        method: "GET",
+        url: `/votes/export/${eventId}`,
+        headers: {
+          Authorization: `Bearer ${getToken()}`,
+        },
+        responseType: "blob",
       });
     },
   };

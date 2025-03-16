@@ -18,6 +18,8 @@ import { useDeleteEvent, useToggleVoting } from "../data/mutations/events";
 import ReactDOM from "react-dom/client";
 import Link from "next/link";
 import CreateVoteModal from "./CreateVoteModal";
+import VoteListModal from "./VoteListModal";
+import { useVote } from "../api/vote";
 
 export interface EventListRef {
   fetchEvents: () => Promise<void>;
@@ -42,6 +44,9 @@ const EventList = forwardRef<EventListRef>((props, ref) => {
   );
   const deleteMutation = useDeleteEvent();
   const toggleVotingMutation = useToggleVoting();
+  const { EXPORT_VOTE_DATA } = useVote();
+
+  const [isVoteListModalOpen, setIsVoteListModalOpen] = useState(false);
 
   const getVoteCodeURL = (voteCode: string) => {
     if (typeof window !== "undefined") {
@@ -81,6 +86,29 @@ const EventList = forwardRef<EventListRef>((props, ref) => {
   const handleOpenVoteModal = (event?: Event) => {
     setSelectedEvent(event || null);
     setIsVoteModalOpen(true);
+  };
+
+  const handleOpenVoteList = (event: Event) => {
+    setSelectedEvent(event);
+    setIsVoteListModalOpen(true);
+  };
+
+  const handleExportVoteData = async (event: Event) => {
+    try {
+      const response = await EXPORT_VOTE_DATA(event.id);
+      const blob = new Blob([response.data], { type: response.headers["content-type"] });
+      const url = window.URL.createObjectURL(blob);
+      const link = document.createElement("a");
+      link.href = url;
+      link.download = `${event.title}_投票資料.xlsx`;
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      window.URL.revokeObjectURL(url);
+    } catch (error) {
+      console.error("下載失敗", error);
+      alert("下載失敗，請稍後再試");
+    }
   };
 
   // Printing logic moved into a separate function.
@@ -299,12 +327,18 @@ const EventList = forwardRef<EventListRef>((props, ref) => {
             <div className="flex justify-end gap-2 mt-2">
               <Button
                 variant="secondary"
-                onClick={() =>
-                  router.push(`/client/live-vote-count?eventId=${event.id}`)
-                }
+                onClick={() => handleOpenVoteList(event)}
               >
-                查看投票結果
+                查看投票列表
               </Button>
+              {event.isArchived && (
+                <Button
+                  variant="secondary"
+                  onClick={() => handleExportVoteData(event)}
+                >
+                  下載投票資料
+                </Button>
+              )}
               {!event.isVotingStarted && !event.isArchived && (
                 <Button
                   variant="secondary"
@@ -451,6 +485,14 @@ const EventList = forwardRef<EventListRef>((props, ref) => {
         onSuccess={refetch}
         mode={selectedEvent ? "edit" : "create"}
       />
+
+      {selectedEvent && (
+        <VoteListModal
+          isOpen={isVoteListModalOpen}
+          onOpenChange={setIsVoteListModalOpen}
+          eventId={selectedEvent.id}
+        />
+      )}
     </div>
   );
 });

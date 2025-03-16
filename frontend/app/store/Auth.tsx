@@ -2,7 +2,7 @@
 
 import { createContext, useContext, useState, useEffect } from "react";
 import { usePathname, useRouter } from "next/navigation";
-import { getVoteInfo } from "../api/vote";
+import { useVote } from "../api/vote";
 
 interface AuthContextType {
   token: string | null;
@@ -23,7 +23,7 @@ export const useAuth = () => {
 export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
   children,
 }) => {
-  const api = getVoteInfo();
+  const api = useVote();
   const [token, setToken] = useState<string | null>(null);
   const router = useRouter();
   const pathname = usePathname();

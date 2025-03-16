@@ -1,5 +1,5 @@
 import json
-from sqlalchemy.orm import Session
+from sqlalchemy.orm import Session, joinedload
 from sqlalchemy import String, cast, func
 from app.models.models import Vote, Ticket, Event, Archived
 from app.errors.handlers import VotingError, ErrorCodes
@@ -149,5 +149,44 @@ class VoteService:
         if not archived:
             return None
         return archived.vote_result
+
+    @staticmethod
+    def get_vote_candidates(db: Session, event_id: str) -> List[Dict[str, Any]]:
+        try:
+            votes = (
+                db.query(Vote)
+                .filter(Vote.event_id == event_id)
+                .options(joinedload(Vote.event))
+                .options(joinedload(Vote.ticket))
+                .order_by(Vote.created_at.desc())
+                .all()
+            )
+            
+            result = []
+            for vote in votes:
+                candidate_data = json.loads(vote.candidate) if isinstance(vote.candidate, str) else vote.candidate
+                result.append({
+                    "vote_id": vote.id,
+                    "vote_code": vote.vote_code,
+                    "candidate": candidate_data,
+                    "created_at": vote.created_at,
+                    "event": {
+                        "id": vote.event.id,
+                        "title": vote.event.title
+                    } if vote.event else None,
+                    "ticket": {
+                        "vote_code": vote.ticket.vote_code,
+                        "used": vote.ticket.used
+                    } if vote.ticket else None
+                })
+            
+            return result
+        except Exception as e:
+            raise VotingError(
+                status_code=500,
+                message="獲取投票資訊失敗",
+                error_code="GET_VOTES_FAILED",
+                details={"error": str(e)},
+            )
 
                 

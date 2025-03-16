@@ -1,5 +1,5 @@
 import { useQuery } from '@tanstack/react-query';
-import { getVoteInfo } from '@/app/api/vote';
+import { useVote } from '@/app/api/vote';
 import type { Event } from '../types';
 
 export const eventsKeys = {
@@ -9,7 +9,7 @@ export const eventsKeys = {
 };
 
 export const useEvents = () => {
-  const { GET_EVENTS } = getVoteInfo();
+  const { GET_EVENTS } = useVote();
 
   return useQuery({
     queryKey: eventsKeys.list(),
