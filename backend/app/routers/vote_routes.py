@@ -176,10 +176,14 @@ async def export_vote_data(
     # Create DataFrame for tickets and votes
     tickets_data = []
     used_votes = 0
+    map_vote_count = {}
     for ticket in tickets:
         ticket_votes = [v for v in votes if v["vote_code"] == str(ticket.vote_code)]
         candidates = [v["candidate"] for v in ticket_votes]
         used_votes += len(candidates)
+        if len(candidates) not in map_vote_count:
+            map_vote_count[len(candidates)] = 0
+        map_vote_count[len(candidates)] += 1
         tickets_data.append(
             {
                 "票券ID": ticket.vote_code,
@@ -209,6 +213,7 @@ async def export_vote_data(
     total_tickets = len(tickets)
     used_tickets = sum(1 for t in tickets if t.used)
     unused_tickets = total_tickets - used_tickets
+    total_sohuld_be_votes = total_tickets * event.required_count
 
     statistics_data = [
         {"統計項目": "總票根", "數量": total_tickets},
@@ -222,11 +227,24 @@ async def export_vote_data(
                 else "0%"
             ),
         },
-        {"統計項目": "總投票數", "數量": total_tickets * event.required_count},
-        {"統計項目": "已投票數", "數量": used_votes},
         {
-            "統計項目": "未投票數",
-            "數量": (total_tickets * event.required_count) - used_votes,
+            "統計項目": "總投票數",
+            "數量": total_sohuld_be_votes,
+        },
+        {
+            "統計項目": "未使用票數",
+            "數量": (total_sohuld_be_votes) - used_votes,
+            "百分比": f"{(100 - (used_votes/total_sohuld_be_votes*100)):.2f}%",
+        },
+        {
+            "統計項目": "已投票數",
+            "數量": used_votes,
+            "百分比": f"{(used_votes/total_sohuld_be_votes*100):.2f}%",
+        },
+        {
+            "統計項目": "廢票數",
+            "數量": total_sohuld_be_votes - used_votes,
+            "百分比": f"{(100 - (used_votes/total_sohuld_be_votes*100)):.2f}%",
         },
         {
             "統計項目": "總投票率",
@@ -257,6 +275,54 @@ async def export_vote_data(
         # Statistics sheet
         df_stats = pd.DataFrame(statistics_data)
         df_stats.to_excel(writer, sheet_name="統計資訊", index=False)
+        workbook = writer.book
+        worksheet = writer.sheets["統計資訊"]
+
+        style = workbook.add_format(
+            {
+                "bg_color": "#DA9695",
+                "bold": True,
+                "font_size": 14,
+                "border": 1,
+            }
+        )
+        worksheet.write("A13", "驗證", style)
+        worksheet.write("B13", "人", style)
+        worksheet.write("C13", "投幾票", style)
+        worksheet.write("D13", "票數", style)
+
+        data_start_row = 14
+# Write your data rows
+        for i, (key, value) in enumerate(map_vote_count.items()):
+            current_row = data_start_row + i
+            worksheet.write(f"B{current_row}", key)
+            worksheet.write(f"C{current_row}", value)
+            worksheet.write(f"D{current_row}", key * value)
+
+        # Calculate the last row with data
+        last_data_row = data_start_row + i
+
+        # The sum row will be immediately after the last data row
+        sum_row = last_data_row + 1
+
+        
+        # Write formulas for the sum of columns C and D
+        worksheet.write_formula(
+            f"B{sum_row}",
+            f"=SUM(B{data_start_row}:B{last_data_row})"
+        )
+        
+        worksheet.write_formula(
+            f"C{sum_row}",
+            f"=SUM(C{data_start_row}:C{last_data_row})"
+        )
+        worksheet.write_formula(
+            f"D{sum_row}",
+            f"=SUM(D{data_start_row}:D{last_data_row})"
+        )
+            
+        
+        
 
         # Vote counts sheet
         df_counts = pd.DataFrame(vote_counts_data)
