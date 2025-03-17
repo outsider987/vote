@@ -5,6 +5,7 @@ from app.models.models import Vote, Ticket, Event, Archived
 from app.errors.handlers import VotingError, ErrorCodes
 from typing import Any, Dict, List,Tuple
 import uuid
+from collections import defaultdict
 
 
 class VoteService:
@@ -70,45 +71,51 @@ class VoteService:
     @staticmethod
     def get_vote_counts(db: Session, event_id: str) -> Tuple[List[Dict[str, Any]], Event]:
         try:
-            # Query vote counts grouped by candidate using distinct vote_codes
-            vote_counts = (
-                db.query(cast(Vote.candidate, String), func.count(func.distinct(Vote.vote_code)).label("count"))
-                .filter(Vote.event_id == event_id)
-                .group_by(cast(Vote.candidate, String))
-                .all()
-            )
+            # 1) Query all votes for the event
+            all_votes = db.query(Vote).filter(Vote.event_id == event_id).all()
+            
+            # 2) Fetch the event itself
             event = db.query(Event).filter(Event.id == event_id).first()
+            if not event:
+                raise VotingError(
+                    status_code=404,
+                    message="找不到對應的投票事件",
+                    error_code="EVENT_NOT_FOUND"
+                )
 
-            # Build a mapping from candidate identifier (using candidate number) to vote count
-            vote_mapping = {}
-            for candidate_str, count in vote_counts:
-                try:
-                    candidate_data = json.loads(candidate_str)
-                    candidate_number = candidate_data.get("number")
-                    if candidate_number is not None:
-                        vote_mapping[candidate_number] = count
-                    else:
-                        # Fallback: use the entire candidate string if no number is provided
-                        vote_mapping[candidate_str] = count
-                except Exception:
-                    vote_mapping[candidate_str] = count
+            # 3) Build a mapping from candidate number -> aggregated vote count
+            vote_mapping = defaultdict(int)
 
-            # Ensure event.options is a list (parse it if it's stored as a JSON string)
+            for vote in all_votes:
+                # If vote.candidate is already a dict, no need to json.loads()
+                if isinstance(vote.candidate, str):
+                    candidate_data = json.loads(vote.candidate)
+                else:
+                    candidate_data = vote.candidate
+                
+                candidate_number = candidate_data.get("number")
+                if candidate_number is not None:
+                    vote_mapping[candidate_number] += 1
+
+            # 4) Parse event.options if it's stored as JSON text
             options = event.options
             if isinstance(options, str):
                 options = json.loads(options)
 
-            # Map each candidate from event.options with its vote count (default to 0 if not found)
+            # 5) Build the result list, preserving the order in event.options
             result = []
             for candidate in options:
-                candidate_number = candidate.get("number")
-                count = vote_mapping.get(candidate_number, 0)
+                number = candidate.get("number")
+                count = vote_mapping.get(number, 0)  # default to 0 if no votes
                 result.append({
                     "candidate": candidate,
                     "count": count
                 })
+                
+            total_votes = sum(vote["count"] for vote in result)
 
-            return result, event
+            return result, event, total_votes
+
         except Exception as e:
             raise VotingError(
                 status_code=500,
@@ -116,6 +123,7 @@ class VoteService:
                 error_code="VOTE_COUNT_FAILED",
                 details={"error": str(e)},
             )
+
 
     @staticmethod
     def create_archived_record(db: Session, event_id: str, vote_result: dict) -> None:
