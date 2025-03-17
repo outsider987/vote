@@ -70,9 +70,9 @@ class VoteService:
     @staticmethod
     def get_vote_counts(db: Session, event_id: str) -> Tuple[List[Dict[str, Any]], Event]:
         try:
-            # Query vote counts grouped by candidate (stored as JSON strings)
+            # Query vote counts grouped by candidate using distinct vote_codes
             vote_counts = (
-                db.query(cast(Vote.candidate, String), func.count(Vote.id).label("count"))
+                db.query(cast(Vote.candidate, String), func.count(func.distinct(Vote.vote_code)).label("count"))
                 .filter(Vote.event_id == event_id)
                 .group_by(cast(Vote.candidate, String))
                 .all()
