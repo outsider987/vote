@@ -327,6 +327,12 @@ const EventList = forwardRef<EventListRef>((props, ref) => {
             <div className="flex justify-end gap-2 mt-2">
               <Button
                 variant="secondary"
+                onClick={() => router.push(`/client/live-vote-count?eventId=${event.id}`)}
+              >
+                查看投票結果
+              </Button>
+              <Button
+                variant="secondary"
                 onClick={() => handleOpenVoteList(event)}
               >
                 查看投票列表
