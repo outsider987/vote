@@ -331,12 +331,12 @@ const EventList = forwardRef<EventListRef>((props, ref) => {
               >
                 查看投票結果
               </Button>
-              <Button
+              {/* <Button
                 variant="secondary"
                 onClick={() => handleOpenVoteList(event)}
               >
                 查看投票列表
-              </Button>
+              </Button> */}
               {event.isArchived && (
                 <Button
                   variant="secondary"
