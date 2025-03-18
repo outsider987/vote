@@ -295,8 +295,8 @@ async def export_vote_data(
 # Write your data rows
         for i, (key, value) in enumerate(map_vote_count.items()):
             current_row = data_start_row + i
-            worksheet.write(f"B{current_row}", key)
-            worksheet.write(f"C{current_row}", value)
+            worksheet.write(f"B{current_row}", value)
+            worksheet.write(f"C{current_row}", key)
             worksheet.write(f"D{current_row}", key * value)
 
         # Calculate the last row with data
@@ -307,12 +307,7 @@ async def export_vote_data(
 
         
         # Write formulas for the sum of columns C and D
-        worksheet.write_formula(
-            f"B{sum_row}",
-            f"=SUM(B{data_start_row}:B{last_data_row})",
-            style
-        )
-        
+     
         worksheet.write_formula(
             f"C{sum_row}",
             f"=SUM(C{data_start_row}:C{last_data_row})",
