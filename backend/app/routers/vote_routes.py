@@ -309,16 +309,19 @@ async def export_vote_data(
         # Write formulas for the sum of columns C and D
         worksheet.write_formula(
             f"B{sum_row}",
-            f"=SUM(B{data_start_row}:B{last_data_row})"
+            f"=SUM(B{data_start_row}:B{last_data_row})",
+            style
         )
         
         worksheet.write_formula(
             f"C{sum_row}",
-            f"=SUM(C{data_start_row}:C{last_data_row})"
+            f"=SUM(C{data_start_row}:C{last_data_row})",
+            style
         )
         worksheet.write_formula(
             f"D{sum_row}",
-            f"=SUM(D{data_start_row}:D{last_data_row})"
+            f"=SUM(D{data_start_row}:D{last_data_row})",
+            style
         )
             
         
