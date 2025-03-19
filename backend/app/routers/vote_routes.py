@@ -287,16 +287,16 @@ async def export_vote_data(
             }
         )
         worksheet.write("A13", "驗證", style)
-        worksheet.write("B13", "人", style)
-        worksheet.write("C13", "投幾票", style)
+        worksheet.write("B13", "投幾票", style)
+        worksheet.write("C13", "人", style)
         worksheet.write("D13", "票數", style)
 
         data_start_row = 14
 # Write your data rows
         for i, (key, value) in enumerate(map_vote_count.items()):
             current_row = data_start_row + i
-            worksheet.write(f"B{current_row}", value)
-            worksheet.write(f"C{current_row}", key)
+            worksheet.write(f"B{current_row}", key)
+            worksheet.write(f"C{current_row}", value)
             worksheet.write(f"D{current_row}", key * value)
 
         # Calculate the last row with data
