@@ -38,32 +38,51 @@ async def get_vote_info(vote_code: str, db: Session = Depends(get_db)):
 async def submit_vote(vote: Vote = Form(...), db: Session = Depends(get_db)):
 
     event = db.query(Event).filter(Event.id == vote.event_id).first()
+    if not event:
+        raise VotingError(
+            status_code=404,
+            message="找不到對應的投票事件",
+            error_code="EVENT_NOT_FOUND"
+        )
+        
     if len(vote.candidate) == 0:
         raise VotingError(
             status_code=400,
             message="請至少選擇 1 人",
             error_code="INVALID_VOTE_COUNT",
         )
-    # if len(vote.candidate) != event.votes_per_user:
-    #     raise VotingError(
-    #         status_code=400,
-    #         message=f"請選擇 {event.votes_per_user} 人",
-    #         error_code="INVALID_VOTE_COUNT",
-    #     )
-    candidate_list = [json.loads(candidate) for candidate in vote.candidate]
 
-    print(candidate_list)
+    try:
+        candidate_list = [json.loads(candidate) for candidate in vote.candidate]
+        
+        # Extra validation for manually input candidates
+        event_options = event.options
+        if isinstance(event_options, str):
+            event_options = json.loads(event_options)
+            
+        valid_numbers = [option.get("number") for option in event_options]
+        
+        for candidate in candidate_list:
+            candidate_number = candidate.get("number")
+            if candidate_number not in valid_numbers:
+                raise VotingError(
+                    status_code=400,
+                    message=f"無效的候選人編號: {candidate_number}",
+                    error_code="INVALID_CANDIDATE",
+                )
 
-    vote_service.submit_vote(
-        db, vote.vote_code, candidate_list
-    )  # Use existing instance
-
-    # Get updated vote counts and broadcast to websocket clients
-    # vote_counts = vote_service.get_vote_counts(db, vote.vote_code)
-    # for ws in active_websockets:
-    #     await ws.send_json(vote_counts)
-
-    return JSONResponse({"message": "投票成功"})
+        vote_service.submit_vote(
+            db, vote.vote_code, candidate_list
+        )  # Use existing instance
+        
+        return JSONResponse({"message": "投票成功"})
+        
+    except json.JSONDecodeError:
+        raise VotingError(
+            status_code=400,
+            message="無效的候選人數據格式",
+            error_code="INVALID_CANDIDATE_FORMAT",
+        )
 
 
 # @router.websocket("/ws/vote-updates")

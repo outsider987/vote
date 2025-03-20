@@ -6,6 +6,14 @@ import { useVote } from "../../api/vote";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { useSnackbar } from "notistack";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogFooter,
+} from "@/components/ui/dialog";
+import { Input } from "@/components/ui/input";
 
 interface VoteFormProps {
   voteInfo: {
@@ -30,6 +38,9 @@ export function VoteForm({
 }: VoteFormProps) {
   const { POST_VOTE } = useVote();
   const [isSuccess, setIsSuccess] = useState(false);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [manualNumber, setManualNumber] = useState("");
+  const [inputError, setInputError] = useState("");
   const router = useRouter();
   const { register, handleSubmit, watch, setValue } = useForm<VoteFormData>({
     defaultValues: {
@@ -62,16 +73,7 @@ export function VoteForm({
   };
 
   const onSubmit = async (data: VoteFormData) => {
-    // Ensure exactly votesPerUser candidates are selected
-    // if (
-    //   data.candidates.length !== voteInfo.event.votesPerUser ||
-    //   voteInfo.event.votesPerUser != data.candidates.length
-    // ) {
-    //   enqueueSnackbar(`請選擇 ${voteInfo.event.votesPerUser} 人`, {
-    //     variant: "error",
-    //   });
-    //   return;
-    // }
+    
     if (data.candidates.length === 0) {
       enqueueSnackbar("請至少選擇 1 人", {
         variant: "error",
@@ -89,7 +91,48 @@ export function VoteForm({
     });
     if (res.status === 200) {
       setIsSuccess(true); // Disable further interactions
-      // router.push(`/client/live-vote-count?eventId=${voteInfo.event.id}`);
+    
+    }
+  };
+
+  const handleManualInput = () => {
+    setInputError("");
+    const numberValue = parseInt(manualNumber);
+    
+    // Validate input is a number
+    if (isNaN(numberValue)) {
+      setInputError("請輸入有效的數字");
+      return;
+    }
+    
+    // Check if candidate exists
+    const candidate = voteInfo.event.options.find(option => option.number === numberValue);
+    if (!candidate) {
+      setInputError(`編號 ${numberValue} 不存在於候選人名單中`);
+      return;
+    }
+    
+    // Check if already selected
+    const currentCandidates = watch("candidates");
+    const isAlreadySelected = currentCandidates.some(c => c.number === numberValue);
+    
+    if (isAlreadySelected) {
+      // If already selected, remove it
+      setValue(
+        "candidates",
+        currentCandidates.filter(c => c.number !== numberValue)
+      );
+      setIsModalOpen(false);
+      setManualNumber("");
+      enqueueSnackbar(`已移除編號 ${numberValue} 的候選人`, { variant: "info" });
+    } else if (currentCandidates.length < voteInfo.event.votesPerUser) {
+      // Add if not at max selection
+      setValue("candidates", [...currentCandidates, candidate]);
+      setIsModalOpen(false);
+      setManualNumber("");
+      enqueueSnackbar(`已選擇編號 ${numberValue} 的候選人`, { variant: "success" });
+    } else {
+      setInputError(`最多只能選擇 ${voteInfo.event.votesPerUser} 人`);
     }
   };
 
@@ -115,10 +158,19 @@ export function VoteForm({
               />
             ))}
         </div>
-        <CardFooter className="flex justify-center mt-4">
+        <CardFooter className="flex justify-center gap-4 mt-4">
+          <Button
+            type="button"
+            variant="outline"
+            onClick={() => setIsModalOpen(true)}
+            className="w-1/3 py-2 text-lg"
+            disabled={isSuccess}
+          >
+            手動輸入編號
+          </Button>
           <Button
             type="submit"
-            className="w-full py-2 text-lg"
+            className="w-2/3 py-2 text-lg"
             disabled={isSuccess}
           >
             送出投票
@@ -131,6 +183,31 @@ export function VoteForm({
         </span>
         <span className="text-primary">已選擇 {selectedCount} 人</span>
       </div>
+
+      {/* Manual Input Modal */}
+      <Dialog open={isModalOpen} onOpenChange={setIsModalOpen}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>手動輸入候選人編號</DialogTitle>
+          </DialogHeader>
+          <div className="py-4">
+            <Input
+              type="number"
+              placeholder="請輸入候選人編號"
+              value={manualNumber}
+              onChange={(e) => setManualNumber(e.target.value)}
+              className="w-full"
+            />
+            {inputError && <p className="text-red-500 mt-2">{inputError}</p>}
+          </div>
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setIsModalOpen(false)}>
+              取消
+            </Button>
+            <Button onClick={handleManualInput}>確認</Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </div>
   ) : (
     <div className="shadow-lg p-4">

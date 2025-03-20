@@ -46,6 +46,26 @@ class VoteService:
                 },
             )
 
+        # Validate that all candidates exist in the event options
+        event_options = event.options
+        if isinstance(event_options, str):
+            event_options = json.loads(event_options)
+            
+        valid_numbers = [option.get("number") for option in event_options]
+        
+        for candidate in candidates:
+            candidate_number = candidate.get("number") if isinstance(candidate, dict) else None
+            if candidate_number is None or candidate_number not in valid_numbers:
+                raise VotingError(
+                    status_code=400,
+                    message=f"無效的候選人編號: {candidate_number}",
+                    error_code="INVALID_CANDIDATE",
+                    details={
+                        "invalid_candidate": candidate,
+                        "valid_numbers": valid_numbers,
+                    },
+                )
+
         try:
             ticket.used = True
 
