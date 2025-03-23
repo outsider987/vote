@@ -1,96 +1,122 @@
 "use client";
 import Link from "next/link";
-import { useEffect, useState } from "react";
-import { Button } from "@/components/ui/button"; // 根據 shadcn/ui 設定引入 Button
-import { X, Menu } from "lucide-react"; // 使用 lucide-react 做圖示，可自行替換
-import clsx from "clsx";
-import { useAuth } from "../store/Auth";
+import { useEffect, useState, Dispatch, SetStateAction } from "react";
 import { usePathname } from "next/navigation";
+import { Layout, Menu } from 'antd';
+import { 
+  MenuUnfoldOutlined, 
+  MenuFoldOutlined, 
+  HomeOutlined, 
+  LogoutOutlined 
+} from '@ant-design/icons';
+import { useAuth } from "../store/Auth";
 
-export default function Navbar({ className = "" }) {
-  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+const { Sider } = Layout;
+
+interface NavBarProps {
+  collapsed: boolean;
+  setCollapsed: Dispatch<SetStateAction<boolean>>;
+}
+
+export default function NavBar({ collapsed, setCollapsed }: NavBarProps) {
   const { token, logout } = useAuth();
   const pathname = usePathname();
-  const toggleMenu = () => {
-    setMobileMenuOpen(!mobileMenuOpen);
+
+  // Effect to handle window resize and set collapsed state for mobile screens
+  useEffect(() => {
+    const handleResize = () => {
+      if (window.innerWidth < 768) {
+        setCollapsed(true);
+      }
+    };
+
+    // Initial check
+    handleResize();
+
+    // Listen for window resize
+    window.addEventListener('resize', handleResize);
+
+    // Cleanup
+    return () => window.removeEventListener('resize', handleResize);
+  }, [setCollapsed]);
+
+  const toggleCollapsed = () => {
+    setCollapsed(!collapsed);
   };
 
-  useEffect(() => {
-    setMobileMenuOpen(false);
-  }, [pathname]);
+  if (!token) {
+    return null;
+  }
+
+  const menuItems = [
+    {
+      key: 'home',
+      icon: <HomeOutlined />,
+      label: <Link href="/">投票系統</Link>,
+    },
+    {
+      key: 'logout',
+      icon: <LogoutOutlined />,
+      label: <a onClick={logout}>登出</a>,
+    }
+  ];
 
   return (
-    <nav
-      className={clsx(
-        "bg-gray-800 bg-opacity-30 text-white fixed top-0 left-0 right-0 z-20",
-        className
-      )}
+    <Sider
+      collapsible
+      collapsed={collapsed}
+      onCollapse={setCollapsed}
+      style={{
+        overflow: 'auto',
+        height: '100vh',
+        position: 'fixed',
+        left: 0,
+        top: 0,
+        bottom: 0,
+        zIndex: 10,
+      }}
+      trigger={null}
+      width={200}
+      collapsedWidth={80}
+      breakpoint="lg"
     >
-      {token && (
-        <>
-          <div className="container mx-auto flex items-center justify-between p-4">
-            <Link className="text-xl font-bold hover:text-gray-300" href="/">
-              後臺系統
-            </Link>
-            {/* 桌機版選單 */}
-            <div className="hidden md:flex space-x-4">
-              <Link href="/">
-                <Button className="hover:bg-gray-700">建立投票事件</Button>
-              </Link>
-              {/* <Link href="/generate-tickets">
-            <Button    className="hover:bg-gray-700">
-              票券產生
-            </Button>
-          </Link> */}
-              {/* <Link href="/live-vote-count">
-                <Button className="hover:bg-gray-700">投票結果</Button>
-              </Link> */}
-
-              <Button onClick={logout} className="hover:bg-gray-700">
-                登出
-              </Button>
-            </div>
-            {/* 手機版漢堡按鈕 */}
-            <div className="md:hidden">
-              <button onClick={toggleMenu} className="focus:outline-none">
-                {mobileMenuOpen ? (
-                  <X className="w-6 h-6" />
-                ) : (
-                  <Menu className="w-6 h-6" />
-                )}
-              </button>
-            </div>
-          </div>
-          {/* 手機版選單內容 */}
-          {mobileMenuOpen && (
-            <div className="md:hidden bg-gray-800 ">
-              <div className="flex flex-col space-y-2 p-4">
-                <Link href="/" onClick={() => setMobileMenuOpen(false)}>
-                  <Button variant="ghost" className="w-full text-left">
-                    建立投票事件
-                  </Button>
-                </Link>
-                {/* <Link href="/generate-tickets" onClick={() => setMobileMenuOpen(false)}>
-              <Button variant="ghost" className="w-full text-left">
-                票券產生
-              </Button>
-            </Link> */}
-                {/* <Link
-                  href="/live-vote-count"
-                  onClick={() => setMobileMenuOpen(false)}
-                >
-                  <Button variant="ghost" className="w-full text-left">
-                    投票結果
-                  </Button>
-                </Link> */}
-                <Button onClick={logout} className="hover:bg-gray-700">
-                  登出
-                </Button>
-              </div>
-            </div>
-          )}
-        </>
-      )}
-    </nav>
+      <div className="logo" style={{ 
+        height: '64px', 
+        display: 'flex', 
+        justifyContent: 'center', 
+        alignItems: 'center', 
+        color: 'white',
+        fontWeight: 'bold',
+        fontSize: collapsed ? '14px' : '18px',
+        margin: '16px 0'
+      }}>
+        {collapsed ? '投票' : '投票系統管理'}
+      </div>
+      
+      <div style={{ 
+        padding: '0 16px', 
+        marginBottom: '16px', 
+        textAlign: 'center' 
+      }}>
+        {collapsed ? (
+          <MenuUnfoldOutlined 
+            style={{ color: 'white', fontSize: '16px', cursor: 'pointer' }} 
+            onClick={toggleCollapsed} 
+          />
+        ) : (
+          <MenuFoldOutlined 
+            style={{ color: 'white', fontSize: '16px', cursor: 'pointer' }} 
+            onClick={toggleCollapsed} 
+          />
+        )}
+      </div>
+      
+      <Menu
+        theme="dark"
+        mode="inline"
+        selectedKeys={[pathname === '/' ? 'home' : '']}
+        items={menuItems}
+      />
+    </Sider>
   );
 }

@@ -1,13 +1,20 @@
 "use client";
 
 import { useState, useEffect, forwardRef, useImperativeHandle } from "react";
-import { Button } from "@/components/ui/button";
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-} from "@/components/ui/dialog";
+import { Table, Button, Modal, Tag, Space, message, Typography, Dropdown, MenuProps } from "antd";
+import type { ColumnsType } from 'antd/es/table';
+import { 
+  EditOutlined, 
+  DeleteOutlined, 
+  PrinterOutlined, 
+  PlayCircleOutlined, 
+  StopOutlined, 
+  BarChartOutlined,
+  DownloadOutlined,
+  QrcodeOutlined,
+  MoreOutlined,
+  EllipsisOutlined
+} from "@ant-design/icons";
 import moment from "moment";
 import QRCode from "react-qr-code";
 import { useRouter } from "next/navigation";
@@ -21,24 +28,33 @@ import CreateVoteModal from "./CreateVoteModal";
 import VoteListModal from "./VoteListModal";
 import { useVote } from "../api/vote";
 
+const { Text } = Typography;
+
 export interface EventListRef {
   fetchEvents: () => Promise<void>;
+}
+
+// Define interface for ticket data
+interface Ticket {
+  id: string;
+  voteCode: string;
+  used: boolean;
+  usedAt?: string;
 }
 
 const EventList = forwardRef<EventListRef>((props, ref) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isVoteModalOpen, setIsVoteModalOpen] = useState(false);
   const [selectedEvent, setSelectedEvent] = useState<Event | null>(null);
-  // New state for delete confirmation modal
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [eventToDelete, setEventToDelete] = useState<Event | null>(null);
-  // States for printing
   const [printEvent, setPrintEvent] = useState<Event | null>(null);
   const [isPrinting, setIsPrinting] = useState(false);
+  const [screenWidth, setScreenWidth] = useState<number>(typeof window !== 'undefined' ? window.innerWidth : 1200);
+  
   const router = useRouter();
 
   const { data: events = [], error, refetch } = useEvents();
-  // Note: useTickets depends on selectedEvent?.id so it updates when selectedEvent changes.
   const { data: tickets = [], refetch: refetchTickets } = useTickets(
     selectedEvent?.id
   );
@@ -47,6 +63,16 @@ const EventList = forwardRef<EventListRef>((props, ref) => {
   const { EXPORT_VOTE_DATA } = useVote();
 
   const [isVoteListModalOpen, setIsVoteListModalOpen] = useState(false);
+
+  // Track window resize for responsive design
+  useEffect(() => {
+    const handleResize = () => {
+      setScreenWidth(window.innerWidth);
+    };
+
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
 
   const getVoteCodeURL = (voteCode: string) => {
     if (typeof window !== "undefined") {
@@ -64,16 +90,20 @@ const EventList = forwardRef<EventListRef>((props, ref) => {
   const handleDeleteEvent = async (eventId: string) => {
     try {
       await deleteMutation.mutateAsync(eventId);
+      message.success("活動已成功刪除");
     } catch (err) {
-      console.error("刪除失敗，請稍後再試", err);
+      message.error("刪除失敗，請稍後再試");
+      console.error(err);
     }
   };
 
   const handleToggleVoting = async (eventId: string, startVoting: boolean) => {
     try {
       await toggleVotingMutation.mutateAsync({ eventId, startVoting });
+      message.success(startVoting ? "投票已開始" : "投票已停止");
     } catch (err) {
-      console.error("操作失敗，請稍後再試", err);
+      message.error("操作失敗，請稍後再試");
+      console.error(err);
     }
   };
 
@@ -105,11 +135,50 @@ const EventList = forwardRef<EventListRef>((props, ref) => {
       link.click();
       document.body.removeChild(link);
       window.URL.revokeObjectURL(url);
+      message.success("投票資料已下載");
     } catch (error) {
       console.error("下載失敗", error);
-      alert("下載失敗，請稍後再試");
+      message.error("下載失敗，請稍後再試");
     }
   };
+
+  // Generate action menu items for dropdown
+  const getActionMenuItems = (record: Event): MenuProps['items'] => [
+    {
+      key: 'viewResult',
+      label: '查看結果',
+      icon: <BarChartOutlined />,
+      onClick: () => router.push(`/client/live-vote-count?eventId=${record.id}`)
+    },
+    ...(record.isArchived ? [{
+      key: 'download',
+      label: '下載資料',
+      icon: <DownloadOutlined />,
+      onClick: () => handleExportVoteData(record)
+    }] : []),
+    ...(!record.isVotingStarted && !record.isArchived ? [{
+      key: 'edit',
+      label: '編輯',
+      icon: <EditOutlined />,
+      onClick: () => handleOpenVoteModal(record)
+    }] : []),
+    ...(!record.isArchived ? [{
+      key: 'toggleVoting',
+      label: record.isVotingStarted ? '停止投票' : '開始投票',
+      icon: record.isVotingStarted ? <StopOutlined /> : <PlayCircleOutlined />,
+      onClick: () => handleToggleVoting(record.id, !record.isVotingStarted)
+    }] : []),
+    {
+      key: 'delete',
+      label: '刪除',
+      icon: <DeleteOutlined />,
+      danger: true,
+      onClick: () => {
+        setEventToDelete(record);
+        setIsDeleteModalOpen(true);
+      }
+    }
+  ];
 
   // Printing logic moved into a separate function.
   const doPrint = (event: Event, currentTickets: typeof tickets) => {
@@ -256,7 +325,7 @@ const EventList = forwardRef<EventListRef>((props, ref) => {
         // If tickets are still empty after 1 second, alert the user.
         const timeoutId = setTimeout(() => {
           if (tickets.length === 0) {
-            alert("目前沒有票券可列印");
+            message.warning("目前沒有票券可列印");
             setIsPrinting(false);
           }
         }, 1000);
@@ -273,213 +342,305 @@ const EventList = forwardRef<EventListRef>((props, ref) => {
     );
   }
 
-  return (
-    <div className="space-y-4">
-      <div className="space-y-4">
-        {events.map((event) => (
-          <div
-            key={event.id}
-            className="flex flex-col gap-2 p-4 border border-solid rounded-lg shadow-sm hover:shadow-md transition-shadow"
+  // Define columns based on screen width
+  const getColumns = (): ColumnsType<Event> => {
+    // Base columns for all screen sizes
+    const baseColumns: ColumnsType<Event> = [
+      {
+        title: '投票標題',
+        dataIndex: 'title',
+        key: 'title',
+        render: (text, record) => (
+          <Space direction="vertical" size={2}>
+            <Text strong>{text}</Text>
+            <Space>
+              <Tag color={record.isVotingStarted ? "green" : "default"}>
+                {record.isVotingStarted ? "投票中" : "未開始"}
+              </Tag>
+              <Tag color={record.isArchived ? "red" : "default"}>
+                {record.isArchived ? "已封存" : "未封存"}
+              </Tag>
+            </Space>
+          </Space>
+        ),
+      }
+    ];
+
+    // Medium screen columns
+    if (screenWidth > 768) {
+      baseColumns.push(
+        {
+          title: '投票日期',
+          dataIndex: 'eventDate',
+          key: 'eventDate',
+          render: (date) => moment(date).format("YYYY-MM-DD HH:mm:ss"),
+        },
+        {
+          title: '會員人數',
+          dataIndex: 'memberCount',
+          key: 'memberCount',
+          responsive: ['md'],
+        },
+        {
+          title: '候選數',
+          dataIndex: 'options',
+          key: 'candidateCount',
+          responsive: ['md'],
+          render: (options) => options.length,
+        }
+      );
+    }
+
+    // Ticket tools column
+    baseColumns.push({
+      title: '票卷工具',
+      key: 'ticketTools',
+      dataIndex: 'id',
+      render: (_, record) => (
+        <Space>
+          <Button 
+            type="primary"
+            icon={<PrinterOutlined />}
+            onClick={() => handlePrint(record)}
+            size={screenWidth < 768 ? 'small' : 'middle'}
           >
-            <div className="flex justify-between items-start gpa-2">
-              <h3 className="text-xl font-semibold mb-2">{event.title}</h3>
-              <Button
-                onClick={() => handleOpenTicketsModal(event)}
-                variant="secondary"
-              >
-                查看票券
-              </Button>
-            </div>
+            {screenWidth > 768 ? '列印' : ''}
+          </Button>
+          <Button 
+            icon={<QrcodeOutlined />}
+            onClick={() => handleOpenTicketsModal(record)}
+            size={screenWidth < 768 ? 'small' : 'middle'}
+          >
+            {screenWidth > 768 ? '查看票券' : ''}
+          </Button>
+        </Space>
+      ),
+    });
 
-            <div className="flex justify-between gap-2">
-              <div className="text-sm text-gray-300">
-                <p>
-                  投票日期:{" "}
-                  {moment(event.eventDate).format("YYYY-MM-DD HH:mm:ss")}
-                </p>
-                <p>
-                  建立時間:{" "}
-                  {moment(event.createdAt).format("YYYY-MM-DD HH:mm:ss")}
-                </p>
-                <p>會員人數: {event.memberCount}</p>
-                <p>每人可投票數: {event.votesPerUser}</p>
-                <p>候選人數: {event.options.length}</p>
-                <p>應選數: {event.requiredCount}</p>
-                <p>備選數: {event.backupCount}</p>
-                <p>事件 ID: {event.id}</p>
-                <p
-                  className={`${
-                    event.isArchived ? "text-red" : "text-green"
-                  }`}
-                >
-                  已封存: {event.isArchived ? "是" : "否"}
-                </p>
-              </div>
-              <Button
-                className="min-h-[80px]"
-                onClick={() => handlePrint(event)}
-                type="button"
-              >
-                列印票卷
-              </Button>
-            </div>
-
-            <div className="flex justify-end gap-2 mt-2">
-              <Button
-                variant="secondary"
-                onClick={() => router.push(`/client/live-vote-count?eventId=${event.id}`)}
-              >
-                查看投票結果
-              </Button>
-              {/* <Button
-                variant="secondary"
-                onClick={() => handleOpenVoteList(event)}
-              >
-                查看投票列表
-              </Button> */}
-              {event.isArchived && (
-                <Button
-                  variant="secondary"
-                  onClick={() => handleExportVoteData(event)}
-                >
-                  下載投票資料
-                </Button>
-              )}
-              {!event.isVotingStarted && !event.isArchived && (
-                <Button
-                  variant="secondary"
-                  onClick={() => handleOpenVoteModal(event)}
-                >
-                  編輯
-                </Button>
-              )}
-              {!event.isArchived && (
-                <Button
-                  onClick={() =>
-                    handleToggleVoting(event.id, !event.isVotingStarted)
-                  }
-                  variant={event.isVotingStarted ? "destructive" : "default"}
-                >
-                  {event.isVotingStarted ? "停止投票" : "開始投票"}
-                </Button>
-              )}
-              <Button
-                onClick={() => {
-                  setEventToDelete(event);
-                  setIsDeleteModalOpen(true);
-                }}
-                variant="destructive"
-              >
-                刪除
-              </Button>
-            </div>
-          </div>
-        ))}
-      </div>
-
-      {/* Tickets Modal */}
-      <Dialog open={isModalOpen} onOpenChange={setIsModalOpen}>
-        <DialogContent className="max-w-2xl max-h-[80vh] overflow-y-auto">
-          <DialogHeader>
-            <DialogTitle>{selectedEvent?.title} - 票券列表</DialogTitle>
-            <div className="flex gap-4 mt-2 text-sm text-gray-500">
-              <p className="text-red">
-                已使用票券: {tickets?.filter((ticket) => ticket.used).length}
-              </p>
-              <p className="text-green">
-                未使用票券: {tickets?.filter((ticket) => !ticket.used).length}
-              </p>
-              <p className="text-gray-100">總票券數: {tickets.length}</p>
-            </div>
-          </DialogHeader>
-          <div className="mt-4">
-            <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-              {tickets && tickets.length > 0 ? (
-                tickets.map((ticket) => (
-                  <div
-                    key={ticket.id}
-                    className={`p-4 border rounded ${
-                      ticket.used ? "bg-gray-100" : "bg-white"
-                    }`}
-                  >
-                    <div className="flex flex-col items-center gap-2">
-                      <QRCode
-                        value={getVoteCodeURL(ticket.voteCode)}
-                        size={128}
-                        className="mb-2"
-                      />
-                      <div className="flex items-center gap-2">
-                        <p className="w-1/2 font-mono text-sm text-gray-900">
-                          {ticket.voteCode.length > 12
-                            ? `${ticket.voteCode.substring(0, 12)}...`
-                            : ticket.voteCode}
-                        </p>
-                        <Link
-                          className="w-1/2 bg-blue text-center text-white text-xs rounded-full p-1"
-                          target="_blank"
-                          href={getVoteCodeURL(ticket.voteCode)}
-                        >
-                          連結
-                        </Link>
-                      </div>
-                      <p
-                        className={`text-sm font-bold ${
-                          ticket.used ? "text-red" : "text-green"
-                        }`}
-                      >
-                        {ticket.used ? "已使用" : "未使用"}
-                      </p>
-                      {ticket.usedAt && (
-                        <p className="text-xs text-gray-400">
-                          使用時間:{" "}
-                          {moment(ticket.usedAt).format("YYYY-MM-DD HH:mm")}
-                        </p>
-                      )}
-                    </div>
-                  </div>
-                ))
-              ) : (
-                <div className="col-span-3 text-center text-gray-500">
-                  無票券資料
-                </div>
-              )}
-            </div>
-          </div>
-        </DialogContent>
-      </Dialog>
-
-      {/* Delete Confirmation Modal */}
-      <Dialog open={isDeleteModalOpen} onOpenChange={setIsDeleteModalOpen}>
-        <DialogContent className="max-w-md">
-          <DialogHeader>
-            <DialogTitle>確認刪除</DialogTitle>
-          </DialogHeader>
-          <div className="mt-4">
-            <p>
-              確定要刪除事件 "{eventToDelete?.title}" 嗎？此操作無法恢復。
-            </p>
-          </div>
-          <div className="flex justify-end gap-2 mt-4">
+    // Actions column
+    if (screenWidth > 768) {
+      // For larger screens, show all action buttons
+      baseColumns.push({
+        title: '操作',
+        key: 'action',
+        dataIndex: 'id',
+        render: (_, record) => (
+          <Space wrap>
             <Button
-              variant="secondary"
-              onClick={() => setIsDeleteModalOpen(false)}
+              icon={<BarChartOutlined />}
+              onClick={() => router.push(`/client/live-vote-count?eventId=${record.id}`)}
             >
-              取消
+              查看結果
             </Button>
+            
+            {record.isArchived && (
+              <Button
+                icon={<DownloadOutlined />}
+                onClick={() => handleExportVoteData(record)}
+              >
+                下載資料
+              </Button>
+            )}
+            
+            {!record.isVotingStarted && !record.isArchived && (
+              <Button
+                icon={<EditOutlined />}
+                onClick={() => handleOpenVoteModal(record)}
+              >
+                編輯
+              </Button>
+            )}
+            
+            {!record.isArchived && (
+              <Button
+                type={record.isVotingStarted ? "default" : "primary"}
+                danger={record.isVotingStarted}
+                icon={record.isVotingStarted ? <StopOutlined /> : <PlayCircleOutlined />}
+                onClick={() => handleToggleVoting(record.id, !record.isVotingStarted)}
+              >
+                {record.isVotingStarted ? "停止" : "開始"}
+              </Button>
+            )}
+            
             <Button
-              variant="destructive"
-              onClick={async () => {
-                if (eventToDelete) {
-                  await handleDeleteEvent(eventToDelete.id);
-                  setIsDeleteModalOpen(false);
-                }
+              danger
+              icon={<DeleteOutlined />}
+              onClick={() => {
+                setEventToDelete(record);
+                setIsDeleteModalOpen(true);
               }}
             >
-              確認刪除
+              刪除
             </Button>
+          </Space>
+        ),
+      });
+    } else {
+      // For mobile screens, use a dropdown menu for actions
+      baseColumns.push({
+        title: '操作',
+        key: 'action',
+        dataIndex: 'id',
+        render: (_, record) => (
+          <Dropdown 
+            menu={{ items: getActionMenuItems(record) }} 
+            trigger={['click']}
+          >
+            <Button icon={<EllipsisOutlined />} />
+          </Dropdown>
+        ),
+      });
+    }
+
+    return baseColumns;
+  };
+
+  // Configure responsive layouts for Tickets table
+  const ticketColumns: ColumnsType<Ticket> = [
+    {
+      title: 'QR Code',
+      key: 'qrcode',
+      dataIndex: 'voteCode',
+      responsive: ['md'],
+      render: (_, record) => (
+        <QRCode
+          value={getVoteCodeURL(record.voteCode)}
+          size={80}
+        />
+      )
+    },
+    {
+      title: '票券代碼',
+      dataIndex: 'voteCode',
+      key: 'voteCode',
+    },
+    {
+      title: '狀態',
+      key: 'status',
+      dataIndex: 'used',
+      render: (_, record) => (
+        <Tag color={record.used ? 'red' : 'green'}>
+          {record.used ? "已使用" : "未使用"}
+        </Tag>
+      ),
+    },
+    {
+      title: '使用時間',
+      key: 'usedAt',
+      dataIndex: 'usedAt',
+      responsive: ['md'],
+      render: (_, record) => (
+        record.usedAt ? moment(record.usedAt).format("YYYY-MM-DD HH:mm") : '-'
+      ),
+    },
+    {
+      title: '操作',
+      key: 'action',
+      dataIndex: 'voteCode',
+      render: (_, record) => (
+        <Link href={getVoteCodeURL(record.voteCode)} target="_blank">
+          連結
+        </Link>
+      ),
+    },
+  ];
+
+  return (
+    <div>
+      <Table 
+        columns={getColumns()} 
+        dataSource={events}
+        rowKey="id"
+        pagination={{ pageSize: 10 }}
+        scroll={{ x: 'max-content' }}
+        expandable={{
+          expandedRowRender: (record) => (
+            <div style={{ padding: 16 }}>
+              {screenWidth <= 768 && (
+                <>
+                  <p><Text type="secondary">投票日期: </Text>{moment(record.eventDate).format("YYYY-MM-DD HH:mm:ss")}</p>
+                  <p><Text type="secondary">會員人數: </Text>{record.memberCount}</p>
+                  <p><Text type="secondary">候選人數: </Text>{record.options.length}</p>
+                </>
+              )}
+              <p><Text type="secondary">建立時間: </Text>{moment(record.createdAt).format("YYYY-MM-DD HH:mm:ss")}</p>
+              <p><Text type="secondary">每人可投票數: </Text>{record.votesPerUser}</p>
+              <p><Text type="secondary">應選數: </Text>{record.requiredCount}</p>
+              <p><Text type="secondary">備選數: </Text>{record.backupCount}</p>
+              <p><Text type="secondary">事件 ID: </Text>{record.id}</p>
+              <p><Text type="secondary">候選人: </Text>
+                {record.options.map(option => `${option.number} - ${option.text}`).join(', ')}
+              </p>
+            </div>
+          ),
+        }}
+      />
+
+      {/* Tickets Modal */}
+      <Modal
+        title={
+          <div>
+            <div>{selectedEvent?.title} - 票券列表</div>
+            <div style={{ fontSize: '14px', marginTop: '8px' }}>
+              <Space>
+                <Tag color="red">已使用票券: {tickets?.filter((ticket) => ticket.used).length}</Tag>
+                <Tag color="green">未使用票券: {tickets?.filter((ticket) => !ticket.used).length}</Tag>
+                <Tag>總票券數: {tickets.length}</Tag>
+              </Space>
+            </div>
           </div>
-        </DialogContent>
-      </Dialog>
+        }
+        open={isModalOpen}
+        onCancel={() => setIsModalOpen(false)}
+        width={screenWidth < 768 ? '95%' : 1000}
+        footer={null}
+      >
+        <div style={{ marginTop: '20px' }}>
+          {tickets && tickets.length > 0 ? (
+            <Table
+              dataSource={tickets}
+              rowKey="id"
+              pagination={{ pageSize: screenWidth < 768 ? 5 : 8 }}
+              columns={ticketColumns}
+              scroll={{ x: 'max-content' }}
+              size={screenWidth < 768 ? 'small' : 'middle'}
+            />
+          ) : (
+            <div style={{ textAlign: 'center', padding: '40px', color: '#999' }}>
+              無票券資料
+            </div>
+          )}
+        </div>
+      </Modal>
+
+      {/* Delete Confirmation Modal */}
+      <Modal
+        title="確認刪除"
+        open={isDeleteModalOpen}
+        onCancel={() => setIsDeleteModalOpen(false)}
+        footer={[
+          <Button key="cancel" onClick={() => setIsDeleteModalOpen(false)}>
+            取消
+          </Button>,
+          <Button
+            key="delete"
+            danger
+            type="primary"
+            onClick={async () => {
+              if (eventToDelete) {
+                await handleDeleteEvent(eventToDelete.id);
+                setIsDeleteModalOpen(false);
+              }
+            }}
+          >
+            確認刪除
+          </Button>,
+        ]}
+      >
+        <p>
+          確定要刪除事件 "{eventToDelete?.title}" 嗎？此操作無法恢復。
+        </p>
+      </Modal>
 
       <CreateVoteModal
         event={selectedEvent || undefined}

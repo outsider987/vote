@@ -1,49 +1,68 @@
-import type { Metadata } from "next";
+"use client";
+
 import { Inter } from "next/font/google";
 import "./globals.css";
-import RootContextProvider from "./store";
-import clsx from "clsx";
+import "antd/dist/reset.css";
+import {  Layout } from "antd";
+import { QueryClient } from "@tanstack/react-query";
 import NavBar from "./layouts/NavBar";
-import MyWagmiProvider from "./Provide/MyWagmiProvider";
-import "react-datepicker/dist/react-datepicker.css";
+import { ReactNode, useState, useEffect } from "react";
+import RootContextProvider from "./store";
+import { useAuth } from "./store/Auth";
 
-import { VoteProvider } from "./store/VoteContext";
-
+const { Content } = Layout;
 const inter = Inter({ subsets: ["latin"] });
+const queryClient = new QueryClient();
 
-export const metadata: Metadata = {
-  title: "vote",
-  description: "vote",
-  metadataBase: new URL("https://lifetime.cx"), // Replace with your actual domain
-};
+export default function RootLayout({ children }: { children: ReactNode }) {
+  // Create a state for sidebar collapse that can be shared
+  const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
 
-export default function RootLayout({
-  children,
-}: Readonly<{
-  children: React.ReactNode;
-}>) {
+  // Effect to detect screen size and set initial state
+  useEffect(() => {
+    const handleResize = () => {
+      setSidebarCollapsed(window.innerWidth < 768);
+    };
+
+    if (typeof window !== "undefined") {
+      handleResize();
+      window.addEventListener("resize", handleResize);
+      return () => window.removeEventListener("resize", handleResize);
+    }
+  }, []);
+
   return (
     <html lang="en">
-      <head>
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.4.0/p5.js"></script>
-        <script src="https://unpkg.com/p5.js-svg@1.5.1"></script>
-      </head>
-      <MyWagmiProvider>
+      <body className={inter.className}>
         <RootContextProvider>
-          <VoteProvider>
-            <body
-              suppressHydrationWarning
-              className={clsx(inter.className, "h-[100dvh]")}
-            >
-              {/* <Header className="z-20" /> */}
-              <NavBar className={"z-20"} />
-              <div className="w-full overflow-x-hidden max-w-[1920px] mx-auto min-h-[calc(100dvh)] pt-[76px]">
-                {children}
-              </div>
-            </body>
-          </VoteProvider>
+          <Layout style={{ minHeight: "100vh", background: "black" }}>
+            <NavBar collapsed={sidebarCollapsed} setCollapsed={setSidebarCollapsed} />
+            {!window.location.pathname.split("/").includes("client") ? (
+              <Layout
+                style={{
+                  marginLeft: sidebarCollapsed ? 80 : 200,
+                  transition: "margin-left 0.2s",
+                }}
+              >
+                <Content
+                  style={{
+                    margin: "24px 16px",
+                    overflow: "initial",
+                    padding: 24,
+                    minHeight: "calc(100vh - 48px)",
+                    background: "#fff",
+                    borderRadius: 4,
+                  }}
+                >
+                  {children}
+                </Content>
+              </Layout>
+            ) : (
+              children
+            )}
+          </Layout>
         </RootContextProvider>
-      </MyWagmiProvider>
+      </body>
     </html>
   );
 }

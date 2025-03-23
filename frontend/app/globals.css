@@ -316,30 +316,9 @@ html {
 
 
 /* Change background and border for active pagination item */
-.ant-pagination-item-active {
-  background-color: #1890ff !important;
-  border-color: #1890ff !important;
-}
 
-/* Change text color for active pagination link */
-.ant-pagination-item-active a {
-  color: #fff !important;
-}
 
-/* Optionally, style inactive pagination items */
-.ant-pagination-item {
-  background-color: #f0f0f0;
-}
-.ant-pagination-item-ellipsis {
-  color: #fff !important;
-}
-.ant-pagination-item-link {
-  color: #fff !important;
-}
-.ant-pagination-item:hover {
-  color: #fff !important;
-  background-color: #1890ff !important; 
-}
-.ant-pagination-item:active {
-  color: #fff !important;
-}
+/* Import Ant Design styles */
+/* @import 'antd/dist/reset.css'; */
+
+/* Your custom styles below */

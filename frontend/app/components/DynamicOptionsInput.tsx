@@ -1,7 +1,7 @@
 "use client";
-import { useState } from "react";
-import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
+import { useState, useEffect } from "react";
+import { Input, Button, List, Space, Form } from "antd";
+import { EditOutlined, DeleteOutlined, PlusOutlined } from "@ant-design/icons";
 
 interface Option {
   number: number;
@@ -9,45 +9,61 @@ interface Option {
 }
 
 interface DynamicOptionsInputProps {
-  value: Option[];
-  onChange: (options: Option[]) => void;
+  value?: Option[];
+  onChange?: (options: Option[]) => void;
 }
 
 export default function DynamicOptionsInput({
-  value,
+  value = [],
   onChange,
 }: DynamicOptionsInputProps) {
+  const [options, setOptions] = useState<Option[]>(value);
   const [optionText, setOptionText] = useState("");
   const [optionNumber, setOptionNumber] = useState("");
   const [editingIndex, setEditingIndex] = useState<number | null>(null);
   const [editText, setEditText] = useState("");
   const [editNumber, setEditNumber] = useState("");
 
+  // Sync internal state with form values when they change externally
+  useEffect(() => {
+    setOptions(value);
+  }, [value]);
+
+  const triggerChange = (newOptions: Option[]) => {
+    // Update internal state
+    setOptions(newOptions);
+    
+    // Notify Form.Item through onChange if provided
+    if (onChange) {
+      onChange(newOptions);
+    }
+  };
+
   const handleAddOption = () => {
     if (optionText.trim() === "" || optionNumber.trim() === "") return;
     const numberValue = parseInt(optionNumber, 10);
     if (isNaN(numberValue) || numberValue <= 0) return;
     // Check for duplicate number
-    if (value.some(option => option.number === numberValue)) {
+    if (options.some(option => option.number === numberValue)) {
       alert("Number is already used.");
       return;
     }
     const newOption: Option = { number: numberValue, text: optionText.trim() };
-    const newOptions = [...value, newOption].sort((a, b) => b.number - a.number);
-    onChange(newOptions);
+    const newOptions = [...options, newOption].sort((a, b) => b.number - a.number);
+    triggerChange(newOptions);
     setOptionText("");
     setOptionNumber("");
   };
 
   const handleRemoveOption = (index: number) => {
-    const newOptions = value.filter((_, i) => i !== index);
-    onChange(newOptions);
+    const newOptions = options.filter((_, i) => i !== index);
+    triggerChange(newOptions);
   };
 
   const handleEditOption = (index: number) => {
     setEditingIndex(index);
-    setEditText(value[index].text);
-    setEditNumber(value[index].number.toString());
+    setEditText(options[index].text);
+    setEditNumber(options[index].number.toString());
   };
 
   const handleSaveEdit = () => {
@@ -55,14 +71,14 @@ export default function DynamicOptionsInput({
     const newNumber = parseInt(editNumber, 10);
     if (isNaN(newNumber) || newNumber <= 0) return;
     // Check for duplicate number excluding the option currently being edited
-    if (value.some((option, idx) => idx !== editingIndex && option.number === newNumber)) {
+    if (options.some((option, idx) => idx !== editingIndex && option.number === newNumber)) {
       alert("Number is already used.");
       return;
     }
-    const newOptions = [...value];
+    const newOptions = [...options];
     newOptions[editingIndex] = { number: newNumber, text: editText.trim() };
     newOptions.sort((a, b) => b.number - a.number);
-    onChange(newOptions);
+    triggerChange(newOptions);
     setEditingIndex(null);
     setEditText("");
     setEditNumber("");
@@ -70,89 +86,86 @@ export default function DynamicOptionsInput({
 
   return (
     <div>
-      <div className="flex items-center space-x-2">
-        <div className="flex items-center space-x-2">
-          <Input
-            className="flex-[1]"
-            type="number"
-            min={1}
-            placeholder="編號"
-            value={optionNumber}
-            onChange={(e) => {
-              const val = e.target.value;
-              if (/^\d*$/.test(val)) {
-                setOptionNumber(val);
-              }
-            }}
-          />
-          <Input
-            className="flex-[4]"
-            type="text"
-            placeholder="名子"
-            value={optionText}
-            onChange={(e) => setOptionText(e.target.value)}
-          />
-        </div>
-        <Button type="button" onClick={handleAddOption}>新增</Button>
-      </div>
-      {value.length > 0 && (
-        <ul className="mt-2 space-y-2">
-          {value.sort((a, b) => b.number - a.number).map((option, index) => (
-            <li
-              key={index}
-              className="flex items-center justify-between border rounded py-2 gap-2"
-            >
-              {editingIndex === index ? (
-                <>
-                  <Input
-                    className="flex-[1]"
-                    type="number"
-                    min={1}
-                    placeholder="編號"
-                    value={editNumber}
-                    onChange={(e) => {
-                      const val = e.target.value;
-                      if (/^\d*$/.test(val)) {
-                        setEditNumber(val);
-                      }
-                    }}
-                  />
-                  <Input
-                    className="flex-[4]"
-                    type="text"
-                    placeholder="名子"
-                    value={editText}
-                    onChange={(e) => setEditText(e.target.value)}
-                  />
-                  <Button variant="secondary" type="button" size="sm" onClick={handleSaveEdit}>
-                    儲存
-                  </Button>
-                </>
-              ) : (
-                <>
-                  <span>
-                    {`${option.number} - ${option.text}`}
-                    {/* {JSON.stringify(option)} */}
-                  </span>
-                  <div className="flex space-x-2">
-                    <Button type="button" size="sm" onClick={() => handleEditOption(index)}>
-                      編輯
+      <Space.Compact style={{ width: '100%', marginBottom: 16 }}>
+        <Input
+          type="number"
+          min={1}
+          placeholder="編號"
+          value={optionNumber}
+          style={{ width: '25%' }}
+          onChange={(e) => {
+            const val = e.target.value;
+            if (/^\d*$/.test(val)) {
+              setOptionNumber(val);
+            }
+          }}
+        />
+        <Input
+          placeholder="名子"
+          value={optionText}
+          style={{ width: '60%' }}
+          onChange={(e) => setOptionText(e.target.value)}
+        />
+        <Button 
+          type="primary" 
+          icon={<PlusOutlined />} 
+          onClick={handleAddOption}
+          style={{ width: '15%' }}
+        >
+          新增
+        </Button>
+      </Space.Compact>
+
+      <List
+        dataSource={options.sort((a, b) => b.number - a.number)}
+        bordered
+        renderItem={(option, index) => (
+          <List.Item
+            actions={
+              editingIndex === index 
+                ? [
+                    <Button key="save" type="primary" onClick={handleSaveEdit}>
+                      儲存
                     </Button>
-                    <Button
-                      type="button"
-                      variant="destructive"
-                      size="sm"
-                      onClick={() => handleRemoveOption(index)}
-                    >
+                  ]
+                : [
+                    <Button key="edit" icon={<EditOutlined />} onClick={() => handleEditOption(index)}>
+                      編輯
+                    </Button>,
+                    <Button key="delete" danger icon={<DeleteOutlined />} onClick={() => handleRemoveOption(index)}>
                       刪除
                     </Button>
-                  </div>
-                </>
-              )}
-            </li>
-          ))}
-        </ul>
-      )}
+                  ]
+            }
+          >
+            {editingIndex === index ? (
+              <Space.Compact style={{ width: '100%' }}>
+                <Input
+                  type="number"
+                  min={1}
+                  placeholder="編號"
+                  value={editNumber}
+                  style={{ width: '30%' }}
+                  onChange={(e) => {
+                    const val = e.target.value;
+                    if (/^\d*$/.test(val)) {
+                      setEditNumber(val);
+                    }
+                  }}
+                />
+                <Input
+                  placeholder="名子"
+                  value={editText}
+                  style={{ width: '70%' }}
+                  onChange={(e) => setEditText(e.target.value)}
+                />
+              </Space.Compact>
+            ) : (
+              <span>{`${option.number} - ${option.text}`}</span>
+            )}
+          </List.Item>
+        )}
+      />
     </div>
   );
 }
