@@ -44,7 +44,7 @@ export default function RootLayout({ children }: { children: ReactNode }) {
               collapsed={sidebarCollapsed}
               setCollapsed={setSidebarCollapsed}
             />
-            {!pathname.split("/").includes("client") ? (
+            {!window.location.pathname.split("/").includes("client") ? (
               <Layout
                 style={{
                   marginLeft: sidebarCollapsed ? 80 : 200,
