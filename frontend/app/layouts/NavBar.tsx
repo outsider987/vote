@@ -24,6 +24,7 @@ export default function NavBar({ collapsed, setCollapsed }: NavBarProps) {
 
   // Effect to handle window resize and set collapsed state for mobile screens
   useEffect(() => {
+    if (typeof window !== "undefined") {
     const handleResize = () => {
       if (window.innerWidth < 768) {
         setCollapsed(true);
@@ -36,8 +37,9 @@ export default function NavBar({ collapsed, setCollapsed }: NavBarProps) {
     // Listen for window resize
     window.addEventListener('resize', handleResize);
 
-    // Cleanup
-    return () => window.removeEventListener('resize', handleResize);
+      // Cleanup
+      return () => window.removeEventListener("resize", handleResize);
+    }
   }, [setCollapsed]);
 
   const toggleCollapsed = () => {

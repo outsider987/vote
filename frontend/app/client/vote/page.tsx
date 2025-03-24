@@ -34,9 +34,11 @@ export default function VotePage() {
   const { GET_TICKET_VOTE_INFO } = useVote();
 
   useEffect(() => {
-    const searchParams = new URLSearchParams(window.location.search);
-    const code = searchParams.get("vote_code");
-    setVoteCode(code);
+    if (typeof window !== "undefined") {
+      const searchParams = new URLSearchParams(window.location.search);
+      const code = searchParams.get("vote_code");
+      setVoteCode(code);
+    }
   }, []);
 
   useEffect(() => {
