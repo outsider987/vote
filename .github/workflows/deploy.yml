@@ -16,6 +16,8 @@ jobs:
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v2
 
+      - name: Build Docker image(s)
+        run: docker-compose build
    
       - name: docker login
         uses: docker/login-action@v2
@@ -23,10 +25,10 @@ jobs:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
 
-      - name: Build and push Docker image
-        run: |
-          docker build -t ${{ secrets.DOCKERHUB_USERNAME }}/vote:latest .
-          docker push ${{ secrets.DOCKERHUB_USERNAME }}/vote:latest
+      # - name: Build and push Docker image
+      #   run: |
+      #     docker build -t ${{ secrets.DOCKERHUB_USERNAME }}/vote:latest .
+      #     docker push ${{ secrets.DOCKERHUB_USERNAME }}/vote:latest
         
 
       - name: Deploy to Server
