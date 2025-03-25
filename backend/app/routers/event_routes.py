@@ -22,10 +22,10 @@ async def create_event(
     data: EventCreate, 
     db: Session = Depends(get_db),
     authorization: Optional[str] = Header(None),
-    # current_user: dict = None
+    current_user: dict = None
 ):
     # Create event
-    event = event_service.create_event(db, data)
+    event = event_service.create_event(db, data, current_user)
 
     # Generate tickets in bulk
     tickets = ticket_service.generate_tickets_bulk(db, event.id, event.member_count)
@@ -58,7 +58,8 @@ async def get_events(
 ):
     if(current_user.role.name == 'admin'):
         events = db.query(Event).all()
-    events = db.query(Event).filter(Event.admin_id == current_user.id).all()
+    else:
+        events = db.query(Event).filter(Event.admin_id == current_user.id).all()
     camel_case_events = to_camel_case(events)
     return camel_case_events
 

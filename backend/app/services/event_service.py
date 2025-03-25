@@ -8,18 +8,19 @@ from datetime import datetime, timedelta
 import pandas as pd
 from io import BytesIO
 from fastapi.responses import StreamingResponse
-
+from app.models.models import Admin
 logger = logging.getLogger(__name__)
 
 class EventService:
     @staticmethod
-    def create_event(db: Session, event_data: EventCreate) -> Event:
+    def create_event(db: Session, event_data: EventCreate, current_user: Admin) -> Event:
         try:
             event_id = str(uuid.uuid4())
             db_event = Event(
                 id=event_id,
                 **event_data.model_dump(),
-                is_voting_started=False
+                is_voting_started=False,
+                admin_id=current_user.id
             )
             db.add(db_event)
             db.commit()

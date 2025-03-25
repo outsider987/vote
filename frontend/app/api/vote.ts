@@ -7,7 +7,7 @@ export function useVote() {
       return request({
         method: "POST",
         url: "/events",
-        data: payload,
+        data: {data: payload},
         headers: {
           Authorization: `Bearer ${getToken()}`,
         },
