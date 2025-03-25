@@ -31,6 +31,7 @@ export const useAuth = () => {
 // Helper function to set a cookie
 const setCookie = (name: string, value: string, days: number = 7) => {
   const expires = new Date(Date.now() + days * 864e5).toUTCString();
+  // We encode the value here to ensure special characters are safely stored
   document.cookie = `${name}=${encodeURIComponent(value)}; expires=${expires}; path=/`;
 };
 
@@ -47,9 +48,7 @@ const deleteCookie = (name: string) => {
   document.cookie = `${name}=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT`;
 };
 
-export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
-  children,
-}) => {
+export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const api = useVote();
   const [token, setToken] = useState<string | null>(null);
   const [uiPermissions, setUIPermissions] = useState<string[]>([]);
@@ -67,7 +66,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
     setRole(null);
     setUserId(null);
     setUsername(null);
-    
+
     // Clear all auth cookies
     deleteCookie("token");
     deleteCookie("ui_permissions");
@@ -75,7 +74,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
     deleteCookie("role");
     deleteCookie("user_id");
     deleteCookie("username");
-    
+
     router.push("/login");
   };
 
@@ -97,35 +96,43 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
     const storedRole = getCookie("role");
     const storedUserId = getCookie("user_id");
     const storedUsername = getCookie("username");
-    
+
     if (storedToken) {
       setToken(storedToken);
-      
-      // Try to parse stored permissions
+
       try {
         if (storedUIPermissions) {
-          setUIPermissions(JSON.parse(decodeURIComponent(storedUIPermissions)));
+          // First decode the cookie value
+          let decodedUIPermissions = decodeURIComponent(storedUIPermissions);
+          // If the result still appears encoded (starts with '%'), decode again
+          if (decodedUIPermissions.startsWith("%")) {
+            decodedUIPermissions = decodeURIComponent(decodedUIPermissions);
+          }
+          setUIPermissions(JSON.parse(decodedUIPermissions));
         }
-        
+
         if (storedAPIPermissions) {
-          setAPIPermissions(JSON.parse(decodeURIComponent(storedAPIPermissions)));
+          let decodedAPIPermissions = decodeURIComponent(storedAPIPermissions);
+          if (decodedAPIPermissions.startsWith("%")) {
+            decodedAPIPermissions = decodeURIComponent(decodedAPIPermissions);
+          }
+          setAPIPermissions(JSON.parse(decodedAPIPermissions));
         }
-        
+
         if (storedRole) {
           setRole(decodeURIComponent(storedRole));
         }
-        
+
         if (storedUserId) {
           setUserId(decodeURIComponent(storedUserId));
         }
-        
+
         if (storedUsername) {
           setUsername(decodeURIComponent(storedUsername));
         }
       } catch (error) {
         console.error("Failed to parse stored permissions:", error);
-        
-        // Fallback: Try to parse from JWT if cookie parsing fails
+        // Fallback: Try to parse from the JWT if cookie parsing fails
         try {
           const payload = JSON.parse(atob(storedToken.split('.')[1]));
           if (payload) {
@@ -153,7 +160,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
         user_id = null, 
         username: user = null 
       } = response.data;
-      
+
       // Set state
       setToken(access_token);
       setUIPermissions(ui_permissions);
@@ -161,14 +168,15 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
       setRole(role);
       setUserId(user_id);
       setUsername(user);
-      
+
       // Store in cookies
       setCookie("token", access_token);
-      setCookie("ui_permissions", encodeURIComponent(JSON.stringify(ui_permissions)));
-      setCookie("api_permissions", encodeURIComponent(JSON.stringify(api_permissions)));
-      if (role) setCookie("role", encodeURIComponent(role));
-      if (user_id) setCookie("user_id", encodeURIComponent(user_id));
-      if (user) setCookie("username", encodeURIComponent(user));
+      // Note: We're encoding the JSON string when setting the cookie
+      setCookie("ui_permissions", JSON.stringify(ui_permissions));
+      setCookie("api_permissions", JSON.stringify(api_permissions));
+      if (role) setCookie("role", role);
+      if (user_id) setCookie("user_id", user_id);
+      if (user) setCookie("username", user);
     }
   };
 

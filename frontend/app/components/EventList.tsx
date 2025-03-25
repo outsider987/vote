@@ -460,7 +460,7 @@ const EventList = forwardRef<EventListRef>((props, ref) => {
                 icon={record.isVotingStarted ? <StopOutlined /> : <PlayCircleOutlined />}
                 onClick={() => handleToggleVoting(record.id, !record.isVotingStarted)}
               >
-                {record.isVotingStarted ? "停止" : "開始"}
+                {record.isVotingStarted ? "停止投票" : "開始投票"}
               </Button>
             )}
             
