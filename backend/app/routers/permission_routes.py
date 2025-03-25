@@ -13,7 +13,8 @@ from app.schemas.vote import (
     AdminResponse,
     AdminUpdate,
     PermissionTreeCreate,
-    AdminCreate
+    AdminCreate,
+    PermissionTreeResponse
 )
 from app.services.auth_service import require_auth
 from fastapi.responses import JSONResponse
@@ -38,7 +39,7 @@ def build_permission_tree(permissions: List[Permission]) -> List[dict]:
     
     return tree
 
-@router.get("/tree")
+@router.get("/tree", )
 @require_auth()
 async def get_permission_tree(
     db: Session = Depends(get_db),

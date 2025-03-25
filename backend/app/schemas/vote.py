@@ -115,6 +115,19 @@ class PermissionResponse(PermissionBase):
     class Config:
         from_attributes = True
 
+class PermissionTreeResponse(BaseModel):
+    id: str
+    name: str
+    description: Optional[str] = None
+    type: str
+    path: str
+    parent_id: Optional[str] = None
+    order: int
+    children: Optional[List['PermissionTreeResponse']] = None
+
+    class Config:
+        from_attributes = True
+
 # Role Schemas
 class RoleBase(BaseModel):
     name: str

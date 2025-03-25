@@ -83,7 +83,7 @@ def require_auth(required_permissions: List[str] = None):
             
             # Verify the token and get the user
             current_user = get_current_user(token, db)
-            
+            kwargs['current_user'] = current_user
             # Check permissions if required
             if required_permissions:
                 token_data = get_token_data(token)

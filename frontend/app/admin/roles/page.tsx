@@ -1,33 +1,41 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { Table, Button, Modal, Form, Input, Space, message, Popconfirm, Select, Tag } from "antd";
+import { Table, Button, Modal, Form, Input, Space, message, Popconfirm, Tree, Tag } from "antd";
+import type { TreeDataNode, TreeProps } from 'antd';
 import { PlusOutlined, EditOutlined, DeleteOutlined } from "@ant-design/icons";
 import { useVote } from "../../api/vote";
 import ProtectedRoute from "../../components/ProtectedRoute";
 
-interface Permission {
+interface PermissionTree {
   id: string;
   name: string;
-  code: string;
   description: string | null;
+  type: string;
+  path: string;
+  parent_id: string | null;
+  order: number;
+  children?: PermissionTree[];
 }
 
 interface Role {
   id: string;
   name: string;
   description: string | null;
-  permissions: Permission[];
+  permissions: PermissionTree[];
   created_at: string;
 }
 
 export default function RolesPage() {
   const [roles, setRoles] = useState<Role[]>([]);
-  const [permissions, setPermissions] = useState<Permission[]>([]);
+  const [permissions, setPermissions] = useState<PermissionTree[]>([]);
   const [loading, setLoading] = useState(false);
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [form] = Form.useForm();
   const [editingId, setEditingId] = useState<string | null>(null);
+  const [checkedKeys, setCheckedKeys] = useState<React.Key[]>([]);
+  const [expandedKeys, setExpandedKeys] = useState<React.Key[]>([]);
+  const [selectedKeys, setSelectedKeys] = useState<React.Key[]>([]);
   const api = useVote();
 
   const fetchRoles = async () => {
@@ -47,7 +55,7 @@ export default function RolesPage() {
 
   const fetchPermissions = async () => {
     try {
-      const response = await api.GET_PERMISSIONS();
+      const response = await api.GET_PERMISSION_TREE();
       if (response.status === 200) {
         setPermissions(response.data);
       }
@@ -69,12 +77,12 @@ export default function RolesPage() {
   };
 
   const handleEdit = (record: Role) => {
- 
     form.setFieldsValue({
       name: record.name,
       description: record.description,
       permission_ids: record.permissions.map(p => p.id),
     });
+    setCheckedKeys(record.permissions.map(p => p.id));
     setEditingId(record.id);
     setIsModalVisible(true);
   };
@@ -129,6 +137,29 @@ export default function RolesPage() {
     }
   };
 
+  const transformToTreeData = (permissions: PermissionTree[]): TreeDataNode[] => {
+    return permissions.map(permission => ({
+      key: permission.id,
+      title: (
+        <div>
+          <div>{permission.name}</div>
+          {permission.description && (
+            <div style={{ fontSize: '12px', color: '#888' }}>
+              {permission.description}
+            </div>
+          )}
+        </div>
+      ),
+      disabled: false,
+      children: permission.children ? transformToTreeData(permission.children) : undefined
+    }));
+  };
+
+  const onCheck: TreeProps['onCheck'] = (checkedKeys, info) => {
+    setCheckedKeys(checkedKeys as React.Key[]);
+    form.setFieldValue('permission_ids', checkedKeys);
+  };
+
   const columns = [
     {
       title: '角色名稱',
@@ -145,7 +176,7 @@ export default function RolesPage() {
       title: '權限',
       dataIndex: 'permissions',
       key: 'permissions',
-      render: (permissions: Permission[]) => (
+      render: (permissions: PermissionTree[]) => (
         <div style={{ maxWidth: '400px', overflowX: 'auto' }}>
           {permissions?.length > 0 ? (
             <Space wrap>
@@ -239,27 +270,15 @@ export default function RolesPage() {
               label="權限"
               rules={[{ required: true, message: '請選擇至少一個權限' }]}
             >
-              <Select
-                mode="multiple"
-                placeholder="請選擇角色權限"
-                style={{ width: '100%' }}
-                optionFilterProp="label"
-              >
-                {permissions.map(permission => (
-                  <Select.Option 
-                    key={permission.id} 
-                    value={permission.id}
-                    label={permission.name}
-                  >
-                    <div>
-                      <div><strong>{permission.name}</strong></div>
-                      <div style={{ fontSize: '12px', color: '#888' }}>
-                        {permission.code} {permission.description ? `- ${permission.description}` : ''}
-                      </div>
-                    </div>
-                  </Select.Option>
-                ))}
-              </Select>
+              <div style={{ maxHeight: '400px', overflow: 'auto' }}>
+                <Tree
+                  checkable
+                  treeData={transformToTreeData(permissions)}
+                  checkedKeys={checkedKeys}
+                  onCheck={onCheck}
+                  defaultExpandAll
+                />
+              </div>
             </Form.Item>
           </Form>
         </Modal>

@@ -7,6 +7,7 @@ from app.services.event_service import EventService
 from app.services.ticket_service import TicketService
 from app.utils.case_utils import to_camel_case
 from app.services.auth_service import require_auth
+from app.models.models import Event
 from typing import Optional
 from io import BytesIO
 
@@ -55,7 +56,9 @@ async def get_events(
     authorization: Optional[str] = Header(None),
     current_user: dict = None
 ):
-    events = event_service.get_events(db)
+    if(current_user.role.name == 'admin'):
+        events = db.query(Event).all()
+    events = db.query(Event).filter(Event.admin_id == current_user.id).all()
     camel_case_events = to_camel_case(events)
     return camel_case_events
 
