@@ -294,6 +294,31 @@ export function useVote() {
         },
       });
     },
+    CREATE_ADMIN: (data: {
+      username: string;
+      password: string;
+      role_id?: string;
+    }) => {
+      return request({
+        method: "POST",
+        url: "/permissions/admins",
+        headers: {
+          Authorization: `Bearer ${getToken()}`,
+        },
+        data:{
+          admin: data
+        },
+      });
+    },
+    DELETE_ADMIN: (adminId: string) => {
+      return request({
+        method: "DELETE",
+        url: `/permissions/admins/${adminId}`,
+        headers: {
+          Authorization: `Bearer ${getToken()}`,
+        },
+      });
+    },
     ASSIGN_ROLE: (
       adminId: string,
       data: {

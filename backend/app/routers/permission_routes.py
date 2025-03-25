@@ -12,7 +12,8 @@ from app.schemas.vote import (
     RoleUpdate,
     AdminResponse,
     AdminUpdate,
-    PermissionTreeCreate
+    PermissionTreeCreate,
+    AdminCreate
 )
 from app.services.auth_service import require_auth
 from fastapi.responses import JSONResponse
@@ -296,3 +297,46 @@ async def get_admins(
         return admins
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
+
+@router.post("/admins")
+@require_auth()
+async def create_admin(
+    admin: AdminCreate,
+    db: Session = Depends(get_db),
+    authorization: Optional[str] = Header(None),
+    current_user: dict = None
+):
+    """Create a new admin user"""
+    # Check if username already exists
+    existing_admin = db.query(Admin).filter(Admin.username == admin.username).first()
+    if existing_admin:
+        raise HTTPException(status_code=400, detail=f"Admin with username '{admin.username}' already exists")
+    
+    # Create new admin
+    db_admin = Admin(
+        username=admin.username,
+        password=admin.password,  # Note: In production, this should be hashed
+        role_id=admin.role_id
+    )
+    
+    db.add(db_admin)
+    db.commit()
+    db.refresh(db_admin)
+    return db_admin
+
+@router.delete("/admins/{admin_id}")
+@require_auth()
+async def delete_admin(
+    admin_id: str,
+    db: Session = Depends(get_db),
+    authorization: Optional[str] = Header(None),
+    current_user: dict = None
+):
+    """Delete an admin user"""
+    admin = db.query(Admin).filter(Admin.id == admin_id).first()
+    if not admin:
+        raise HTTPException(status_code=404, detail="Admin not found")
+    
+    db.delete(admin)
+    db.commit()
+    return JSONResponse({"message": "Admin deleted successfully"})

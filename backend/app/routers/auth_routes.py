@@ -3,11 +3,11 @@ from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
 from jose import JWTError, jwt
 from datetime import datetime, timedelta
 from typing import Optional, List
-from sqlalchemy.orm import Session
+from sqlalchemy.orm import Session, joinedload
 import os
 import json
 from app.db.database import get_db
-from app.models.models import Admin
+from app.models.models import Admin, Role
 
 router = APIRouter()
 
@@ -33,7 +33,7 @@ async def login(
     form_data: OAuth2PasswordRequestForm = Depends(), 
     db: Session = Depends(get_db)
 ):
-    user = db.query(Admin).filter(Admin.username == form_data.username).first()
+    user = db.query(Admin).options(joinedload(Admin.role).joinedload(Role.permissions)).filter(Admin.username == form_data.username).first()
     if not user or form_data.password != user.password:  # Note: In production, use proper password hashing
         raise HTTPException(
             status_code=401,

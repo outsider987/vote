@@ -1,8 +1,8 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { Table, Button, Modal, Form, Input, Space, message, Select, Tag } from "antd";
-import { EditOutlined } from "@ant-design/icons";
+import { Table, Button, Modal, Form, Input, Space, message, Select, Tag, Popconfirm } from "antd";
+import { EditOutlined, DeleteOutlined, PlusOutlined } from "@ant-design/icons";
 import { useVote } from "../../api/vote";
 import ProtectedRoute from "../../components/ProtectedRoute";
 import { useAuth } from "@/app/store/Auth";
@@ -24,7 +24,9 @@ export default function UsersPage() {
   const [roles, setRoles] = useState<Role[]>([]);
   const [loading, setLoading] = useState(false);
   const [isModalVisible, setIsModalVisible] = useState(false);
+  const [isCreateModalVisible, setIsCreateModalVisible] = useState(false);
   const [form] = Form.useForm();
+  const [createForm] = Form.useForm();
   const [editingId, setEditingId] = useState<string | null>(null);
   const { userId } = useAuth();
   const api = useVote();
@@ -69,6 +71,40 @@ export default function UsersPage() {
     });
     setEditingId(record.id);
     setIsModalVisible(true);
+  };
+
+  const handleCreate = () => {
+    createForm.resetFields();
+    setIsCreateModalVisible(true);
+  };
+
+  const handleCreateSubmit = async () => {
+    try {
+      const values = await createForm.validateFields();
+      const response = await api.CREATE_ADMIN(values);
+      
+      if (response.status === 200) {
+        message.success("管理員創建成功");
+        setIsCreateModalVisible(false);
+        fetchAdmins();
+      }
+    } catch (error) {
+      console.error("Error creating admin:", error);
+      message.error("創建失敗，請檢查表單內容");
+    }
+  };
+
+  const handleDelete = async (adminId: string) => {
+    try {
+      const response = await api.DELETE_ADMIN(adminId);
+      if (response.status === 200) {
+        message.success("管理員刪除成功");
+        fetchAdmins();
+      }
+    } catch (error) {
+      console.error("Error deleting admin:", error);
+      message.error("刪除失敗");
+    }
   };
 
   const handleSubmit = async () => {
@@ -125,12 +161,27 @@ export default function UsersPage() {
       title: '操作',
       key: 'action',
       render: (_: any, record: Admin) => (
-        <Button 
-          icon={<EditOutlined />} 
-          onClick={() => handleEdit(record)}
-        >
-          編輯
-        </Button>
+        <Space>
+          <Button 
+            icon={<EditOutlined />} 
+            onClick={() => handleEdit(record)}
+          >
+            編輯
+          </Button>
+          <Popconfirm
+            title="確定要刪除此管理員嗎？"
+            onConfirm={() => handleDelete(record.id)}
+            okText="確定"
+            cancelText="取消"
+          >
+            <Button 
+              icon={<DeleteOutlined />} 
+              danger
+            >
+              刪除
+            </Button>
+          </Popconfirm>
+        </Space>
       ),
     },
   ];
@@ -140,6 +191,13 @@ export default function UsersPage() {
       <div className="p-6">
         <div className="flex justify-between items-center mb-6">
           <h1 className="text-2xl font-bold">使用者管理</h1>
+          <Button 
+            type="primary" 
+            icon={<PlusOutlined />}
+            onClick={handleCreate}
+          >
+            新增管理員
+          </Button>
         </div>
 
         <Table
@@ -149,6 +207,7 @@ export default function UsersPage() {
           loading={loading}
         />
 
+        {/* Edit Modal */}
         <Modal
           title="編輯使用者"
           open={isModalVisible}
@@ -175,6 +234,54 @@ export default function UsersPage() {
               extra="如果不需要更改密碼，請留空"
             >
               <Input.Password placeholder="請輸入新密碼" />
+            </Form.Item>
+            
+            <Form.Item
+              name="role_id"
+              label="角色"
+            >
+              <Select
+                placeholder="請選擇角色"
+                allowClear
+                style={{ width: '100%' }}
+              >
+                {roles.map(role => (
+                  <Select.Option key={role.id} value={role.id}>
+                    {role.name}
+                  </Select.Option>
+                ))}
+              </Select>
+            </Form.Item>
+          </Form>
+        </Modal>
+
+        {/* Create Modal */}
+        <Modal
+          title="新增管理員"
+          open={isCreateModalVisible}
+          onCancel={() => setIsCreateModalVisible(false)}
+          onOk={handleCreateSubmit}
+          okText="創建"
+          cancelText="取消"
+        >
+          <Form
+            form={createForm}
+            layout="vertical"
+          >
+            <Form.Item
+              name="username"
+              label="使用者名稱"
+              rules={[{ required: true, message: '請輸入使用者名稱' }]}
+            >
+              <Input placeholder="請輸入使用者名稱" />
+            </Form.Item>
+            
+            <Form.Item
+              name="password"
+              label="密碼"
+              rules={[{ required: true, message: '請輸入密碼' }]}
+            >
+              <Input.Password placeholder="請輸入密碼" />
             </Form.Item>
             
             <Form.Item

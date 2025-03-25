@@ -138,7 +138,7 @@ class Admin(Base):
     __tablename__ = "admins"
     __table_args__ = {"extend_existing": True}
 
-    id = Column(String(36), primary_key=True, default=lambda: str(uuid4()))
+    id = Column(Integer, primary_key=True, autoincrement=True)
     username = Column(String(255), nullable=False)
     password = Column(String(255), nullable=False)
     role_id = Column(String(36), ForeignKey("roles.id"), nullable=True)
