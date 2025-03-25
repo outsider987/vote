@@ -50,9 +50,9 @@ async def login(
         role_name = user.role.name
         for p in user.role.permissions:
             if p.type == "ui":
-                ui_permissions.append(p.code)
+                ui_permissions.append(p.path)
             else:  # api
-                api_permissions.append(p.code)
+                api_permissions.append(p.path)
     
     access_token_expires = timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES)
     access_token = create_access_token(
