@@ -6,6 +6,7 @@ from app.db.database import get_db
 from app.models.models import Admin
 import os
 from functools import wraps
+from typing import List, Optional
 
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="auth/login")
 
@@ -32,7 +33,30 @@ def get_current_user(token: str = Depends(oauth2_scheme), db: Session = Depends(
         raise credentials_exception
     return user
 
-def require_auth():
+def get_token_data(token: str):
+    try:
+        payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
+        return payload
+    except JWTError:
+        return None
+
+def has_permission(token: str, required_permission: str) -> bool:
+    """Check if the token has the required permission"""
+    payload = get_token_data(token)
+    if not payload:
+        return False
+    
+    api_permissions = payload.get("api_permissions", [])
+    return required_permission in api_permissions
+
+def require_auth(required_permissions: List[str] = None):
+    """
+    Decorator to require authentication and optionally specific permissions.
+    
+    Parameters:
+    - required_permissions: List of permission codes that are required to access the endpoint.
+                          If None, only authentication is required.
+    """
     def decorator(func):
         @wraps(func)
         async def wrapper(*args, **kwargs):
@@ -59,7 +83,24 @@ def require_auth():
             
             # Verify the token and get the user
             current_user = get_current_user(token, db)
-            # kwargs['current_user'] = current_user
+            
+            # Check permissions if required
+            if required_permissions:
+                token_data = get_token_data(token)
+                if not token_data:
+                    raise HTTPException(
+                        status_code=status.HTTP_401_UNAUTHORIZED,
+                        detail="Token invalid or expired",
+                    )
+                
+                api_permissions = token_data.get("api_permissions", [])
+                has_required_permissions = any(perm in api_permissions for perm in required_permissions)
+                
+                if not has_required_permissions:
+                    raise HTTPException(
+                        status_code=status.HTTP_403_FORBIDDEN,
+                        detail="Insufficient permissions",
+                    )
             
             return await func(*args, **kwargs)
         return wrapper

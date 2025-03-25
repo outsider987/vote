@@ -17,11 +17,14 @@ app.add_middleware(
     allow_origins=[
         "http://localhost:3000",
         "http://localhost:3001",
-        "https://vote.cashone.tw/",
-    ],  # In production, replace with specific origins
-    allow_credentials=True,
-    allow_methods=["*"],
-    allow_headers=["*"],
+        "https://vote.cashone.tw",
+        # Add any additional origins as needed
+    ],
+    allow_credentials=True,  # Important for cookies
+    allow_methods=["GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH"],
+    allow_headers=["Content-Type", "Authorization", "X-Requested-With", "X-CSRF-Token"],
+    expose_headers=["Content-Type", "Authorization"],
+    max_age=86400,  # Cache CORS response for 1 day
 )
 
 # Add exception handler

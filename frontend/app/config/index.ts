@@ -1,11 +1,21 @@
-import { http, createConfig } from 'wagmi'
-import { mainnet, sepolia, baseSepolia } from 'wagmi/chains'
 
-export const config = createConfig({
-  chains: [mainnet, sepolia, baseSepolia],
-  transports: {
-    [mainnet.id]: http(),
-    [sepolia.id]: http(),
-    [baseSepolia.id]: http(),
-  },
-})
+
+export const permissionsRoutes = [
+    {
+        path: "/admin/roles",
+        name: "Roles",
+        icon: "setting",
+    },
+    {
+        path: "/admin/permissions",
+        name: "Permissions",
+        icon: "setting",
+    },
+    {
+        path: "/admin/users",
+        name: "Users",
+        icon: "user",
+    },
+    
+    
+]

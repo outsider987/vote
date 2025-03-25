@@ -1,4 +1,4 @@
-from typing import List
+from typing import List, Optional
 from datetime import datetime
 from pydantic import BaseModel, Field
 from uuid import UUID
@@ -80,6 +80,78 @@ class ArchivedResponse(BaseModel):
     event_id: UUID
     vote_result: dict
     created_at: datetime
+
+    class Config:
+        from_attributes = True
+
+# Permission Schemas
+class PermissionBase(BaseModel):
+    name: str
+    description: Optional[str] = None
+    type: str = "api"  # 'ui' or 'api'
+
+class PermissionCreate(PermissionBase):
+    pass
+
+class PermissionTreeCreate(BaseModel):
+    name: str
+    description: Optional[str] = None
+    type: str
+    path: str
+    parent_id: Optional[int|str] = None
+    order: Optional[int] = 0
+
+class PermissionUpdate(BaseModel):
+    name: Optional[str] = None
+    description: Optional[str] = None
+    type: Optional[str] = None
+    path: Optional[str] = None
+    parent_id: Optional[str] = None
+    order: Optional[int] = None
+
+class PermissionResponse(PermissionBase):
+    id: UUID
+
+    class Config:
+        from_attributes = True
+
+# Role Schemas
+class RoleBase(BaseModel):
+    name: str
+    description: Optional[str] = None
+
+class RoleCreate(RoleBase):
+    permission_ids: List[int] = []
+
+class RoleUpdate(BaseModel):
+    name: Optional[str] = None
+    description: Optional[str] = None
+    permission_ids: Optional[List[int]] = None
+
+class RoleResponse(RoleBase):
+    id: int
+    permissions: List[PermissionResponse] = []
+    created_at: datetime
+
+    class Config:
+        from_attributes = True
+
+# Admin Schema Updates
+class AdminBase(BaseModel):
+    username: str
+
+class AdminCreate(AdminBase):
+    password: str
+    role_id: Optional[UUID] = None
+
+class AdminUpdate(BaseModel):
+    username: Optional[str] = None
+    password: Optional[str] = None
+    role_id: Optional[UUID] = None
+
+class AdminResponse(AdminBase):
+    id: UUID
+    role: Optional[RoleResponse] = None
 
     class Config:
         from_attributes = True

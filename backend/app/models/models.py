@@ -10,12 +10,22 @@ from sqlalchemy import (
     DateTime,
     Time,
     text,
+    Table,
 )
 from sqlalchemy.orm import relationship
 from sqlalchemy.sql import func
 from app.db.database import Base
 from uuid import uuid4
 from datetime import datetime
+
+
+# Role-Permission association table
+role_permissions = Table(
+    'role_permissions',
+    Base.metadata,
+    Column('role_id', String(36), ForeignKey('roles.id', ondelete="CASCADE")),
+    Column('permission_id', String(36), ForeignKey('permissions.id', ondelete="CASCADE")),
+)
 
 
 class Event(Base):
@@ -80,6 +90,50 @@ class Vote(Base):
     ticket = relationship("Ticket", back_populates="votes")
 
 
+class Permission(Base):
+    __tablename__ = "permissions"
+    __table_args__ = {"extend_existing": True}
+
+    id = Column(Integer, primary_key=True, autoincrement=True)
+    name = Column(String(255), nullable=False)
+    description = Column(String(255), nullable=True)
+    type = Column(String(10), nullable=False, default="api")  # 'ui' or 'api'
+    path = Column(String(255), nullable=False)  # e.g., "admin/roles"
+    parent_id = Column(String(36), ForeignKey("permissions.id"), nullable=True)
+    order = Column(Integer, default=0)  # For sorting in tree structure
+    
+    # Relationships
+    parent = relationship("Permission", remote_side=[id], backref="children")
+    roles = relationship("Role", secondary=role_permissions, back_populates="permissions")
+
+    def to_dict(self):
+        return {
+            "id": self.id,
+            "name": self.name,
+          
+            "description": self.description,
+            "type": self.type,
+            "path": self.path,
+            "parent_id": self.parent_id,
+            "order": self.order,
+            "children": [child.to_dict() for child in sorted(self.children, key=lambda x: x.order)]
+        }
+
+
+class Role(Base):
+    __tablename__ = "roles"
+    __table_args__ = {"extend_existing": True}
+
+    id = Column(String(36), primary_key=True, default=lambda: str(uuid4()))
+    name = Column(String(255), unique=True, nullable=False)
+    description = Column(String(255), nullable=True)
+    created_at = Column(TIMESTAMP, server_default=func.now())
+    
+    # Relationships
+    permissions = relationship("Permission", secondary=role_permissions, back_populates="roles")
+    admins = relationship("Admin", back_populates="role")
+
+
 class Admin(Base):
     __tablename__ = "admins"
     __table_args__ = {"extend_existing": True}
@@ -87,6 +141,10 @@ class Admin(Base):
     id = Column(String(36), primary_key=True, default=lambda: str(uuid4()))
     username = Column(String(255), nullable=False)
     password = Column(String(255), nullable=False)
+    role_id = Column(String(36), ForeignKey("roles.id"), nullable=True)
+    
+    # Relationship
+    role = relationship("Role", back_populates="admins")
 
 
 class Archived(Base):

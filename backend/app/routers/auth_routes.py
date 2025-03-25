@@ -1,10 +1,11 @@
-from fastapi import APIRouter, Depends, HTTPException
+from fastapi import APIRouter, Depends, HTTPException, Response
 from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
 from jose import JWTError, jwt
 from datetime import datetime, timedelta
-from typing import Optional
+from typing import Optional, List
 from sqlalchemy.orm import Session
 import os
+import json
 from app.db.database import get_db
 from app.models.models import Admin
 
@@ -15,9 +16,7 @@ SECRET_KEY = os.getenv("SECRET_KEY","your-secret-key")
 ALGORITHM = "HS256"
 ACCESS_TOKEN_EXPIRE_MINUTES = 60
 
-# This should be replaced with your actual user authentication logic
-
-
+# Define function to create access token
 def create_access_token(data: dict, expires_delta: Optional[timedelta] = None):
     to_encode = data.copy()
     if expires_delta:
@@ -29,7 +28,11 @@ def create_access_token(data: dict, expires_delta: Optional[timedelta] = None):
     return encoded_jwt
 
 @router.post("/login")
-async def login(form_data: OAuth2PasswordRequestForm = Depends(), db: Session = Depends(get_db)):
+async def login(
+    response: Response,
+    form_data: OAuth2PasswordRequestForm = Depends(), 
+    db: Session = Depends(get_db)
+):
     user = db.query(Admin).filter(Admin.username == form_data.username).first()
     if not user or form_data.password != user.password:  # Note: In production, use proper password hashing
         raise HTTPException(
@@ -38,8 +41,40 @@ async def login(form_data: OAuth2PasswordRequestForm = Depends(), db: Session = 
             headers={"WWW-Authenticate": "Bearer"},
         )
     
+    # Get user role and permissions
+    role_name = None
+    ui_permissions = []
+    api_permissions = []
+    
+    if user.role:
+        role_name = user.role.name
+        for p in user.role.permissions:
+            if p.type == "ui":
+                ui_permissions.append(p.code)
+            else:  # api
+                api_permissions.append(p.code)
+    
     access_token_expires = timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES)
     access_token = create_access_token(
-        data={"sub": user.username}, expires_delta=access_token_expires
+        data={
+            "sub": user.username, 
+            "role": role_name,
+            "ui_permissions": ui_permissions,
+            "api_permissions": api_permissions,
+            "user_id": str(user.id)
+        }, 
+        expires_delta=access_token_expires
     )
-    return {"access_token": access_token, "token_type": "bearer"}
+    
+    # Set content type explicitly to ensure proper parsing on frontend
+    response.headers["Content-Type"] = "application/json"
+    
+    return {
+        "access_token": access_token, 
+        "token_type": "bearer",
+        "user_id": str(user.id),
+        "username": user.username,
+        "role": role_name,
+        "ui_permissions": ui_permissions,
+        "api_permissions": api_permissions
+    }
