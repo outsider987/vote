@@ -42,7 +42,8 @@ async def toggle_voting(
     event_id: str, 
     start_voting: bool, 
     db: Session = Depends(get_db),
-    authorization: Optional[str] = Header(None)
+    authorization: Optional[str] = Header(None),
+    current_user: dict = None
 ):
     event = event_service.toggle_voting(db, event_id, start_voting)
     status = "開始" if start_voting else "停止"
@@ -69,7 +70,8 @@ async def get_events(
 async def delete_event(
     event_id: str, 
     db: Session = Depends(get_db),
-    authorization: Optional[str] = Header(None)
+    authorization: Optional[str] = Header(None),
+    current_user: dict = None
 ):
     event_service.delete_event(db, event_id)
     return JSONResponse({"message": "活動刪除成功"})
