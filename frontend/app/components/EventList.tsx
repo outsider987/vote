@@ -65,16 +65,16 @@ const EventList = forwardRef<EventListRef>((props, ref) => {
   const [isVoteListModalOpen, setIsVoteListModalOpen] = useState(false);
 
   // Track window resize for responsive design
-  useEffect(() => {
-    if (typeof window !== "undefined") {
-    const handleResize = () => {
-      setScreenWidth(window.innerWidth);
-    };
+  // useEffect(() => {
+  //   if (typeof window !== "undefined") {
+  //   const handleResize = () => {
+  //     setScreenWidth(window.innerWidth);
+  //   };
 
-      window.addEventListener("resize", handleResize);
-      return () => window.removeEventListener("resize", handleResize);
-    }
-  }, []);
+  //     window.addEventListener("resize", handleResize);
+  //     return () => window.removeEventListener("resize", handleResize);
+  //   }
+  // }, []);
 
   const getVoteCodeURL = (voteCode: string) => {
     if (typeof window !== "undefined") {

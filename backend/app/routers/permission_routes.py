@@ -213,7 +213,8 @@ async def update_role(
     role_id: UUID,
     role_update: RoleUpdate,
     db: Session = Depends(get_db),
-    authorization: Optional[str] = Header(None)
+    authorization: Optional[str] = Header(None),
+    current_user: dict = None
 ):
     role = db.query(Role).filter(Role.id == str(role_id)).first()
     if not role:

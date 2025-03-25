@@ -107,6 +107,7 @@ export default function RolesPage() {
       if (editingId) {
         // Update existing role
         const response = await api.UPDATE_ROLE(editingId, {
+          
           name: values.name,
           description: values.description,
           permission_ids: values.permission_ids,

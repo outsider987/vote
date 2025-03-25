@@ -271,7 +271,9 @@ export function useVote() {
         headers: {
           Authorization: `Bearer ${getToken()}`,
         },
-        data,
+        data:{
+          role_update: data
+        },
       });
     },
     DELETE_ROLE: (id: string) => {
