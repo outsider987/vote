@@ -10,7 +10,13 @@ export const useDeleteEvent = () => {
   const { enqueueSnackbar } = useSnackbar();
 
   return useMutation({
-    mutationFn: (eventId: string) => DELETE_EVENT(eventId),
+    mutationFn: async (eventId: string) => {
+      const response = await DELETE_EVENT(eventId);
+      if (response.status !== 200) {
+        throw new Error(response.data?.message || '操作失敗');
+      }
+      return response;
+    },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: eventsKeys.all });
       enqueueSnackbar('活動已刪除', { variant: 'success' });
