@@ -7,13 +7,14 @@ import { VoteProvider } from "./VoteContext";
 import MySnackbarProvider from "../Provide/SnackbarProvider";
 import { QueryClientProvider, QueryClient } from "@tanstack/react-query";
 import { ConfigProvider } from "antd";
+import { useState } from "react";
 type RootContextProviderProps = {
   children?: React.ReactNode;
 };
 const RootContextProvider: React.FC<RootContextProviderProps> = ({
   children,
 }) => {
-  const queryClient = new QueryClient();
+  const [queryClient] = useState(() => new QueryClient());
   return (
     <MySnackbarProvider>
       <QueryClientProvider client={queryClient}>
