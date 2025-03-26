@@ -12,7 +12,7 @@ export const useEvents = () => {
   const { GET_EVENTS } = useVote();
 
   return useQuery({
-    queryKey: eventsKeys.list(),
+    queryKey: eventsKeys.all,
     queryFn: async () => {
       const response = await GET_EVENTS();
       if (response.status !== 200) {
