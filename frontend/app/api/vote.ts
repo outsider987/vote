@@ -88,6 +88,9 @@ export function useVote() {
       return request({
         method: "POST",
         url: `/events/${eventId}/toggle-voting?start_voting=${startVoting}`,
+        headers: {
+          Authorization: `Bearer ${getToken()}`,
+        },
       });
     },
     GET_VOTE_COUNTS: (eventId: string) => {

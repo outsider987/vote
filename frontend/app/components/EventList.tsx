@@ -101,11 +101,13 @@ const EventList = forwardRef<EventListRef>((props, ref) => {
 
   const handleToggleVoting = async (eventId: string, startVoting: boolean) => {
     try {
-      await toggleVotingMutation.mutateAsync({ eventId, startVoting });
-      message.success(startVoting ? "投票已開始" : "投票已停止");
+      const result = await toggleVotingMutation.mutateAsync({ eventId, startVoting });
+      if (result.status === 200) {
+        await refetch();
+      }
     } catch (err) {
-      message.error("操作失敗，請稍後再試");
-      console.error(err);
+      console.error('Toggle voting error in handler:', err);
+      // Error message will be shown by the mutation's onError handler
     }
   };
 
