@@ -205,6 +205,8 @@ export default function UsersPage() {
           dataSource={admins}
           rowKey="id"
           loading={loading}
+          scroll={{ x: true }}
+          className="overflow-x-auto"
         />
 
         {/* Edit Modal */}
@@ -215,6 +217,7 @@ export default function UsersPage() {
           onOk={handleSubmit}
           okText="更新"
           cancelText="取消"
+          className="max-w-[95vw]"
         >
           <Form
             form={form}
@@ -263,6 +266,7 @@ export default function UsersPage() {
           onOk={handleCreateSubmit}
           okText="創建"
           cancelText="取消"
+          className="max-w-[95vw]"
         >
           <Form
             form={createForm}

@@ -204,6 +204,8 @@ export default function PermissionsPage() {
             defaultExpandAllRows: true,
             expandRowByClick: true,
           }}
+          scroll={{ x: true }}
+          className="overflow-x-auto"
         />
 
         <Modal
@@ -214,6 +216,7 @@ export default function PermissionsPage() {
           okText={editingId ? "更新" : "創建"}
           cancelText="取消"
           width={600}
+          className="max-w-[95vw]"
         >
           <Form
             form={form}

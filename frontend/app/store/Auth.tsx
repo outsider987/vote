@@ -36,7 +36,7 @@ const setCookie = (name: string, value: string, days: number = 7) => {
 };
 
 // Helper function to get a cookie
-const getCookie = (name: string): string | undefined => {
+export const getCookie = (name: string): string | undefined => {
   return document.cookie
     .split("; ")
     .find((row) => row.startsWith(`${name}=`))
@@ -75,7 +75,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     deleteCookie("user_id");
     deleteCookie("username");
 
-    router.push("/login");
+    window.location.href = "/login";
   };
 
   // Function to check if user has a specific UI permission

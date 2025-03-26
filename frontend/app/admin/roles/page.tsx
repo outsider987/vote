@@ -236,6 +236,8 @@ export default function RolesPage() {
           dataSource={roles}
           rowKey="id"
           loading={loading}
+          scroll={{ x: true }}
+          className="overflow-x-auto"
         />
 
         <Modal
@@ -246,6 +248,7 @@ export default function RolesPage() {
           okText={editingId ? "更新" : "創建"}
           cancelText="取消"
           width={600}
+          className="max-w-[95vw]"
         >
           <Form
             form={form}
@@ -271,13 +274,14 @@ export default function RolesPage() {
               label="權限"
               rules={[{ required: true, message: '請選擇至少一個權限' }]}
             >
-              <div style={{ maxHeight: '400px', overflow: 'auto' }}>
+              <div style={{ maxHeight: '400px', overflow: 'auto' }} className="mobile-tree-container">
                 <Tree
                   checkable
                   treeData={transformToTreeData(permissions)}
                   checkedKeys={checkedKeys}
                   onCheck={onCheck}
                   defaultExpandAll
+                  className="mobile-tree"
                 />
               </div>
             </Form.Item>
