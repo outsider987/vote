@@ -18,7 +18,7 @@ export const useDeleteEvent = () => {
       return response;
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: eventsKeys.all });
+      queryClient.invalidateQueries({ queryKey: eventsKeys.list() });
       enqueueSnackbar('活動已刪除', { variant: 'success' });
     },
   });
@@ -43,7 +43,7 @@ export const useToggleVoting = () => {
       }
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: eventsKeys.all });
+      queryClient.invalidateQueries({ queryKey: eventsKeys.list() });
       enqueueSnackbar('投票狀態已更新', { variant: 'success' });
     },
     onError: (error: any) => {

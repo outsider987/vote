@@ -1,19 +1,29 @@
 "use client";
 
 import { useState, useEffect, forwardRef, useImperativeHandle } from "react";
-import { Table, Button, Modal, Tag, Space, message, Typography, Dropdown, MenuProps } from "antd";
-import type { ColumnsType } from 'antd/es/table';
-import { 
-  EditOutlined, 
-  DeleteOutlined, 
-  PrinterOutlined, 
-  PlayCircleOutlined, 
-  StopOutlined, 
+import {
+  Table,
+  Button,
+  Modal,
+  Tag,
+  Space,
+  message,
+  Typography,
+  Dropdown,
+  MenuProps,
+} from "antd";
+import type { ColumnsType } from "antd/es/table";
+import {
+  EditOutlined,
+  DeleteOutlined,
+  PrinterOutlined,
+  PlayCircleOutlined,
+  StopOutlined,
   BarChartOutlined,
   DownloadOutlined,
   QrcodeOutlined,
   MoreOutlined,
-  EllipsisOutlined
+  EllipsisOutlined,
 } from "@ant-design/icons";
 import moment from "moment";
 import QRCode from "react-qr-code";
@@ -50,8 +60,10 @@ const EventList = forwardRef<EventListRef>((props, ref) => {
   const [eventToDelete, setEventToDelete] = useState<Event | null>(null);
   const [printEvent, setPrintEvent] = useState<Event | null>(null);
   const [isPrinting, setIsPrinting] = useState(false);
-  const [screenWidth, setScreenWidth] = useState<number>(typeof window !== 'undefined' ? window.innerWidth : 1200);
-  
+  const [screenWidth, setScreenWidth] = useState<number>(
+    typeof window !== "undefined" ? window.innerWidth : 1200
+  );
+
   const router = useRouter();
 
   const { data: events = [], error, refetch } = useEvents();
@@ -101,12 +113,10 @@ const EventList = forwardRef<EventListRef>((props, ref) => {
 
   const handleToggleVoting = async (eventId: string, startVoting: boolean) => {
     try {
-      const result = await toggleVotingMutation.mutateAsync({ eventId, startVoting });
-      if (result.status === 200) {
-        await refetch();
-      }
+      await toggleVotingMutation.mutateAsync({ eventId, startVoting });
+      message.success(startVoting ? "投票已開始" : "投票已停止");
     } catch (err) {
-      console.error('Toggle voting error in handler:', err);
+      console.error("Toggle voting error in handler:", err);
       // Error message will be shown by the mutation's onError handler
     }
   };
@@ -130,7 +140,9 @@ const EventList = forwardRef<EventListRef>((props, ref) => {
   const handleExportVoteData = async (event: Event) => {
     try {
       const response = await EXPORT_VOTE_DATA(event.id);
-      const blob = new Blob([response.data], { type: response.headers["content-type"] });
+      const blob = new Blob([response.data], {
+        type: response.headers["content-type"],
+      });
       const url = window.URL.createObjectURL(blob);
       const link = document.createElement("a");
       link.href = url;
@@ -147,41 +159,59 @@ const EventList = forwardRef<EventListRef>((props, ref) => {
   };
 
   // Generate action menu items for dropdown
-  const getActionMenuItems = (record: Event): MenuProps['items'] => [
+  const getActionMenuItems = (record: Event): MenuProps["items"] => [
     {
-      key: 'viewResult',
-      label: '查看結果',
+      key: "viewResult",
+      label: "查看結果",
       icon: <BarChartOutlined />,
-      onClick: () => router.push(`/client/live-vote-count?eventId=${record.id}`)
+      onClick: () =>
+        router.push(`/client/live-vote-count?eventId=${record.id}`),
     },
-    ...(record.isArchived ? [{
-      key: 'download',
-      label: '下載資料',
-      icon: <DownloadOutlined />,
-      onClick: () => handleExportVoteData(record)
-    }] : []),
-    ...(!record.isVotingStarted && !record.isArchived ? [{
-      key: 'edit',
-      label: '編輯',
-      icon: <EditOutlined />,
-      onClick: () => handleOpenVoteModal(record)
-    }] : []),
-    ...(!record.isArchived ? [{
-      key: 'toggleVoting',
-      label: record.isVotingStarted ? '停止投票' : '開始投票',
-      icon: record.isVotingStarted ? <StopOutlined /> : <PlayCircleOutlined />,
-      onClick: () => handleToggleVoting(record.id, !record.isVotingStarted)
-    }] : []),
+    ...(record.isArchived
+      ? [
+          {
+            key: "download",
+            label: "下載資料",
+            icon: <DownloadOutlined />,
+            onClick: () => handleExportVoteData(record),
+          },
+        ]
+      : []),
+    ...(!record.isVotingStarted && !record.isArchived
+      ? [
+          {
+            key: "edit",
+            label: "編輯",
+            icon: <EditOutlined />,
+            onClick: () => handleOpenVoteModal(record),
+          },
+        ]
+      : []),
+    ...(!record.isArchived
+      ? [
+          {
+            key: "toggleVoting",
+            label: record.isVotingStarted ? "停止投票" : "開始投票",
+            icon: record.isVotingStarted ? (
+              <StopOutlined />
+            ) : (
+              <PlayCircleOutlined />
+            ),
+            onClick: () =>
+              handleToggleVoting(record.id, !record.isVotingStarted),
+          },
+        ]
+      : []),
     {
-      key: 'delete',
-      label: '刪除',
+      key: "delete",
+      label: "刪除",
       icon: <DeleteOutlined />,
       danger: true,
       onClick: () => {
         setEventToDelete(record);
         setIsDeleteModalOpen(true);
-      }
-    }
+      },
+    },
   ];
 
   // Printing logic moved into a separate function.
@@ -351,9 +381,9 @@ const EventList = forwardRef<EventListRef>((props, ref) => {
     // Base columns for all screen sizes
     const baseColumns: ColumnsType<Event> = [
       {
-        title: '投票標題',
-        dataIndex: 'title',
-        key: 'title',
+        title: "投票標題",
+        dataIndex: "title",
+        key: "title",
         render: (text, record) => (
           <Space direction="vertical" size={2}>
             <Text strong>{text}</Text>
@@ -367,29 +397,29 @@ const EventList = forwardRef<EventListRef>((props, ref) => {
             </Space>
           </Space>
         ),
-      }
+      },
     ];
 
     // Medium screen columns
     if (screenWidth > 768) {
       baseColumns.push(
         {
-          title: '投票日期',
-          dataIndex: 'eventDate',
-          key: 'eventDate',
+          title: "投票日期",
+          dataIndex: "eventDate",
+          key: "eventDate",
           render: (date) => moment(date).format("YYYY-MM-DD HH:mm:ss"),
         },
         {
-          title: '會員人數',
-          dataIndex: 'memberCount',
-          key: 'memberCount',
-          responsive: ['md'],
+          title: "會員人數",
+          dataIndex: "memberCount",
+          key: "memberCount",
+          responsive: ["md"],
         },
         {
-          title: '候選數',
-          dataIndex: 'options',
-          key: 'candidateCount',
-          responsive: ['md'],
+          title: "候選數",
+          dataIndex: "options",
+          key: "candidateCount",
+          responsive: ["md"],
           render: (options) => options.length,
         }
       );
@@ -397,25 +427,25 @@ const EventList = forwardRef<EventListRef>((props, ref) => {
 
     // Ticket tools column
     baseColumns.push({
-      title: '票卷工具',
-      key: 'ticketTools',
-      dataIndex: 'id',
+      title: "票卷工具",
+      key: "ticketTools",
+      dataIndex: "id",
       render: (_, record) => (
         <Space>
-          <Button 
+          <Button
             type="primary"
             icon={<PrinterOutlined />}
             onClick={() => handlePrint(record)}
-            size={screenWidth < 768 ? 'small' : 'middle'}
+            size={screenWidth < 768 ? "small" : "middle"}
           >
-            {screenWidth > 768 ? '列印' : ''}
+            {screenWidth > 768 ? "列印" : ""}
           </Button>
-          <Button 
+          <Button
             icon={<QrcodeOutlined />}
             onClick={() => handleOpenTicketsModal(record)}
-            size={screenWidth < 768 ? 'small' : 'middle'}
+            size={screenWidth < 768 ? "small" : "middle"}
           >
-            {screenWidth > 768 ? '查看票券' : ''}
+            {screenWidth > 768 ? "查看票券" : ""}
           </Button>
         </Space>
       ),
@@ -425,18 +455,20 @@ const EventList = forwardRef<EventListRef>((props, ref) => {
     if (screenWidth > 768) {
       // For larger screens, show all action buttons
       baseColumns.push({
-        title: '操作',
-        key: 'action',
-        dataIndex: 'id',
+        title: "操作",
+        key: "action",
+        dataIndex: "id",
         render: (_, record) => (
           <Space wrap>
             <Button
               icon={<BarChartOutlined />}
-              onClick={() => router.push(`/client/live-vote-count?eventId=${record.id}`)}
+              onClick={() =>
+                router.push(`/client/live-vote-count?eventId=${record.id}`)
+              }
             >
               查看結果
             </Button>
-            
+
             {record.isArchived && (
               <Button
                 icon={<DownloadOutlined />}
@@ -445,7 +477,7 @@ const EventList = forwardRef<EventListRef>((props, ref) => {
                 下載資料
               </Button>
             )}
-            
+
             {!record.isVotingStarted && !record.isArchived && (
               <Button
                 icon={<EditOutlined />}
@@ -454,18 +486,26 @@ const EventList = forwardRef<EventListRef>((props, ref) => {
                 編輯
               </Button>
             )}
-            
+
             {!record.isArchived && (
               <Button
                 type={record.isVotingStarted ? "default" : "primary"}
                 danger={record.isVotingStarted}
-                icon={record.isVotingStarted ? <StopOutlined /> : <PlayCircleOutlined />}
-                onClick={() => handleToggleVoting(record.id, !record.isVotingStarted)}
+                icon={
+                  record.isVotingStarted ? (
+                    <StopOutlined />
+                  ) : (
+                    <PlayCircleOutlined />
+                  )
+                }
+                onClick={() =>
+                  handleToggleVoting(record.id, !record.isVotingStarted)
+                }
               >
                 {record.isVotingStarted ? "停止投票" : "開始投票"}
               </Button>
             )}
-            
+
             <Button
               danger
               icon={<DeleteOutlined />}
@@ -482,13 +522,13 @@ const EventList = forwardRef<EventListRef>((props, ref) => {
     } else {
       // For mobile screens, use a dropdown menu for actions
       baseColumns.push({
-        title: '操作',
-        key: 'action',
-        dataIndex: 'id',
+        title: "操作",
+        key: "action",
+        dataIndex: "id",
         render: (_, record) => (
-          <Dropdown 
-            menu={{ items: getActionMenuItems(record) }} 
-            trigger={['click']}
+          <Dropdown
+            menu={{ items: getActionMenuItems(record) }}
+            trigger={["click"]}
           >
             <Button icon={<EllipsisOutlined />} />
           </Dropdown>
@@ -502,45 +542,41 @@ const EventList = forwardRef<EventListRef>((props, ref) => {
   // Configure responsive layouts for Tickets table
   const ticketColumns: ColumnsType<Ticket> = [
     {
-      title: 'QR Code',
-      key: 'qrcode',
-      dataIndex: 'voteCode',
-      responsive: ['md'],
+      title: "QR Code",
+      key: "qrcode",
+      dataIndex: "voteCode",
+      responsive: ["md"],
       render: (_, record) => (
-        <QRCode
-          value={getVoteCodeURL(record.voteCode)}
-          size={80}
-        />
-      )
+        <QRCode value={getVoteCodeURL(record.voteCode)} size={80} />
+      ),
     },
     {
-      title: '票券代碼',
-      dataIndex: 'voteCode',
-      key: 'voteCode',
+      title: "票券代碼",
+      dataIndex: "voteCode",
+      key: "voteCode",
     },
     {
-      title: '狀態',
-      key: 'status',
-      dataIndex: 'used',
+      title: "狀態",
+      key: "status",
+      dataIndex: "used",
       render: (_, record) => (
-        <Tag color={record.used ? 'red' : 'green'}>
+        <Tag color={record.used ? "red" : "green"}>
           {record.used ? "已使用" : "未使用"}
         </Tag>
       ),
     },
     {
-      title: '使用時間',
-      key: 'usedAt',
-      dataIndex: 'usedAt',
-      responsive: ['md'],
-      render: (_, record) => (
-        record.usedAt ? moment(record.usedAt).format("YYYY-MM-DD HH:mm") : '-'
-      ),
+      title: "使用時間",
+      key: "usedAt",
+      dataIndex: "usedAt",
+      responsive: ["md"],
+      render: (_, record) =>
+        record.usedAt ? moment(record.usedAt).format("YYYY-MM-DD HH:mm") : "-",
     },
     {
-      title: '操作',
-      key: 'action',
-      dataIndex: 'voteCode',
+      title: "操作",
+      key: "action",
+      dataIndex: "voteCode",
       render: (_, record) => (
         <Link href={getVoteCodeURL(record.voteCode)} target="_blank">
           連結
@@ -551,29 +587,56 @@ const EventList = forwardRef<EventListRef>((props, ref) => {
 
   return (
     <div>
-      <Table 
-        columns={getColumns()} 
+      <Table
+        columns={getColumns()}
         dataSource={events}
         rowKey="id"
         pagination={{ pageSize: 10 }}
-        scroll={{ x: 'max-content' }}
+        scroll={{ x: "max-content" }}
         expandable={{
           expandedRowRender: (record) => (
             <div style={{ padding: 16 }}>
               {screenWidth <= 768 && (
                 <>
-                  <p><Text type="secondary">投票日期: </Text>{moment(record.eventDate).format("YYYY-MM-DD HH:mm:ss")}</p>
-                  <p><Text type="secondary">會員人數: </Text>{record.memberCount}</p>
-                  <p><Text type="secondary">候選人數: </Text>{record.options.length}</p>
+                  <p>
+                    <Text type="secondary">投票日期: </Text>
+                    {moment(record.eventDate).format("YYYY-MM-DD HH:mm:ss")}
+                  </p>
+                  <p>
+                    <Text type="secondary">會員人數: </Text>
+                    {record.memberCount}
+                  </p>
+                  <p>
+                    <Text type="secondary">候選人數: </Text>
+                    {record.options.length}
+                  </p>
                 </>
               )}
-              <p><Text type="secondary">建立時間: </Text>{moment(record.createdAt).format("YYYY-MM-DD HH:mm:ss")}</p>
-              <p><Text type="secondary">每人可投票數: </Text>{record.votesPerUser}</p>
-              <p><Text type="secondary">應選數: </Text>{record.requiredCount}</p>
-              <p><Text type="secondary">備選數: </Text>{record.backupCount}</p>
-              <p><Text type="secondary">事件 ID: </Text>{record.id}</p>
-              <p><Text type="secondary">候選人: </Text>
-                {record.options.map(option => `${option.number} - ${option.text}`).join(', ')}
+              <p>
+                <Text type="secondary">建立時間: </Text>
+                {moment(record.createdAt).format("YYYY-MM-DD HH:mm:ss")}
+              </p>
+              <p>
+                <Text type="secondary">每人可投票數: </Text>
+                {record.votesPerUser}
+              </p>
+              <p>
+                <Text type="secondary">應選數: </Text>
+                {record.requiredCount}
+              </p>
+              <p>
+                <Text type="secondary">備選數: </Text>
+                {record.backupCount}
+              </p>
+              <p>
+                <Text type="secondary">事件 ID: </Text>
+                {record.id}
+              </p>
+              <p>
+                <Text type="secondary">候選人: </Text>
+                {record.options
+                  .map((option) => `${option.number} - ${option.text}`)
+                  .join(", ")}
               </p>
             </div>
           ),
@@ -585,10 +648,14 @@ const EventList = forwardRef<EventListRef>((props, ref) => {
         title={
           <div>
             <div>{selectedEvent?.title} - 票券列表</div>
-            <div style={{ fontSize: '14px', marginTop: '8px' }}>
+            <div style={{ fontSize: "14px", marginTop: "8px" }}>
               <Space>
-                <Tag color="red">已使用票券: {tickets?.filter((ticket) => ticket.used).length}</Tag>
-                <Tag color="green">未使用票券: {tickets?.filter((ticket) => !ticket.used).length}</Tag>
+                <Tag color="red">
+                  已使用票券: {tickets?.filter((ticket) => ticket.used).length}
+                </Tag>
+                <Tag color="green">
+                  未使用票券: {tickets?.filter((ticket) => !ticket.used).length}
+                </Tag>
                 <Tag>總票券數: {tickets.length}</Tag>
               </Space>
             </div>
@@ -596,21 +663,23 @@ const EventList = forwardRef<EventListRef>((props, ref) => {
         }
         open={isModalOpen}
         onCancel={() => setIsModalOpen(false)}
-        width={screenWidth < 768 ? '95%' : 1000}
+        width={screenWidth < 768 ? "95%" : 1000}
         footer={null}
       >
-        <div style={{ marginTop: '20px' }}>
+        <div style={{ marginTop: "20px" }}>
           {tickets && tickets.length > 0 ? (
             <Table
               dataSource={tickets}
               rowKey="id"
               pagination={{ pageSize: screenWidth < 768 ? 5 : 8 }}
               columns={ticketColumns}
-              scroll={{ x: 'max-content' }}
-              size={screenWidth < 768 ? 'small' : 'middle'}
+              scroll={{ x: "max-content" }}
+              size={screenWidth < 768 ? "small" : "middle"}
             />
           ) : (
-            <div style={{ textAlign: 'center', padding: '40px', color: '#999' }}>
+            <div
+              style={{ textAlign: "center", padding: "40px", color: "#999" }}
+            >
               無票券資料
             </div>
           )}
@@ -641,9 +710,7 @@ const EventList = forwardRef<EventListRef>((props, ref) => {
           </Button>,
         ]}
       >
-        <p>
-          確定要刪除事件 "{eventToDelete?.title}" 嗎？此操作無法恢復。
-        </p>
+        <p>確定要刪除事件 "{eventToDelete?.title}" 嗎？此操作無法恢復。</p>
       </Modal>
 
       <CreateVoteModal
