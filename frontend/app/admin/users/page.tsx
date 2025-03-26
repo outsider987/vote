@@ -3,8 +3,8 @@
 import { useState, useEffect } from "react";
 import { Table, Button, Modal, Form, Input, Space, message, Select, Tag, Popconfirm } from "antd";
 import { EditOutlined, DeleteOutlined, PlusOutlined } from "@ant-design/icons";
-import { useVote } from "../../api/vote";
-import ProtectedRoute from "../../components/ProtectedRoute";
+import { usePermissions } from "../../../api/permissions";
+import ProtectedRoute from "../../../components/ProtectedRoute";
 import { useAuth } from "@/app/store/Auth";
 
 interface Role {
@@ -29,7 +29,7 @@ export default function UsersPage() {
   const [createForm] = Form.useForm();
   const [editingId, setEditingId] = useState<string | null>(null);
   const { userId } = useAuth();
-  const api = useVote();
+  const api = usePermissions();
 
   const fetchAdmins = async () => {
     setLoading(true);

@@ -3,9 +3,9 @@
 import { useRef, useState, useEffect } from "react";
 import { Form, Input, Button, Modal, DatePicker, InputNumber, Upload, message } from "antd";
 import { UploadOutlined, DownloadOutlined } from "@ant-design/icons";
-import DynamicOptionsInput from "@/app/components/DynamicOptionsInput";
+import DynamicOptionsInput from "@/components/DynamicOptionsInput";
 import moment from "moment";
-import { useVote } from "../api/vote";
+import { useEventsAPI } from "../api/events";
 import * as XLSX from "xlsx";
 import type { Event } from "../data/types";
 
@@ -41,7 +41,7 @@ export default function CreateVoteModal({
   mode,
 }: CreateVoteModalProps) {
   const [form] = Form.useForm();
-  const voteApi = useVote();
+  const voteApi = useEventsAPI();
   const uploadInputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {

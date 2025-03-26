@@ -3,8 +3,8 @@
 import { useState, useEffect } from "react";
 import { Table, Button, Modal, Form, Input, Space, message, Popconfirm, Select, Tag } from "antd";
 import { PlusOutlined, EditOutlined, DeleteOutlined } from "@ant-design/icons";
-import { useVote } from "../../api/vote";
-import ProtectedRoute from "../../components/ProtectedRoute";
+import { usePermissions } from "../../../api/permissions";
+import ProtectedRoute from "../../../components/ProtectedRoute";
 
 interface Permission {
   id: string;
@@ -24,7 +24,7 @@ export default function PermissionsPage() {
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [form] = Form.useForm();
   const [editingId, setEditingId] = useState<string | null>(null);
-  const api = useVote();
+  const api = usePermissions();
 
   const fetchPermissions = async () => {
     setLoading(true);

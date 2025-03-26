@@ -2,7 +2,7 @@
 
 import { createContext, useContext, useState, useEffect } from "react";
 import { usePathname, useRouter } from "next/navigation";
-import { useVote } from "../api/vote";
+import { useAuthAPI } from "../../api/auth";
 
 interface AuthContextType {
   token: string | null;
@@ -49,7 +49,7 @@ const deleteCookie = (name: string) => {
 };
 
 export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const api = useVote();
+  const api = useAuthAPI();
   const [token, setToken] = useState<string | null>(null);
   const [uiPermissions, setUIPermissions] = useState<string[]>([]);
   const [apiPermissions, setAPIPermissions] = useState<string[]>([]);

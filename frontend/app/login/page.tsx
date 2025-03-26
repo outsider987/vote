@@ -2,7 +2,6 @@
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { useVote } from '../api/vote';
 import { useAuth } from '../store/Auth';
 
 export default function Login() {

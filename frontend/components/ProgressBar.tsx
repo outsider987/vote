@@ -1,5 +1,5 @@
 import React from "react";
-import SvgLoader from "@/app/components/SvgLoader";
+import SvgLoader from "@/components/SvgLoader";
 
 interface ProgressBarProps {
   value: number;

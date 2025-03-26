@@ -4,8 +4,8 @@ import { useState, useEffect } from "react";
 import { Table, Button, Modal, Form, Input, Space, message, Popconfirm, Tree, Tag } from "antd";
 import type { TreeDataNode, TreeProps } from 'antd';
 import { PlusOutlined, EditOutlined, DeleteOutlined } from "@ant-design/icons";
-import { useVote } from "../../api/vote";
-import ProtectedRoute from "../../components/ProtectedRoute";
+import { usePermissions } from "../../../api/permissions";
+import ProtectedRoute from "../../../components/ProtectedRoute";
 
 interface PermissionTree {
   id: string;
@@ -36,7 +36,7 @@ export default function RolesPage() {
   const [checkedKeys, setCheckedKeys] = useState<React.Key[]>([]);
   const [expandedKeys, setExpandedKeys] = useState<React.Key[]>([]);
   const [selectedKeys, setSelectedKeys] = useState<React.Key[]>([]);
-  const api = useVote();
+  const api = usePermissions();
 
   const fetchRoles = async () => {
     setLoading(true);

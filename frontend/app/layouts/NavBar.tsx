@@ -14,7 +14,7 @@ import {
   KeyOutlined,
 } from "@ant-design/icons";
 import { useAuth } from "../store/Auth";
-import { permissionsRoutes } from "../config";
+import { permissionsRoutes } from "../../config";
 import { ItemType } from "antd/es/menu/interface";
 
 const { Sider } = Layout;

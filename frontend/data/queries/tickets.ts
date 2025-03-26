@@ -1,5 +1,5 @@
 import { useQuery } from '@tanstack/react-query';
-import { useVote } from '@/app/api/vote';
+import { useTicketsAPI  } from '@/api/tickets';
 import type { Ticket } from '../types';
 
 export const ticketsKeys = {
@@ -8,7 +8,7 @@ export const ticketsKeys = {
 };
 
 export const useTickets = (eventId: string | undefined) => {
-  const { GET_TICKETS } = useVote();
+  const { GET_TICKETS } = useTicketsAPI();
 
   return useQuery({
     queryKey: ticketsKeys.list(eventId),

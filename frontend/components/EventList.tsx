@@ -36,7 +36,7 @@ import ReactDOM from "react-dom/client";
 import Link from "next/link";
 import CreateVoteModal from "./CreateVoteModal";
 import VoteListModal from "./VoteListModal";
-import { useVote } from "../api/vote";
+import { useVotesAPI } from "../api/votes";
 
 const { Text } = Typography;
 
@@ -72,7 +72,7 @@ const EventList = forwardRef<EventListRef>((props, ref) => {
   );
   const deleteMutation = useDeleteEvent();
   const toggleVotingMutation = useToggleVoting();
-  const { EXPORT_VOTE_DATA } = useVote();
+  const { EXPORT_VOTE_DATA } = useVotesAPI();
 
   const [isVoteListModalOpen, setIsVoteListModalOpen] = useState(false);
 

@@ -1,10 +1,8 @@
 import { useQuery } from "@tanstack/react-query";
-import type { Vote, VoteListResponse } from "../types";
-import axios from "axios";
-import { useVote } from "@/app/api/vote";
+import { useVotesAPI } from "@/api/votes";
 
 export const useVoteList = (eventId: string) => {
-  const { GET_VOTE_LIST } = useVote();
+  const { GET_VOTE_LIST } = useVotesAPI();
   return useQuery({
     queryKey: ["votes", eventId],
     queryFn: async () => {

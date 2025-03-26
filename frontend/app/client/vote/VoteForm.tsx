@@ -2,7 +2,7 @@
 import { useForm } from "react-hook-form";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardFooter } from "@/components/ui/card";
-import { useVote } from "../../api/vote";
+import { useVotesAPI } from "../../../api/votes";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { useSnackbar } from "notistack";
@@ -36,7 +36,7 @@ export function VoteForm({
   voteCode: vote_code,
   onMessage,
 }: VoteFormProps) {
-  const { POST_VOTE } = useVote();
+  const { POST_VOTE } = useVotesAPI();
   const [isSuccess, setIsSuccess] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [manualNumber, setManualNumber] = useState("");

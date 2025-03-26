@@ -10,10 +10,10 @@ import {
   Legend,
 } from "chart.js";
 import { Bar } from "react-chartjs-2";
-import { useVote } from "@/app/api/vote";
+import { useVotesAPI } from "@/api/votes";
 import { useSearchParams } from "next/navigation";
 import clsx from "clsx";
-import { useTickets } from "@/app/data/queries/tickets";
+import { useTickets } from "@/data/queries/tickets";
 import { useVoteContext } from "@/app/store/VoteContext";
 import { Button } from "@/components/ui/button";
 
@@ -41,7 +41,7 @@ function LiveVoteContent() {
   const [isConnecting, setIsConnecting] = useState(false);
   const searchParams = useSearchParams();
   const eventId = searchParams.get("eventId");
-  const voteApi = useVote();
+  const voteApi = useVotesAPI();
   const { data: tickets = [] } = useTickets(eventId);
 
   // Use VoteContext instead of local state

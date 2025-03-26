@@ -1,6 +1,5 @@
 "use client";
-import { GameProvider } from "./GameContext";
-import { WalletProvider } from "./Wallet";
+
 import { AuthProvider } from "./Auth";
 // import { SnackbarProvider } from "notistack";
 import { VoteProvider } from "./VoteContext";
@@ -31,11 +30,7 @@ const RootContextProvider: React.FC<RootContextProviderProps> = ({
           }}
         >
           <VoteProvider>
-            <AuthProvider>
-              <WalletProvider>
-                <GameProvider>{children}</GameProvider>
-              </WalletProvider>
-            </AuthProvider>
+            <AuthProvider>{children}</AuthProvider>
           </VoteProvider>
         </ConfigProvider>
       </QueryClientProvider>

@@ -4,8 +4,8 @@ import { useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import { Typography, Button } from "antd";
 import { PlusOutlined } from "@ant-design/icons";
-import CreateVoteModal from "./components/CreateVoteModal";
-import EventList from "./components/EventList";
+import CreateVoteModal from "../components/CreateVoteModal";
+import EventList from "../components/EventList";
 
 const { Title } = Typography;
 
