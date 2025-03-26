@@ -4,7 +4,6 @@ import { Inter } from "next/font/google";
 import "./globals.css";
 import "antd/dist/reset.css";
 import { Layout } from "antd";
-import { QueryClient } from "@tanstack/react-query";
 import NavBar from "./layouts/NavBar";
 import { ReactNode, useState, useEffect } from "react";
 import RootContextProvider from "./store";
@@ -13,7 +12,7 @@ import { useAuth } from "./store/Auth";
 import { usePathname } from "next/navigation";
 const { Content } = Layout;
 const inter = Inter({ subsets: ["latin"] });
-const queryClient = new QueryClient();
+
 
 export default function RootLayout({ children }: { children: ReactNode }) {
   // Create a state for sidebar collapse that can be shared
