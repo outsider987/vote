@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Depends, HTTPException, Header
+from fastapi import APIRouter, Body, Depends, HTTPException, Header, Request
 from sqlalchemy.orm import Session, joinedload
 from typing import List, Optional
 from app.db.database import get_db
@@ -42,7 +42,9 @@ def build_permission_tree(permissions: List[Permission]) -> List[dict]:
 @router.get("/tree", )
 @require_auth()
 async def get_permission_tree(
+    request: Request,
     db: Session = Depends(get_db),
+    body: dict = None,
     authorization: Optional[str] = Header(None),
     current_user: dict = None
 ):
@@ -53,28 +55,30 @@ async def get_permission_tree(
 @router.post("/")
 @require_auth()
 async def create_permission(
-    permission: PermissionTreeCreate,
+    request: Request,
+    body: Optional[PermissionTreeCreate] = None,
     db: Session = Depends(get_db),
-    authorization: Optional[str] = Header(None)
+    authorization: Optional[str] = Header(None),
+    current_user: dict = None
 ):
     """Create a new permission with tree structure support"""
     # Check if permission with this code already exists
-    existing_permission = db.query(Permission).filter(Permission.path == permission.path).first()
+    existing_permission = db.query(Permission).filter(Permission.path == body.path).first()
     if existing_permission:
-        raise HTTPException(status_code=400, detail=f"Permission with code '{permission.code}' already exists")
+        raise HTTPException(status_code=400, detail=f"Permission with code '{body.code}' already exists")
     
     # Validate type
-    if permission.type not in ["ui", "api"]:
+    if body.type not in ["ui", "api"]:
         raise HTTPException(status_code=400, detail="Permission type must be either 'ui' or 'api'")
     
     # Create new permission
     db_permission = Permission(
-        name=permission.name,
-        description=permission.description,
-        type=permission.type,
-        path=permission.path,
-        parent_id=permission.parent_id,
-        order=permission.order
+        name=body.name,
+        description=body.description,
+        type=body.type,
+        path=body.path,
+        parent_id=body.parent_id,
+        order=body.order
     )
     db.add(db_permission)
     db.commit()
@@ -82,32 +86,34 @@ async def create_permission(
     return db_permission
 
 @router.put("/{permission_id}")
-@require_auth()
+@require_auth(body_model=PermissionUpdate)
 async def update_permission(
+    request: Request,
     permission_id: int,
-    permission_update: PermissionUpdate,
+    body: Optional[PermissionUpdate] = None,
     db: Session = Depends(get_db),
-    authorization: Optional[str] = Header(None)
+    authorization: Optional[str] = Header(None),
+    current_user: dict = None
 ):
     """Update a permission"""
     permission = db.query(Permission).filter(Permission.id == str(permission_id)).first()
     if not permission:
         raise HTTPException(status_code=404, detail="Permission not found")
     
-    if permission_update.name:
-        permission.name = permission_update.name
-    if permission_update.description is not None:
-        permission.description = permission_update.description
-    if permission_update.type is not None:
-        if permission_update.type not in ["ui", "api"]:
+    if body.name:
+        permission.name = body.name
+    if body.description is not None:
+        permission.description = body.description
+    if body.type is not None:
+        if body.type not in ["ui", "api"]:
             raise HTTPException(status_code=400, detail="Permission type must be either 'ui' or 'api'")
-        permission.type = permission_update.type
-    if permission_update.path is not None:
-        permission.path = permission_update.path
-    if permission_update.parent_id is not None:
-        permission.parent_id = permission_update.parent_id
-    if permission_update.order is not None:
-        permission.order = permission_update.order
+        permission.type = body.type
+    if body.path is not None:
+        permission.path = body.path
+    if body.parent_id is not None:
+        permission.parent_id = body.parent_id
+    if body.order is not None:
+        permission.order = body.order
     
     db.commit()
     db.refresh(permission)
@@ -156,7 +162,9 @@ async def delete_permission(
 @router.post("/roles")
 @require_auth()
 async def create_role(
+    request: Request,
     role: RoleCreate,
+    body: dict = None,
     db: Session = Depends(get_db),
     authorization: Optional[str] = Header(None),
     current_user: dict = None
@@ -187,6 +195,8 @@ async def create_role(
 @router.get("/roles", )
 @require_auth()
 async def get_roles(
+    request: Request,
+    body: dict = None,
     db: Session = Depends(get_db),
     authorization: Optional[str] = Header(None),
     current_user: dict = None
@@ -197,7 +207,9 @@ async def get_roles(
 @router.get("/roles/{role_id}", )
 @require_auth()
 async def get_role(
+    request: Request,
     role_id: UUID,
+    body: dict = None,
     db: Session = Depends(get_db),
     authorization: Optional[str] = Header(None),
     current_user: dict = None
@@ -210,8 +222,10 @@ async def get_role(
 @router.put("/roles/{role_id}", )
 @require_auth()
 async def update_role(
+    request: Request,
     role_id: UUID,
     role_update: RoleUpdate,
+    body: dict = None,
     db: Session = Depends(get_db),
     authorization: Optional[str] = Header(None),
     current_user: dict = None
@@ -242,7 +256,9 @@ async def update_role(
 @router.delete("/roles/{role_id}")
 @require_auth()
 async def delete_role(
+    request: Request,
     role_id: UUID,
+    body: dict = None,
     db: Session = Depends(get_db),
     authorization: Optional[str] = Header(None),
     current_user: dict = None
@@ -257,10 +273,11 @@ async def delete_role(
 
 # # Admin role assignment endpoint
 @router.put("/assign/{admin_id}", )
-@require_auth()
+@require_auth(body_model=AdminUpdate)
 async def assign_role_to_admin(
+    request: Request,
     admin_id: int,
-    admin_update: AdminUpdate,
+    body: Optional[AdminUpdate] = None,
     db: Session = Depends(get_db),
     authorization: Optional[str] = Header(None),
     current_user: dict = None
@@ -268,20 +285,20 @@ async def assign_role_to_admin(
     admin = db.query(Admin).filter(Admin.id == str(admin_id)).first()
     if not admin:
         raise HTTPException(status_code=404, detail="Admin not found")
-    
-    if admin_update.role_id:
-        role = db.query(Role).filter(Role.id == str(admin_update.role_id)).first()
+
+    if body.role_id:
+        role = db.query(Role).filter(Role.id == str(body.role_id)).first()
         if not role:
             raise HTTPException(status_code=404, detail="Role not found")
-        admin.role_id = str(admin_update.role_id)
+        admin.role_id = str(body.role_id)
     else:
         admin.role_id = None
     
-    if admin_update.username:
-        admin.username = admin_update.username
+    if body.username:
+        admin.username = body.username
     
-    if admin_update.password:
-        admin.password = admin_update.password
+    if body.password:
+        admin.password = body.password
     
     db.commit()
     db.refresh(admin)
@@ -290,6 +307,8 @@ async def assign_role_to_admin(
 @router.get("/admins")
 @require_auth()
 async def get_admins(
+    request: Request,
+    body: dict = None,
     db: Session = Depends(get_db),
     authorization: Optional[str] = Header(None),
     current_user: dict = None
@@ -301,24 +320,25 @@ async def get_admins(
         raise HTTPException(status_code=500, detail=str(e))
 
 @router.post("/admins")
-@require_auth()
+@require_auth(body_model=AdminCreate)
 async def create_admin(
-    admin: AdminCreate,
+    request: Request,
+    body: Optional[AdminCreate] = None,
     db: Session = Depends(get_db),
     authorization: Optional[str] = Header(None),
     current_user: dict = None
 ):
     """Create a new admin user"""
     # Check if username already exists
-    existing_admin = db.query(Admin).filter(Admin.username == admin.username).first()
+    existing_admin = db.query(Admin).filter(Admin.username == body.username).first()
     if existing_admin:
-        raise HTTPException(status_code=400, detail=f"Admin with username '{admin.username}' already exists")
+        raise HTTPException(status_code=400, detail=f"Admin with username '{body.username}' already exists")
     
     # Create new admin
     db_admin = Admin(
-        username=admin.username,
-        password=admin.password,  # Note: In production, this should be hashed
-        role_id=admin.role_id
+        username=body.username,
+        password=body.password,  # Note: In production, this should be hashed
+        role_id=body.role_id
     )
     
     db.add(db_admin)
@@ -329,7 +349,9 @@ async def create_admin(
 @router.delete("/admins/{admin_id}")
 @require_auth()
 async def delete_admin(
+    request: Request,
     admin_id: str,
+    body: dict = None,
     db: Session = Depends(get_db),
     authorization: Optional[str] = Header(None),
     current_user: dict = None

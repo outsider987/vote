@@ -38,14 +38,25 @@ export default function RootLayout({ children }: { children: ReactNode }) {
     setToken(token);
   }, [pathname]);
 
+
   return (
     <html lang="en">
       <body className="h-screen">
         <RootContextProvider>
           {token ? (
             // Render the Layout only when a token is available
-            <Layout style={{ minHeight: "100vh", background: "black", width: "100%", height: "100vh" }}>
-              <NavBar collapsed={sidebarCollapsed} setCollapsed={setSidebarCollapsed} />
+            <Layout
+              style={{
+                minHeight: "100vh",
+                background: "black",
+                width: "100%",
+                height: "100vh",
+              }}
+            >
+              <NavBar
+                collapsed={sidebarCollapsed}
+                setCollapsed={setSidebarCollapsed}
+              />
               {!pathname.split("/").includes("client") ? (
                 <Layout
                   style={{

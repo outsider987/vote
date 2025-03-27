@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Depends, Header, UploadFile, File
+from fastapi import APIRouter, Depends, Header, Request, UploadFile, File
 from sqlalchemy.orm import Session
 from app.db.database import get_db
 from app.schemas.vote import EventCreate, EventUpdate
@@ -17,15 +17,16 @@ ticket_service = TicketService()
 
 
 @router.post("")
-@require_auth()
+@require_auth(body_model=EventCreate)
 async def create_event(
-    data: EventCreate, 
+    request: Request,
+    body: Optional[EventCreate] = None,
     db: Session = Depends(get_db),
     authorization: Optional[str] = Header(None),
     current_user: dict = None
 ):
     # Create event
-    event = event_service.create_event(db, data, current_user)
+    event = event_service.create_event(db, body, current_user)
 
     # Generate tickets in bulk
     tickets = ticket_service.generate_tickets_bulk(db, event.id, event.member_count)
@@ -39,9 +40,11 @@ async def create_event(
 @router.post("/{event_id}/toggle-voting")
 @require_auth()
 async def toggle_voting(
+    request: Request,
     event_id: str, 
     start_voting: bool, 
     db: Session = Depends(get_db),
+    body: dict = None,
     authorization: Optional[str] = Header(None),
     current_user: dict = None
 ):
@@ -53,7 +56,9 @@ async def toggle_voting(
 @router.get("")
 @require_auth()
 async def get_events(
+    request: Request,
     db: Session = Depends(get_db),
+    body: dict = None,
     authorization: Optional[str] = Header(None),
     current_user: dict = None
 ):
@@ -68,8 +73,10 @@ async def get_events(
 @router.delete("/{event_id}")
 @require_auth()
 async def delete_event(
+    request: Request,   
     event_id: str, 
     db: Session = Depends(get_db),
+    body: dict = None,
     authorization: Optional[str] = Header(None),
     current_user: dict = None
 ):
@@ -89,8 +96,11 @@ async def download_template(
 @router.post("/upload")
 @require_auth()
 async def upload_excel(
+    request: Request,
+    body: dict = None,
     file: UploadFile = File(...),
-    authorization: Optional[str] = Header(None)
+    authorization: Optional[str] = Header(None),
+    current_user: dict = None
 ):
     """Upload Excel file and return processed options"""
     contents = await file.read()
@@ -99,13 +109,15 @@ async def upload_excel(
 
 
 @router.put("/{event_id}")
-@require_auth()
+@require_auth(body_model=EventUpdate)
 async def update_event(
+    request: Request,
     event_id: str,
-    data: EventUpdate,
+    body: Optional[EventUpdate] = None,
     db: Session = Depends(get_db),
-    authorization: Optional[str] = Header(None)
+    authorization: Optional[str] = Header(None),
+    current_user: dict = None
 ):
     """Update an existing event"""
-    event = event_service.update_event(db, event_id, data.model_dump(exclude_unset=True))
+    event = event_service.update_event(db, event_id, body.model_dump(exclude_unset=True))
     return JSONResponse({"message": "活動更新成功"})

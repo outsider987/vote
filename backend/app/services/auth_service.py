@@ -1,4 +1,4 @@
-from fastapi import Depends, HTTPException, status
+from fastapi import Depends, HTTPException, Header, Request, status
 from fastapi.security import OAuth2PasswordBearer
 from jose import JWTError, jwt
 from sqlalchemy.orm import Session
@@ -7,6 +7,9 @@ from app.models.models import Admin
 import os
 from functools import wraps
 from typing import List, Optional
+from typing import Optional, List, Type, TypeVar, Generic
+from pydantic import BaseModel, ValidationError
+ModelType = TypeVar('ModelType', bound=BaseModel)
 
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="auth/login")
 
@@ -49,59 +52,81 @@ def has_permission(token: str, required_permission: str) -> bool:
     api_permissions = payload.get("api_permissions", [])
     return required_permission in api_permissions
 
-def require_auth(required_permissions: List[str] = None):
+def require_auth(
+    required_permissions: Optional[List[str]] = None, 
+    body_model: Optional[Type[ModelType]] = None
+):
     """
-    Decorator to require authentication and optionally specific permissions.
+    Advanced authentication decorator with optional body validation.
     
-    Parameters:
-    - required_permissions: List of permission codes that are required to access the endpoint.
-                          If None, only authentication is required.
+    Args:
+        required_permissions: List of permissions required to access the endpoint
+        body_model: Pydantic model for body validation (optional)
     """
     def decorator(func):
         @wraps(func)
-        async def wrapper(*args, **kwargs):
-            # Get the database session
-            db = kwargs.get('db')
-            if not db:
+        async def wrapper(
+            request: Request,
+            db: Session = Depends(get_db),
+            authorization: Optional[str] = Header(None),
+            *args,
+            **kwargs
+        ):
+            # Extract token from Authorization header
+            if not authorization or not authorization.startswith('Bearer '):
                 raise HTTPException(
-                    status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-                    detail="Database session not found"
+                    status_code=status.HTTP_401_UNAUTHORIZED,
+                    detail="Not authenticated",
+                    headers={"WWW-Authenticate": "Bearer"},
+                )
+            token = authorization.split(' ')[1]
+            
+            # Verify token and get current user
+            try:
+                current_user = get_current_user(token, db)
+            except Exception:
+                raise HTTPException(
+                    status_code=status.HTTP_401_UNAUTHORIZED,
+                    detail="Invalid token"
                 )
             
-            # Get the token from kwargs
-            token = kwargs.get('token')
-            if not token:
-                # If token is not in kwargs, try to get it from the Authorization header
-                auth_header = kwargs.get('authorization')
-                if not auth_header or not auth_header.startswith('Bearer '):
-                    raise HTTPException(
-                        status_code=status.HTTP_401_UNAUTHORIZED,
-                        detail="Not authenticated",
-                        headers={"WWW-Authenticate": "Bearer"},
-                    )
-                token = auth_header.split(' ')[1]
-            
-            # Verify the token and get the user
-            current_user = get_current_user(token, db)
-            kwargs['current_user'] = current_user
-            # Check permissions if required
+            # Validate permissions if required
             if required_permissions:
-                token_data = get_token_data(token)
-                if not token_data:
-                    raise HTTPException(
-                        status_code=status.HTTP_401_UNAUTHORIZED,
-                        detail="Token invalid or expired",
-                    )
-                
-                api_permissions = token_data.get("api_permissions", [])
-                has_required_permissions = any(perm in api_permissions for perm in required_permissions)
-                
-                if not has_required_permissions:
+                try:
+                    token_data = get_token_data(token)
+                    api_permissions = token_data.get("api_permissions", [])
+                    
+                    if not any(perm in api_permissions for perm in required_permissions):
+                        raise HTTPException(
+                            status_code=status.HTTP_403_FORBIDDEN,
+                            detail="Insufficient permissions"
+                        )
+                except Exception:
                     raise HTTPException(
                         status_code=status.HTTP_403_FORBIDDEN,
-                        detail="Insufficient permissions",
+                        detail="Permission verification failed"
                     )
             
-            return await func(*args, **kwargs)
+            # Handle body validation if a model is provided
+            validated_body = None
+            if body_model:
+                try:
+                    # Try to parse request body
+                    body_data = await request.json()
+                    validated_body = body_model(**body_data)
+                except ValidationError as e:
+                    raise HTTPException(
+                        status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
+                        detail=[{"msg": err['msg'], "loc": err['loc']} for err in e.errors()]
+                    )
+            
+            # Add validated data to kwargs
+            kwargs.update({
+                'current_user': current_user,
+                'db': db,
+                'body': validated_body
+            })
+            
+            return await func(request, *args, **kwargs)
         return wrapper
     return decorator

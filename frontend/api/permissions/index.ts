@@ -58,7 +58,9 @@ export function usePermissions() {
         url: `/permissions/${id}`,
         headers: {
           Authorization: `Bearer ${getToken()}`,
+          "Content-Type": "application/json",
         },
+        
         data,
       });
     },
@@ -147,9 +149,7 @@ export function usePermissions() {
         headers: {
           Authorization: `Bearer ${getToken()}`,
         },
-        data:{
-          admin: data
-        },
+        data,
       });
     },
 
@@ -177,8 +177,9 @@ export function usePermissions() {
         url: `/permissions/assign/${adminId}`,
         headers: {
           Authorization: `Bearer ${getToken()}`,
+          "Content-Type": "application/json",
         },
-        data: { admin_id: data.admin_id, admin_update: data },
+        data,
       });
     },
   };

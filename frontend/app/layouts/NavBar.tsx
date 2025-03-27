@@ -66,9 +66,9 @@ export default function NavBar({ collapsed, setCollapsed }: NavBarProps) {
   const getMenuItems = (): ItemType[] => {
     const baseItems: ItemType[] = [
       {
-        key: "/",
+        key: "/vote",
         icon: <HomeOutlined />,
-        label: <Link href="/">投票系統</Link>,
+        label: <Link href="/vote">投票系統</Link>,
       },
     ];
 

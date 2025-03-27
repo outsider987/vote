@@ -1,5 +1,11 @@
 import json
-from fastapi import APIRouter, Depends, Header, WebSocket, WebSocketDisconnect, Form
+from fastapi import (
+    APIRouter,
+    Depends,
+    Header,
+    Request,
+    Form,
+)
 from sqlalchemy.orm import Session
 from app.db.database import get_db
 from app.services.vote_service import VoteService
@@ -16,7 +22,7 @@ import io
 from urllib.parse import quote
 
 router = APIRouter(prefix="/votes", tags=["votes"])
-active_websockets: List[WebSocket] = []
+# active_websockets: List[WebSocket] = []
 ticket_service = TicketService()
 vote_service = VoteService()  # Create single instance at module level
 
@@ -42,9 +48,9 @@ async def submit_vote(vote: Vote = Form(...), db: Session = Depends(get_db)):
         raise VotingError(
             status_code=404,
             message="找不到對應的投票事件",
-            error_code="EVENT_NOT_FOUND"
+            error_code="EVENT_NOT_FOUND",
         )
-        
+
     if len(vote.candidate) == 0:
         raise VotingError(
             status_code=400,
@@ -54,14 +60,14 @@ async def submit_vote(vote: Vote = Form(...), db: Session = Depends(get_db)):
 
     try:
         candidate_list = [json.loads(candidate) for candidate in vote.candidate]
-        
+
         # Extra validation for manually input candidates
         event_options = event.options
         if isinstance(event_options, str):
             event_options = json.loads(event_options)
-            
+
         valid_numbers = [option.get("number") for option in event_options]
-        
+
         for candidate in candidate_list:
             candidate_number = candidate.get("number")
             if candidate_number not in valid_numbers:
@@ -74,9 +80,9 @@ async def submit_vote(vote: Vote = Form(...), db: Session = Depends(get_db)):
         vote_service.submit_vote(
             db, vote.vote_code, candidate_list
         )  # Use existing instance
-        
+
         return JSONResponse({"message": "投票成功"})
-        
+
     except json.JSONDecodeError:
         raise VotingError(
             status_code=400,
@@ -110,10 +116,12 @@ async def get_event_vote_counts(event_id: str, db: Session = Depends(get_db)):
 @router.post("/archive/{event_id}")
 @require_auth()
 async def archive_vote_result(
+    request: Request,
     event_id: str,
     vote_result: dict,
     db: Session = Depends(get_db),
     authorization: Optional[str] = Header(None),
+    body: dict = None,
 ):
     # Get current vote counts
 
@@ -150,9 +158,11 @@ async def archive_vote_result(
 @router.get("/archive/{event_id}")
 @require_auth()
 async def get_archived_result(
+    request: Request,
     event_id: str,
     db: Session = Depends(get_db),
     authorization: Optional[str] = Header(None),
+    body: dict = None,
 ):
     archived_result = vote_service.get_archived_record(db, event_id)
     if not archived_result:
@@ -171,9 +181,11 @@ async def get_vote_candidates(event_id: str, db: Session = Depends(get_db)):
 @router.get("/export/{event_id}")
 @require_auth()
 async def export_vote_data(
+    request: Request,
     event_id: str,
     db: Session = Depends(get_db),
     authorization: Optional[str] = Header(None),
+    body: dict = None,
 ):
     # Get event details
     event = db.query(Event).filter(Event.id == event_id).first()
@@ -311,7 +323,7 @@ async def export_vote_data(
         worksheet.write("D13", "票數", style)
 
         data_start_row = 14
-# Write your data rows
+        # Write your data rows
         for i, (key, value) in enumerate(map_vote_count.items()):
             current_row = data_start_row + i
             worksheet.write(f"B{current_row}", key)
@@ -324,22 +336,14 @@ async def export_vote_data(
         # The sum row will be immediately after the last data row
         sum_row = last_data_row + 1
 
-        
         # Write formulas for the sum of columns C and D
-     
+
         worksheet.write_formula(
-            f"C{sum_row}",
-            f"=SUM(C{data_start_row}:C{last_data_row})",
-            style
+            f"C{sum_row}", f"=SUM(C{data_start_row}:C{last_data_row})", style
         )
         worksheet.write_formula(
-            f"D{sum_row}",
-            f"=SUM(D{data_start_row}:D{last_data_row})",
-            style
+            f"D{sum_row}", f"=SUM(D{data_start_row}:D{last_data_row})", style
         )
-            
-        
-        
 
         # Vote counts sheet
         df_counts = pd.DataFrame(vote_counts_data)

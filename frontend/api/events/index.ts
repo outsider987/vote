@@ -6,7 +6,7 @@ export function useEventsAPI() {
       return request({
         method: "POST",
         url: "/events",
-        data: {data: payload},
+        data: payload,
         headers: {
           Authorization: `Bearer ${getToken()}`,
         },

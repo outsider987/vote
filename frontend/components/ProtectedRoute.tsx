@@ -46,5 +46,10 @@ export default function ProtectedRoute({ children, requiredPermission }: Protect
     return null;
   }
 
+  if (!token) {
+    router.push("/login");
+    return null;
+  }
+
   return <>{children}</>;
 } 
