@@ -69,6 +69,19 @@ export default function NavBar({ collapsed, setCollapsed }: NavBarProps) {
         key: "/vote",
         icon: <HomeOutlined />,
         label: <Link href="/vote">投票系統</Link>,
+        children: [
+          {
+            key: "/vote/member",
+            icon: <UserOutlined />,
+            label: <Link href="/vote/member">成員管理</Link>,
+          },
+          {
+            key: "/vote/event",
+            icon: <UserOutlined />,
+            label: <Link href="/vote/event">活動管理</Link>,
+          },
+          
+        ],
       },
     ];
 

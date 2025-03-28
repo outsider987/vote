@@ -11,6 +11,7 @@ class EventBase(BaseModel):
     votes_per_user: int = Field(gt=0)
     required_count: int = Field(gt=0)
     backup_count: int = Field(gt=0)
+    group_id: Optional[UUID] = None
 
 class EventCreate(EventBase):
     pass
@@ -165,6 +166,48 @@ class AdminUpdate(BaseModel):
 class AdminResponse(AdminBase):
     id: UUID
     role: Optional[RoleResponse] = None
+
+    class Config:
+        from_attributes = True
+
+# Group Schemas
+class GroupBase(BaseModel):
+    name: str
+    description: Optional[str] = None
+
+class GroupCreate(GroupBase):
+    pass
+
+class GroupUpdate(BaseModel):
+    name: Optional[str] = None
+    description: Optional[str] = None
+
+class GroupResponse(GroupBase):
+    id: UUID
+    created_at: datetime
+
+    class Config:
+        from_attributes = True
+
+# Member Schemas
+class MemberBase(BaseModel):
+    name: str
+    email: str
+    phone: Optional[str] = None
+    group_id: UUID
+
+class MemberCreate(MemberBase):
+    pass
+
+class MemberUpdate(BaseModel):
+    name: Optional[str] = None
+    email: Optional[str] = None
+    phone: Optional[str] = None
+    group_id: Optional[UUID] = None
+
+class MemberResponse(MemberBase):
+    id: UUID
+    created_at: datetime
 
     class Config:
         from_attributes = True

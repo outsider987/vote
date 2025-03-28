@@ -1,13 +1,14 @@
 "use client";
 
 import { useRef, useState, useEffect } from "react";
-import { Form, Input, Button, Modal, DatePicker, InputNumber, Upload, message } from "antd";
+import { Form, Input, Button, Modal, DatePicker, InputNumber, Upload, message, Select } from "antd";
 import { UploadOutlined, DownloadOutlined } from "@ant-design/icons";
 import DynamicOptionsInput from "@/components/DynamicOptionsInput";
 import moment from "moment";
 import { useEventsAPI } from "../api/events";
 import * as XLSX from "xlsx";
 import type { Event } from "../data/types";
+import { useGroups } from "@/data/queries/groups";
 
 interface Option {
   number: number;
@@ -23,6 +24,7 @@ type FormValues = {
   required_count: number;
   backup_count: number;
   options: Option[];
+  group_id: number;
 };
 
 interface CreateVoteModalProps {

@@ -28,12 +28,28 @@ role_permissions = Table(
 )
 
 
+class Group(Base):
+    __tablename__ = "groups"
+    __table_args__ = {"extend_existing": True}
+
+    id = Column(String(36), primary_key=True, default=lambda: str(uuid4()))
+    admin_id = Column(Integer, ForeignKey("admins.id", ondelete="CASCADE"), nullable=False)
+    name = Column(String(255), nullable=False)
+    description = Column(String(255), nullable=True)
+    created_at = Column(TIMESTAMP, server_default=func.now())
+    
+    # Relationships
+    events = relationship("Event", back_populates="group")
+    members = relationship("Member", back_populates="group")
+
+
 class Event(Base):
     __tablename__ = "events"
     __table_args__ = {"extend_existing": True}
 
     id = Column(String(36), primary_key=True, default=lambda: str(uuid4()))
     admin_id = Column(Integer, ForeignKey("admins.id", ondelete="CASCADE"), nullable=False)
+    group_id = Column(String(36), ForeignKey("groups.id", ondelete="SET NULL"), nullable=True)
     event_date = Column(DateTime, nullable=False)
     member_count = Column(Integer, nullable=False)
     title = Column(String(255), nullable=False)
@@ -45,17 +61,14 @@ class Event(Base):
     is_archived = Column(Boolean, default=False)
     start_time = Column(Time, nullable=False)
     end_time = Column(Time, nullable=False)
-    created_at = Column(
-        TIMESTAMP, server_default=func.now() + text("interval '8 hours'")
-    )
+    created_at = Column(TIMESTAMP, server_default=func.now() + text("interval '8 hours'"))
 
-    tickets = relationship(
-        "Ticket", back_populates="event", cascade="all, delete-orphan"
-    )
+    tickets = relationship("Ticket", back_populates="event", cascade="all, delete-orphan")
     votes = relationship("Vote", back_populates="event", cascade="all, delete-orphan")
-    archived = relationship(
-        "Archived", back_populates="event", cascade="all, delete-orphan"
-    )
+    archived = relationship("Archived", back_populates="event", cascade="all, delete-orphan")
+    group = relationship("Group", back_populates="events")
+    members = relationship("Member", back_populates="event")
+
 
 
 class Ticket(Base):
@@ -146,7 +159,7 @@ class Admin(Base):
     
     # Relationship
     role = relationship("Role", back_populates="admins")
-
+    members = relationship("Member", back_populates="admin")
 
 class Archived(Base):
     __tablename__ = "archived"
@@ -160,3 +173,24 @@ class Archived(Base):
     created_at = Column(TIMESTAMP, server_default=func.now())
 
     event = relationship("Event", back_populates="archived")
+
+
+class Member(Base):
+    __tablename__ = "members"
+    __table_args__ = {"extend_existing": True}
+
+    id = Column(String(36), primary_key=True, default=lambda: str(uuid4()))
+    admin_id = Column(Integer, ForeignKey("admins.id", ondelete="CASCADE"), nullable=False)
+    name = Column(String(255), nullable=False)
+    email = Column(String(255), nullable=False, unique=True)
+    phone = Column(String(20), nullable=True)
+    group_id = Column(String(36), ForeignKey("groups.id", ondelete="CASCADE"), nullable=False)
+    # New foreign key linking Member to Event
+    event_id = Column(String(36), ForeignKey("events.id", ondelete="CASCADE"), nullable=True)
+    created_at = Column(TIMESTAMP, server_default=func.now())
+    
+    # Relationships
+    group = relationship("Group", back_populates="members")
+    admin = relationship("Admin", back_populates="members")
+    event = relationship("Event", back_populates="members")
+

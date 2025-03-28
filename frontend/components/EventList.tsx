@@ -384,6 +384,7 @@ const EventList = forwardRef<EventListRef>((props, ref) => {
         title: "投票標題",
         dataIndex: "title",
         key: "title",
+        sorter: (a, b) => a.title.localeCompare(b.title),
         render: (text, record) => (
           <Space direction="vertical" size={2}>
             <Text strong>{text}</Text>
@@ -407,6 +408,7 @@ const EventList = forwardRef<EventListRef>((props, ref) => {
           title: "投票日期",
           dataIndex: "eventDate",
           key: "eventDate",
+          sorter: (a, b) => moment(a.eventDate).unix() - moment(b.eventDate).unix(),
           render: (date) => moment(date).format("YYYY-MM-DD HH:mm:ss"),
         },
         {
@@ -414,12 +416,14 @@ const EventList = forwardRef<EventListRef>((props, ref) => {
           dataIndex: "memberCount",
           key: "memberCount",
           responsive: ["md"],
+          sorter: (a, b) => a.memberCount - b.memberCount,
         },
         {
           title: "候選數",
           dataIndex: "options",
           key: "candidateCount",
           responsive: ["md"],
+          sorter: (a, b) => a.options.length - b.options.length,
           render: (options) => options.length,
         }
       );
@@ -593,6 +597,7 @@ const EventList = forwardRef<EventListRef>((props, ref) => {
         rowKey="id"
         pagination={{ pageSize: 10 }}
         scroll={{ x: "max-content" }}
+        sortDirections={['ascend', 'descend']}
         expandable={{
           expandedRowRender: (record) => (
             <div style={{ padding: 16 }}>

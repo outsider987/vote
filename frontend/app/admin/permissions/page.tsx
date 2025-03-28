@@ -112,6 +112,7 @@ export default function PermissionsPage() {
       title: '權限名稱',
       dataIndex: 'name',
       key: 'name',
+      sorter: (a: Permission, b: Permission) => a.name.localeCompare(b.name),
       render: (text: string, record: Permission) => (
         <Space>
           {record.children ? '📁' : '📄'} {text}
@@ -123,6 +124,7 @@ export default function PermissionsPage() {
       title: '路徑',
       dataIndex: 'path',
       key: 'path',
+      sorter: (a: Permission, b: Permission) => a.path.localeCompare(b.path),
     },
     {
       title: '類型',
