@@ -1,4 +1,4 @@
-import { api } from "../../data/api";
+import { request } from "../../app/utils/request";
 
 export interface Group {
   id: string;
@@ -19,19 +19,33 @@ export interface UpdateGroupRequest {
 
 export const useGroupsAPI = () => {
   const GET_GROUPS = async () => {
-    return await api.get<Group[]>("/members/groups");
+    return await request({
+      method: "GET",
+      url: "/members/groups",
+    });
   };
 
   const CREATE_GROUP = async (data: CreateGroupRequest) => {
-    return await api.post<{ message: string; group_id: string }>("/members/groups", data);
+    return await request({
+      method: "POST",
+      url: "/members/groups",
+      data,
+    });
   };
 
   const UPDATE_GROUP = async (id: string, data: UpdateGroupRequest) => {
-    return await api.put<{ message: string }>(`/members/groups/${id}`, data);
+    return await request({
+      method: "PUT",
+      url: `/members/groups/${id}`,
+      data,
+    });
   };
 
   const DELETE_GROUP = async (id: string) => {
-    return await api.delete<{ message: string }>(`/members/groups/${id}`);
+    return await request({
+      method: "DELETE",
+      url: `/members/groups/${id}`,
+    });
   };
 
   return {

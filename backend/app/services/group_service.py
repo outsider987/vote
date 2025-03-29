@@ -9,12 +9,12 @@ logger = logging.getLogger(__name__)
 
 class GroupService:
     @staticmethod
-    def create_group(db: Session, group_data: GroupCreate) -> Group:
+    def create_group(db: Session, group_data: GroupCreate, admin_id: int) -> Group:
         try:
-            group_id = str(uuid.uuid4())
+            
             db_group = Group(
-                id=group_id,
-                **group_data.model_dump()
+                **group_data.model_dump(),
+                admin_id=admin_id
             )
             db.add(db_group)
             db.commit()

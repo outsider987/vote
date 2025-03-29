@@ -23,7 +23,7 @@ async def create_group(
     authorization: Optional[str] = Header(None),
     current_user: dict = None
 ):
-    group = group_service.create_group(db, body)
+    group = group_service.create_group(db, body,current_user.id)
     return JSONResponse({"message": "群組建立成功", "group_id": group.id})
 
 @router.get("/groups")
@@ -31,10 +31,12 @@ async def create_group(
 async def get_groups(
     request: Request,
     db: Session = Depends(get_db),
+    body: dict = None,
     authorization: Optional[str] = Header(None),
     current_user: dict = None
 ):
-    groups = group_service.get_groups(db, current_user["id"])
+    
+    groups = group_service.get_groups(db, current_user.id)
     return to_camel_case(groups)
 
 @router.put("/groups/{group_id}")
@@ -81,6 +83,7 @@ async def get_members(
     request: Request,
     group_id: Optional[str] = None,
     db: Session = Depends(get_db),
+    body: dict = None,
     authorization: Optional[str] = Header(None),
     current_user: dict = None
 ):

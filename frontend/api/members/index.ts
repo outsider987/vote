@@ -1,4 +1,4 @@
-import { api } from "../../data/api";
+import { request } from "../../app/utils/request";
 
 export interface Member {
   id: string;
@@ -25,21 +25,34 @@ export interface UpdateMemberRequest {
 
 export const useMembersAPI = () => {
   const GET_MEMBERS = async (group_id?: string) => {
-    return await api.get<Member[]>("/members", {
+    return await request({
+      method: "GET",
+      url: "/members",
       params: { group_id },
     });
   };
 
   const CREATE_MEMBER = async (data: CreateMemberRequest) => {
-    return await api.post<{ message: string; member_id: string }>("/members", data);
+    return await request({
+      method: "POST",
+      url: "/members",
+      data,
+    });
   };
 
   const UPDATE_MEMBER = async (id: string, data: UpdateMemberRequest) => {
-    return await api.put<{ message: string }>(`/members/${id}`, data);
+    return await request({
+      method: "PUT",
+      url: `/members/${id}`,
+      data,
+    });
   };
 
   const DELETE_MEMBER = async (id: string) => {
-    return await api.delete<{ message: string }>(`/members/${id}`);
+    return await request({
+      method: "DELETE",
+      url: `/members/${id}`,
+    });
   };
 
   return {
