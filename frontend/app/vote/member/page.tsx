@@ -68,9 +68,15 @@ export default function MemberPage() {
   const [form] = Form.useForm();
   const [groupForm] = Form.useForm();
   const [previewForm] = Form.useForm();
+  const [selectedGroupId, setSelectedGroupId] = useState<string | null>(null);
+  const [searchText, setSearchText] = useState({
+    name: '',
+    email: '',
+    phone: ''
+  });
 
   const { data: groups = [], refetch: refetchGroups } = useGroups();
-  const { data: members = [], refetch: refetchMembers } = useMembers();
+  const { data: members = [], refetch: refetchMembers } = useMembers(selectedGroupId || undefined);
   const createMember = useCreateMember();
   const updateMember = useUpdateMember();
   const deleteMember = useDeleteMember();
@@ -488,7 +494,7 @@ export default function MemberPage() {
               onClick={() => {
                 setSelectedMember(null);
                 form.resetFields();
-                setIsPreviewModalOpen(true);
+                setIsMemberModalOpen(true);
               }}
             >
               新增成員
@@ -496,9 +502,54 @@ export default function MemberPage() {
           </Space>
         </div>
 
+        <div className="mb-4 space-y-4">
+          <div className="flex gap-4">
+            <Select
+              style={{ width: 200 }}
+              placeholder="選擇群組篩選"
+              allowClear
+              onChange={(value) => {
+                setSelectedGroupId(value);
+              }}
+            >
+              {groups.map((group) => (
+                <Select.Option key={group.id} value={group.id}>
+                  {group.name}
+                </Select.Option>
+              ))}
+            </Select>
+            <Input.Search
+              placeholder="搜尋姓名"
+              style={{ width: 200 }}
+              allowClear
+              onSearch={(value) => setSearchText(prev => ({ ...prev, name: value }))}
+            />
+            <Input.Search
+              placeholder="搜尋電子郵件"
+              style={{ width: 200 }}
+              allowClear
+              onSearch={(value) => setSearchText(prev => ({ ...prev, email: value }))}
+            />
+            <Input.Search
+              placeholder="搜尋電話"
+              style={{ width: 200 }}
+              allowClear
+              onSearch={(value) => setSearchText(prev => ({ ...prev, phone: value }))}
+            />
+          </div>
+        </div>
+
         <Table
           columns={memberColumns}
-          dataSource={members}
+          dataSource={members.filter(member => {
+            const nameMatch = !searchText.name || 
+              member.name.toLowerCase().includes(searchText.name.toLowerCase());
+            const emailMatch = !searchText.email || 
+              member.email.toLowerCase().includes(searchText.email.toLowerCase());
+            const phoneMatch = !searchText.phone || 
+              (member.phone && member.phone.includes(searchText.phone));
+            return nameMatch && emailMatch && phoneMatch;
+          })}
           rowKey="id"
           pagination={{ pageSize: 10 }}
         />

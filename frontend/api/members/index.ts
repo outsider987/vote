@@ -25,10 +25,11 @@ export interface UpdateMemberRequest {
 
 export function useMembersAPI() {
   return {
-    GET_MEMBERS: () => {
+    GET_MEMBERS: (group_id?: string) => {
       return request({
         method: "GET",
         url: "/members",
+        params: group_id ? { group_id } : undefined,
         headers: {
           Authorization: `Bearer ${getToken()}`,
         },
