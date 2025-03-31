@@ -186,6 +186,7 @@ async def export_vote_data(
     db: Session = Depends(get_db),
     authorization: Optional[str] = Header(None),
     body: dict = None,
+    current_user: dict = None
 ):
     # Get event details
     event = db.query(Event).filter(Event.id == event_id).first()

@@ -73,7 +73,7 @@ def get_db():
 def init_db():
     """Initialize the database by creating all tables."""
     try:
-        Base.metadata.create_all(bind=engine)
+        # Base.metadata.create_all(bind=engine)
         logger.info("Database tables created successfully")
     except Exception as e:
         logger.error(f"Failed to initialize database: {str(e)}")
