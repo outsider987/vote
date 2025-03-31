@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Depends, Header, Request
+from fastapi import APIRouter, Depends, Header, Request, UploadFile, File
 from sqlalchemy.orm import Session
 from app.db.database import get_db
 from app.schemas.vote import MemberCreate, MemberUpdate, MemberResponse, GroupCreate, GroupUpdate, GroupResponse
@@ -8,6 +8,7 @@ from app.services.group_service import GroupService
 from app.utils.case_utils import to_camel_case
 from app.services.auth_service import require_auth
 from typing import Optional
+from io import BytesIO
 
 router = APIRouter(prefix="/members", tags=["members"])
 member_service = MemberService()
@@ -58,6 +59,7 @@ async def delete_group(
     request: Request,
     group_id: str,
     db: Session = Depends(get_db),
+    body: dict = None,
     authorization: Optional[str] = Header(None),
     current_user: dict = None
 ):
@@ -109,8 +111,38 @@ async def delete_member(
     request: Request,
     member_id: str,
     db: Session = Depends(get_db),
+    body: dict = None,
     authorization: Optional[str] = Header(None),
     current_user: dict = None
 ):
     member_service.delete_member(db, member_id)
-    return JSONResponse({"message": "成員刪除成功"}) 
+    return JSONResponse({"message": "成員刪除成功"})
+
+# Excel routes
+@router.get("/template")
+@require_auth()
+async def download_template(
+    request: Request,
+    db: Session = Depends(get_db),
+    body: dict = None,
+    authorization: Optional[str] = Header(None),
+    current_user: dict = None
+):
+    """Download Excel template for member list"""
+    return member_service.generate_excel_template(db)
+
+@router.post("/upload")
+@require_auth()
+async def upload_excel(
+    request: Request,
+    file: UploadFile = File(...),
+    db: Session = Depends(get_db),
+    body: dict = None,
+    authorization: Optional[str] = Header(None),
+    current_user: dict = None
+):
+    """Upload Excel file and create members"""
+    contents = await file.read()
+    members = member_service.process_excel_upload(BytesIO(contents), current_user.id)
+    created_members = member_service.create_members_bulk(db, members)
+    return JSONResponse({"message": f"成功建立 {len(created_members)} 位成員"}) 

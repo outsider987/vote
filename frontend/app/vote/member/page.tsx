@@ -1,14 +1,41 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { Button, Table, Modal, Form, Input, Select, message, Space, Typography } from "antd";
-import { PlusOutlined, EditOutlined, DeleteOutlined } from "@ant-design/icons";
+import {
+  Button,
+  Table,
+  Modal,
+  Form,
+  Input,
+  Select,
+  message,
+  Space,
+  Typography,
+  Upload,
+} from "antd";
+import {
+  PlusOutlined,
+  EditOutlined,
+  DeleteOutlined,
+  UploadOutlined,
+  DownloadOutlined,
+} from "@ant-design/icons";
 import ProtectedRoute from "@/components/ProtectedRoute";
 import { useGroups } from "@/data/queries/groups";
 import { useMembers } from "@/data/queries/members";
-import { useCreateMember, useUpdateMember, useDeleteMember } from "@/data/mutations/members";
-import { useCreateGroup, useUpdateGroup, useDeleteGroup } from "@/data/mutations/groups";
+import {
+  useCreateMember,
+  useUpdateMember,
+  useDeleteMember,
+} from "@/data/mutations/members";
+import {
+  useCreateGroup,
+  useUpdateGroup,
+  useDeleteGroup,
+} from "@/data/mutations/groups";
 import type { ColumnsType } from "antd/es/table";
+import * as XLSX from "xlsx";
+import { useMembersAPI } from "@/api/members";
 
 const { Title } = Typography;
 
@@ -24,13 +51,23 @@ interface GroupFormData {
   description?: string;
 }
 
+interface ExcelMemberData {
+  name: string;
+  email: string;
+  phone?: string;
+  group_id: number;
+}
+
 export default function MemberPage() {
   const [isMemberModalOpen, setIsMemberModalOpen] = useState(false);
   const [isGroupModalOpen, setIsGroupModalOpen] = useState(false);
+  const [isPreviewModalOpen, setIsPreviewModalOpen] = useState(false);
   const [selectedMember, setSelectedMember] = useState<any>(null);
   const [selectedGroup, setSelectedGroup] = useState<any>(null);
+  const [excelData, setExcelData] = useState<ExcelMemberData[]>([]);
   const [form] = Form.useForm();
   const [groupForm] = Form.useForm();
+  const [previewForm] = Form.useForm();
 
   const { data: groups = [], refetch: refetchGroups } = useGroups();
   const { data: members = [], refetch: refetchMembers } = useMembers();
@@ -40,6 +77,7 @@ export default function MemberPage() {
   const createGroup = useCreateGroup();
   const updateGroup = useUpdateGroup();
   const deleteGroup = useDeleteGroup();
+  const membersApi = useMembersAPI();
 
   const handleMemberSubmit = async (values: MemberFormData) => {
     try {
@@ -76,22 +114,140 @@ export default function MemberPage() {
   };
 
   const handleDeleteMember = async (id: string) => {
-    try {
-      await deleteMember.mutateAsync(id);
-      message.success("成員刪除成功");
-      refetchMembers();
-    } catch (error) {
-      message.error("刪除失敗，請稍後再試");
-    }
+    Modal.confirm({
+      title: '確認刪除',
+      content: '確定要刪除此成員嗎？',
+      okText: '確定',
+      cancelText: '取消',
+      onOk: async () => {
+        try {
+          await deleteMember.mutateAsync(id);
+          message.success("成員刪除成功");
+          refetchMembers();
+        } catch (error) {
+          message.error("刪除失敗，請稍後再試");
+        }
+      },
+    });
   };
 
   const handleDeleteGroup = async (id: string) => {
+    Modal.confirm({
+      title: '確認刪除',
+      content: '確定要刪除此群組嗎？',
+      okText: '確定',
+      cancelText: '取消',
+      onOk: async () => {
+        try {
+          await deleteGroup.mutateAsync(id);
+          message.success("群組刪除成功");
+          refetchGroups();
+        } catch (error) {
+          message.error("刪除失敗，請稍後再試");
+        }
+      },
+    });
+  };
+
+  const handleExcelUpload = async (file: File) => {
     try {
-      await deleteGroup.mutateAsync(id);
-      message.success("群組刪除成功");
-      refetchGroups();
+      // Validate Excel format
+      const reader = new FileReader();
+      reader.onload = async (e) => {
+        try {
+          const data = new Uint8Array(e.target?.result as ArrayBuffer);
+          const workbook = XLSX.read(data, { type: "array" });
+          const firstSheetName = workbook.SheetNames[0];
+          const worksheet = workbook.Sheets[firstSheetName];
+          const jsonData = XLSX.utils.sheet_to_json(
+            worksheet
+          ) as ExcelMemberData[];
+
+          // Validate data
+          const requiredFields = ["name", "email", "group_id"];
+          const missingFields = requiredFields.filter(
+            (field) => !jsonData[0] || !(field in jsonData[0])
+          );
+          if (missingFields.length > 0) {
+            message.error(
+              `Excel 檔案缺少必要欄位: ${missingFields.join(", ")}`
+            );
+            return false;
+          }
+
+          // Set preview data and show modal
+          setExcelData(
+            jsonData
+              .filter((item) => item.group_id)
+              .map((item) => ({ ...item, group_id: Number(item.group_id) }))
+          );
+          setIsPreviewModalOpen(true);
+          return false; // Prevent default upload behavior
+        } catch (error) {
+          message.error("Excel 檔案上傳失敗，請確認格式是否正確");
+          return false;
+        }
+      };
+
+      reader.onerror = () => {
+        message.error("Excel 檔案讀取失敗");
+        return false;
+      };
+
+      reader.readAsArrayBuffer(file);
+      return false;
     } catch (error) {
-      message.error("刪除失敗，請稍後再試");
+      message.error("Excel 檔案處理失敗");
+      return false;
+    }
+  };
+
+  const handleBatchSubmit = async (values: any) => {
+    try {
+      // Convert the data back to Excel format
+      const ws = XLSX.utils.json_to_sheet(excelData);
+      const wb = XLSX.utils.book_new();
+      XLSX.utils.book_append_sheet(wb, ws, "Sheet1");
+
+      // Convert to blob
+      const excelBuffer = XLSX.write(wb, { bookType: "xlsx", type: "array" });
+      const blob = new Blob([excelBuffer], {
+        type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+      });
+
+      // Create a File object
+      const file = new File([blob], "members.xlsx", {
+        type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+      });
+
+      // Upload the file
+      const response = await membersApi.UPLOAD_EXCEL(file);
+      message.success(response.data.message);
+      setIsPreviewModalOpen(false);
+      setExcelData([]);
+      previewForm.resetFields();
+      refetchMembers();
+    } catch (error) {
+      message.error("批次上傳失敗，請稍後再試");
+    }
+  };
+
+  const handleDownloadTemplate = async () => {
+    try {
+      const response = await membersApi.GET_EXCEL_TEMPLATE();
+      const blob = new Blob([response.data], {
+        type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+      });
+      const url = window.URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = "member_template.xlsx";
+      document.body.appendChild(a);
+      a.click();
+      window.URL.revokeObjectURL(url);
+      document.body.removeChild(a);
+    } catch (error) {
+      message.error("範本下載失敗，請稍後再試");
     }
   };
 
@@ -113,10 +269,10 @@ export default function MemberPage() {
     },
     {
       title: "群組",
-      dataIndex: "group_id",
-      key: "group_id",
-      render: (group_id) => {
-        const group = groups.find((g) => g.id === group_id);
+      dataIndex: "groupId",
+      key: "groupId",
+      render: (groupId) => {
+        const group = groups.find((g) => g.id === groupId);
         return group ? group.name : "-";
       },
     },
@@ -129,7 +285,7 @@ export default function MemberPage() {
             icon={<EditOutlined />}
             onClick={() => {
               setSelectedMember(record);
-              form.setFieldsValue(record);
+              form.setFieldsValue({...record, group_id: record.groupId});
               setIsMemberModalOpen(true);
             }}
           >
@@ -185,6 +341,106 @@ export default function MemberPage() {
     },
   ];
 
+  const previewColumns: ColumnsType<ExcelMemberData> = [
+    {
+      title: "姓名",
+      dataIndex: "name",
+      key: "name",
+      render: (text, record, index) => (
+        <Input
+          value={text}
+          onChange={(e) => {
+            const newData = [...excelData];
+            newData[index] = { ...newData[index], name: e.target.value };
+            setExcelData(newData);
+          }}
+        />
+      ),
+    },
+    {
+      title: "電子郵件",
+      dataIndex: "email",
+      key: "email",
+      render: (text, record, index) => (
+        <Input
+          value={text}
+          onChange={(e) => {
+            const newData = [...excelData];
+            newData[index] = { ...newData[index], email: e.target.value };
+            setExcelData(newData);
+          }}
+        />
+      ),
+    },
+    {
+      title: "電話",
+      dataIndex: "phone",
+      key: "phone",
+      render: (text, record, index) => (
+        <Input
+          value={text}
+          onChange={(e) => {
+            const newData = [...excelData];
+            newData[index] = { ...newData[index], phone: e.target.value };
+            setExcelData(newData);
+          }}
+        />
+      ),
+    },
+    {
+      title: "群組",
+      dataIndex: "groupId",
+      key: "groupId",
+      render: (text, record, index) => (
+        <Select
+          value={text}
+          style={{ width: "100%" }}
+          onChange={(value) => {
+            const newData = [...excelData];
+            newData[index] = { ...newData[index], group_id: Number(value) };
+            setExcelData(newData);
+          }}
+          placeholder="請選擇群組"
+        >
+          {groups.length > 0 ? (
+            groups.map((group) => (
+              <Select.Option key={group.id} value={group.id}>
+                {group.name} (ID: {group.id})
+              </Select.Option>
+            ))
+          ) : (
+            <Select.Option disabled>目前沒有可用的群組</Select.Option>
+          )}
+        </Select>
+      ),
+    },
+    {
+      title: "操作",
+      key: "action",
+      render: (_, record, index) => (
+        <Button
+          danger
+          icon={<DeleteOutlined />}
+          onClick={() => {
+            Modal.confirm({
+              title: '確認刪除',
+              content: '確定要刪除此成員嗎？',
+              okText: '確定',
+              cancelText: '取消',
+              onOk: () => {
+                const newData = [...excelData];
+                newData.splice(index, 1);
+                setExcelData(newData);
+              },
+            });
+          }}
+        >
+          刪除
+        </Button>
+      ),
+    },
+  ];
+
   return (
     <ProtectedRoute requiredPermission="/vote/member">
       <div className="space-y-6">
@@ -212,17 +468,32 @@ export default function MemberPage() {
 
         <div className="flex justify-between items-center mt-8">
           <Title level={2}>成員管理</Title>
-          <Button
-            type="primary"
-            icon={<PlusOutlined />}
-            onClick={() => {
-              setSelectedMember(null);
-              form.resetFields();
-              setIsMemberModalOpen(true);
-            }}
-          >
-            新增成員
-          </Button>
+          <Space>
+            <Button
+              icon={<DownloadOutlined />}
+              onClick={handleDownloadTemplate}
+            >
+              下載範本
+            </Button>
+            <Upload
+              beforeUpload={handleExcelUpload}
+              accept=".xlsx,.xls"
+              showUploadList={false}
+            >
+              <Button icon={<UploadOutlined />}>上傳 Excel</Button>
+            </Upload>
+            <Button
+              type="primary"
+              icon={<PlusOutlined />}
+              onClick={() => {
+                setSelectedMember(null);
+                form.resetFields();
+                setIsPreviewModalOpen(true);
+              }}
+            >
+              新增成員
+            </Button>
+          </Space>
         </div>
 
         <Table
@@ -240,12 +511,32 @@ export default function MemberPage() {
             form.resetFields();
           }}
           footer={null}
+          width={800}
         >
-          <Form
-            form={form}
-            layout="vertical"
-            onFinish={handleMemberSubmit}
-          >
+          <Form form={form} layout="vertical" onFinish={handleMemberSubmit}>
+            {!selectedMember && (
+              <Form.Item label="Excel 上傳">
+                <div className="flex gap-2">
+                  <Button
+                    icon={<DownloadOutlined />}
+                    onClick={handleDownloadTemplate}
+                  >
+                    下載範本
+                  </Button>
+                  <Upload
+                    beforeUpload={handleExcelUpload}
+                    accept=".xlsx,.xls"
+                    showUploadList={false}
+                  >
+                    <Button icon={<UploadOutlined />}>上傳 Excel</Button>
+                  </Upload>
+                </div>
+                <div className="text-sm text-gray-500 mt-1">
+                  請先下載範本，填寫後再上傳
+                </div>
+              </Form.Item>
+            )}
+
             <Form.Item
               name="name"
               label="姓名"
@@ -306,11 +597,7 @@ export default function MemberPage() {
           }}
           footer={null}
         >
-          <Form
-            form={groupForm}
-            layout="vertical"
-            onFinish={handleGroupSubmit}
-          >
+          <Form form={groupForm} layout="vertical" onFinish={handleGroupSubmit}>
             <Form.Item
               name="name"
               label="群組名稱"
@@ -338,7 +625,69 @@ export default function MemberPage() {
             </Form.Item>
           </Form>
         </Modal>
+
+        <Modal
+          title="預覽 Excel 資料"
+          open={isPreviewModalOpen}
+          onCancel={() => {
+            setIsPreviewModalOpen(false);
+            setExcelData([]);
+            previewForm.resetFields();
+          }}
+          width={1000}
+          footer={null}
+        >
+          <Form
+            form={previewForm}
+            layout="vertical"
+            onFinish={handleBatchSubmit}
+          >
+            <div className="mb-4">
+              <div className="flex justify-between items-center mb-4">
+                <Button
+                  type="primary"
+                  icon={<PlusOutlined />}
+                  onClick={() => {
+                    setExcelData([
+                      ...excelData,
+                      {
+                        name: "",
+                        email: "",
+                        phone: "",
+                        group_id: groups[0]?.id || "",
+                      },
+                    ]);
+                  }}
+                >
+                  新增成員
+                </Button>
+              </div>
+              <Table
+                columns={previewColumns}
+                dataSource={excelData}
+                rowKey={(_, index) => index}
+                pagination={{ pageSize: 10 }}
+              />
+            </div>
+            <Form.Item>
+              <Space>
+                <Button type="primary" htmlType="submit">
+                  確認上傳
+                </Button>
+                <Button
+                  onClick={() => {
+                    setIsPreviewModalOpen(false);
+                    setExcelData([]);
+                    previewForm.resetFields();
+                  }}
+                >
+                  取消
+                </Button>
+              </Space>
+            </Form.Item>
+          </Form>
+        </Modal>
       </div>
     </ProtectedRoute>
   );
-} 
+}

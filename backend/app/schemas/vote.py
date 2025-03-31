@@ -203,7 +203,7 @@ class MemberUpdate(BaseModel):
     name: Optional[str] = None
     email: Optional[str] = None
     phone: Optional[str] = None
-    group_id: Optional[UUID] = None
+    group_id: Optional[int] = None
 
 class MemberResponse(MemberBase):
     id: UUID

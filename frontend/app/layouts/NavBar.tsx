@@ -68,7 +68,7 @@ export default function NavBar({ collapsed, setCollapsed }: NavBarProps) {
       {
         key: "/vote",
         icon: <HomeOutlined />,
-        label: <Link href="/vote">投票系統</Link>,
+        label: "投票系統",
         children: [
           {
             key: "/vote/member",

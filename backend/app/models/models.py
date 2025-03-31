@@ -67,7 +67,7 @@ class Event(Base):
     votes = relationship("Vote", back_populates="event", cascade="all, delete-orphan")
     archived = relationship("Archived", back_populates="event", cascade="all, delete-orphan")
     group = relationship("Group", back_populates="events")
-    members = relationship("Member", back_populates="event")
+    # members = relationship("Member", back_populates="event")
 
 
 
@@ -159,7 +159,7 @@ class Admin(Base):
     
     # Relationship
     role = relationship("Role", back_populates="admins")
-    members = relationship("Member", back_populates="admin")
+    # members = relationship("Member", back_populates="admin")
 
 class Archived(Base):
     __tablename__ = "archived"
@@ -180,17 +180,15 @@ class Member(Base):
     __table_args__ = {"extend_existing": True}
 
     id = Column(Integer, primary_key=True, autoincrement=True)
-    admin_id = Column(Integer, ForeignKey("admins.id", ondelete="CASCADE"), nullable=False)
+   
     name = Column(String(255), nullable=False)
     email = Column(String(255), nullable=False, unique=True)
     phone = Column(String(20), nullable=True)
     group_id = Column(String(36), ForeignKey("groups.id", ondelete="CASCADE"), nullable=False)
     # New foreign key linking Member to Event
-    event_id = Column(String(36), ForeignKey("events.id", ondelete="CASCADE"), nullable=True)
     created_at = Column(TIMESTAMP, server_default=func.now())
     
     # Relationships
     group = relationship("Group", back_populates="members")
-    admin = relationship("Admin", back_populates="members")
-    event = relationship("Event", back_populates="members")
-
+   
+  

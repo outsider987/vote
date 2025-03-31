@@ -1,4 +1,4 @@
-import { request } from "../../app/utils/request";
+import { getToken, request } from "../../app/utils/request";
 
 export interface Member {
   id: string;
@@ -23,42 +23,73 @@ export interface UpdateMemberRequest {
   group_id?: string;
 }
 
-export const useMembersAPI = () => {
-  const GET_MEMBERS = async (group_id?: string) => {
-    return await request({
-      method: "GET",
-      url: "/members",
-      params: { group_id },
-    });
-  };
-
-  const CREATE_MEMBER = async (data: CreateMemberRequest) => {
-    return await request({
-      method: "POST",
-      url: "/members",
-      data,
-    });
-  };
-
-  const UPDATE_MEMBER = async (id: string, data: UpdateMemberRequest) => {
-    return await request({
-      method: "PUT",
-      url: `/members/${id}`,
-      data,
-    });
-  };
-
-  const DELETE_MEMBER = async (id: string) => {
-    return await request({
-      method: "DELETE",
-      url: `/members/${id}`,
-    });
-  };
-
+export function useMembersAPI() {
   return {
-    GET_MEMBERS,
-    CREATE_MEMBER,
-    UPDATE_MEMBER,
-    DELETE_MEMBER,
+    GET_MEMBERS: () => {
+      return request({
+        method: "GET",
+        url: "/members",
+        headers: {
+          Authorization: `Bearer ${getToken()}`,
+        },
+      });
+    },
+
+    CREATE_MEMBER: (payload: any) => {
+      return request({
+        method: "POST",
+        url: "/members",
+        data: payload,
+        headers: {
+          Authorization: `Bearer ${getToken()}`,
+        },
+      });
+    },
+
+    UPDATE_MEMBER: (id: string, data: any) => {
+      return request({
+        method: "PUT",
+        url: `/members/${id}`,
+        data,
+        headers: {
+          Authorization: `Bearer ${getToken()}`,
+        },
+      });
+    },
+
+    DELETE_MEMBER: (id: string) => {
+      return request({
+        method: "DELETE",
+        url: `/members/${id}`,
+        headers: {
+          Authorization: `Bearer ${getToken()}`,
+        },
+      });
+    },
+
+    GET_EXCEL_TEMPLATE: () => {
+      return request({
+        method: "GET",
+        url: "/members/template",
+        headers: {
+          Authorization: `Bearer ${getToken()}`,
+        },
+        responseType: "blob",
+      });
+    },
+
+    UPLOAD_EXCEL: (file: File) => {
+      const formData = new FormData();
+      formData.append("file", file);
+      return request({
+        method: "POST",
+        url: "/members/upload",
+        data: formData,
+        headers: {
+          Authorization: `Bearer ${getToken()}`,
+          "Content-Type": "multipart/form-data",
+        },
+      });
+    },
   };
-}; 
+} 
