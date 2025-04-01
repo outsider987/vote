@@ -62,7 +62,7 @@ async def get_events(
     authorization: Optional[str] = Header(None),
     current_user: dict = None
 ):
-    if(current_user.role.name == 'admin'):
+    if(current_user.role == 'admin'):
         events = db.query(Event).all()
     else:
         events = db.query(Event).filter(Event.admin_id == current_user.id).all()

@@ -61,7 +61,10 @@ async def login(
             "role": role_name,
             "ui_permissions": ui_permissions,
             "api_permissions": api_permissions,
-            "user_id": str(user.id)
+            "user_id": str(user.id),
+            "email": user.email if hasattr(user, 'email') else None,
+            "is_active": user.is_active if hasattr(user, 'is_active') else True,
+            "created_at": str(user.created_at) if hasattr(user, 'created_at') else None
         }, 
         expires_delta=access_token_expires
     )
