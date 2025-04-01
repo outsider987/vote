@@ -46,9 +46,8 @@ request.interceptors.request.use(
 request.interceptors.response.use(
   (response) => response,
   (error) => {
-    if (error.response?.status === 401) {
+    if (error.response?.status === 401 && error.response.data?.error === 'TokenExpired') {
       removeToken();
-      // You might want to redirect to login page here
       window.location.href = "/login";
     }
  
