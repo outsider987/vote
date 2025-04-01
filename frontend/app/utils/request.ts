@@ -46,7 +46,7 @@ request.interceptors.request.use(
 request.interceptors.response.use(
   (response) => response,
   (error) => {
-    if (error.response?.status === 401 && error.response.data?.error === 'TokenExpired') {
+    if (error.response?.status === 401 && error.response.data?.detail === 'Invalid token') {
       removeToken();
       window.location.href = "/login";
     }

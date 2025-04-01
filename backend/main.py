@@ -1,6 +1,7 @@
 # main.py
 from typing import List
-from fastapi import FastAPI, WebSocket
+from fastapi import FastAPI, WebSocket, Request
+from fastapi.responses import JSONResponse
 from app.db.database import init_db, dispose_engine
 from fastapi.middleware.cors import CORSMiddleware
 from app.errors.handlers import VotingError, voting_exception_handler, ErrorCodes
@@ -27,8 +28,22 @@ app.add_middleware(
     max_age=86400,  # Cache CORS response for 1 day
 )
 
-# Add exception handler
-app.add_exception_handler(VotingError, voting_exception_handler)
+# Add exception handlers
+@app.exception_handler(VotingError)
+async def voting_error_handler(request: Request, exc: VotingError):
+    return voting_exception_handler(request, exc)
+
+@app.exception_handler(Exception)
+async def global_exception_handler(request: Request, exc: Exception):
+    logger.error(f"Global error handler caught: {str(exc)}", exc_info=True)
+    return JSONResponse(
+        status_code=500,
+        content={
+            "error": "Internal Server Error",
+            "message": "An unexpected error occurred",
+            "detail": str(exc) if settings.DEBUG else None
+        }
+    )
 
 # 儲存連線中的 WebSocket 客戶端
 active_websockets: List[WebSocket] = []
