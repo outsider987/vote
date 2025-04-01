@@ -2,7 +2,11 @@ import { Form, Input, Select, Button, Space } from "antd";
 import { SearchOutlined } from "@ant-design/icons";
 import { SearchFormProps, SearchColumn } from "../app/vote/member/types";
 import clsx from "clsx";
-
+import {
+  ProCard,
+  ProFormGroup,
+  ProFormSwitch,
+} from '@ant-design/pro-components';
 export const SearchForm = ({
   columns,
   onSearch,
@@ -48,9 +52,10 @@ export const SearchForm = ({
   };
 
   return (
-    <Form layout="inline" onFinish={onSearch} className={clsx(className,'gap-2 flex')}>
-      {columns.map(renderFormItem)}
-      <Form.Item>
+    <ProCard boxShadow>
+      <Form layout="inline" onFinish={onSearch} className={clsx(className,'gap-2 flex')}>
+        {columns.map(renderFormItem)}
+        <Form.Item>
         <Space>
           <Button type="primary" htmlType="submit" icon={<SearchOutlined />}>
             搜尋
@@ -59,5 +64,6 @@ export const SearchForm = ({
         </Space>
       </Form.Item>
     </Form>
+    </ProCard>
   );
 }; 

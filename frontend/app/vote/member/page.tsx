@@ -27,7 +27,13 @@ import { PreviewModal } from "./components/PreviewModal";
 import { SearchForm } from "../../../components/SearchForm";
 import { getMemberColumns, getGroupColumns } from "./components/tableConfigs";
 import { processExcelFile, createExcelFile } from "./utils/excel";
-import { Member, Group, ExcelMemberData, SearchFilters, SearchColumn } from "./types";
+import {
+  Member,
+  Group,
+  ExcelMemberData,
+  SearchFilters,
+  SearchColumn,
+} from "./types";
 
 const { Title } = Typography;
 
@@ -209,7 +215,7 @@ export default function MemberPage() {
 
   return (
     <ProtectedRoute requiredPermission="/vote/member">
-      <div className="space-y-6">
+      <div className="space-y-2">
         <div className="flex justify-between items-center">
           <Title level={2}>群組管理</Title>
           <Button
@@ -226,38 +232,20 @@ export default function MemberPage() {
         </div>
 
         <Table
-          columns={getGroupColumns(
-            (record) => {
-              setSelectedGroup(record);
-              groupForm.setFieldsValue(record);
-              setIsGroupModalOpen(true);
-            },
-            handleDeleteGroup
-          )}
+          columns={getGroupColumns((record) => {
+            setSelectedGroup(record);
+            groupForm.setFieldsValue(record);
+            setIsGroupModalOpen(true);
+          }, handleDeleteGroup)}
           dataSource={groups}
           rowKey="id"
+          scroll={{ x: true }}
           pagination={{ pageSize: 10 }}
         />
 
-        <div className="flex justify-between items-center mt-8">
+        <div className="flex justify-between items-center ">
           <Title level={2}>成員管理</Title>
           <Space>
-            <Button
-              icon={<DownloadOutlined />}
-              onClick={handleDownloadTemplate}
-            >
-              下載範本
-            </Button>
-            <Button
-              icon={<UploadOutlined />}
-              onClick={() => {
-                setSelectedMember(null);
-                form.resetFields();
-                setIsMemberModalOpen(true);
-              }}
-            >
-              上傳 Excel
-            </Button>
             <Button
               type="primary"
               icon={<PlusOutlined />}
@@ -274,11 +262,13 @@ export default function MemberPage() {
 
         <SearchForm
           columns={searchColumns}
-          onSearch={(values) => setSearchText({
-            name: values.name || "",
-            email: values.email || "",
-            phone: values.phone || "",
-          })}
+          onSearch={(values) =>
+            setSearchText({
+              name: values.name || "",
+              email: values.email || "",
+              phone: values.phone || "",
+            })
+          }
           onReset={() => {
             setSearchText({ name: "", email: "", phone: "" });
             setSelectedGroupId(null);
@@ -295,13 +285,16 @@ export default function MemberPage() {
             },
             handleDeleteMember
           )}
+          scroll={{ x: true }}
           dataSource={members.filter((member) => {
             const nameMatch =
               !searchText.name ||
               member.name.toLowerCase().includes(searchText.name.toLowerCase());
             const emailMatch =
               !searchText.email ||
-              member.email.toLowerCase().includes(searchText.email.toLowerCase());
+              member.email
+                .toLowerCase()
+                .includes(searchText.email.toLowerCase());
             const phoneMatch =
               !searchText.phone ||
               (member.phone && member.phone.includes(searchText.phone));
