@@ -9,6 +9,9 @@ import { ReactNode, useState, useEffect } from "react";
 import RootContextProvider from "./store";
 import { getCookie } from "./store/Auth";
 import { usePathname } from "next/navigation";
+import { ProCard } from "@ant-design/pro-components";
+import TabNavigation from "./layouts/TabNavigation";
+
 const { useBreakpoint } = Grid;
 
 const { Content } = Layout;
@@ -39,7 +42,6 @@ export default function RootLayout({ children }: { children: ReactNode }) {
     setToken(token);
   }, [pathname]);
 
-
   return (
     <html lang="en">
       <body className="h-screen">
@@ -61,17 +63,14 @@ export default function RootLayout({ children }: { children: ReactNode }) {
               {!pathname.split("/").includes("client") ? (
                 <Layout
                   style={{
-                    marginLeft: screens.lg ? sidebarCollapsed ? 80 : 200 : 0,
+                    marginLeft: screens.lg ? (sidebarCollapsed ? 80 : 200) : 0,
                     transition: "margin-left 0.2s",
                     height: "100vh",
-                    padding: "24px 16px",
+                    padding: "12px 16px",
                   }}
                 >
-                  <Content
-                    
-                    >
-                      {children}
-                    </Content>
+                  <TabNavigation />
+                  <ProCard>{children}</ProCard>
                 </Layout>
               ) : (
                 children
