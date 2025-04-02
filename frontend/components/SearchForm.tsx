@@ -18,13 +18,12 @@ export const SearchForm = ({
     const commonProps = {
       name: column.name,
       label: column.label,
-      key: column.name,
     };
 
     switch (column.type) {
       case "select":
         return (
-          <Form.Item {...commonProps}>
+          <Form.Item key={column.name} {...commonProps}>
             <Select
               style={{ width: column.width || 200 }}
               placeholder={column.placeholder || `請選擇${column.label}`}
@@ -42,7 +41,7 @@ export const SearchForm = ({
       case "input":
       default:
         return (
-          <Form.Item {...commonProps}>
+          <Form.Item key={column.name} {...commonProps}>
             <Input
               placeholder={column.placeholder || `請輸入${column.label}`}
               allowClear={column.allowClear ?? true}

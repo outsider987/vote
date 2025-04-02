@@ -26,6 +26,7 @@ interface EventActionsProps {
   onExportVoteData: (event: Event) => Promise<void>;
   setEventToDelete: (event: Event) => void;
   setIsDeleteModalOpen: (isOpen: boolean) => void;
+  actionType: "ticketTools" | "actions";
 }
 
 export default function EventActions({
@@ -38,6 +39,7 @@ export default function EventActions({
   onExportVoteData,
   setEventToDelete,
   setIsDeleteModalOpen,
+  actionType,
 }: EventActionsProps) {
   const router = useRouter();
 
@@ -96,96 +98,91 @@ export default function EventActions({
   ];
 
   // Render ticket tools
-  const renderTicketTools = () => (
-    <Space>
-      <Button
-        type="primary"
-        icon={<PrinterOutlined />}
-        onClick={() => onPrint(record)}
-        size={screenWidth < 768 ? "small" : "middle"}
-      >
-        {screenWidth > 768 ? "列印" : ""}
-      </Button>
-      <Button
-        icon={<QrcodeOutlined />}
-        onClick={() => onOpenTicketsModal(record)}
-        size={screenWidth < 768 ? "small" : "middle"}
-      >
-        {screenWidth > 768 ? "查看票券" : ""}
-      </Button>
-    </Space>
-  );
-
-  // Render all action buttons for larger screens
-  const renderActions = () => {
-    if (screenWidth <= 768) {
-      return (
-        <Dropdown menu={{ items: getActionMenuItems() }} trigger={["click"]}>
-          <Button icon={<EllipsisOutlined />} />
-        </Dropdown>
-      );
-    }
-    
+  if (actionType === "ticketTools") {
     return (
-      <Space wrap>
+      <Space>
         <Button
-          icon={<BarChartOutlined />}
-          onClick={() => router.push(`/client/live-vote-count?eventId=${record.id}`)}
+          type="primary"
+          icon={<PrinterOutlined />}
+          onClick={() => onPrint(record)}
+          size={screenWidth < 768 ? "small" : "middle"}
         >
-          查看結果
+          {screenWidth > 768 ? "列印" : ""}
         </Button>
-
-        {record.isArchived && (
-          <Button
-            icon={<DownloadOutlined />}
-            onClick={() => onExportVoteData(record)}
-          >
-            下載資料
-          </Button>
-        )}
-
-        {!record.isVotingStarted && !record.isArchived && (
-          <Button
-            icon={<EditOutlined />}
-            onClick={() => onOpenVoteModal(record)}
-          >
-            編輯
-          </Button>
-        )}
-
-        {!record.isArchived && (
-          <Button
-            type={record.isVotingStarted ? "default" : "primary"}
-            danger={record.isVotingStarted}
-            icon={
-              record.isVotingStarted ? (
-                <StopOutlined />
-              ) : (
-                <PlayCircleOutlined />
-              )
-            }
-            onClick={() => onToggleVoting(record.id, !record.isVotingStarted)}
-          >
-            {record.isVotingStarted ? "停止投票" : "開始投票"}
-          </Button>
-        )}
-
         <Button
-          danger
-          icon={<DeleteOutlined />}
-          onClick={() => {
-            setEventToDelete(record);
-            setIsDeleteModalOpen(true);
-          }}
+          icon={<QrcodeOutlined />}
+          onClick={() => onOpenTicketsModal(record)}
+          size={screenWidth < 768 ? "small" : "middle"}
         >
-          刪除
+          {screenWidth > 768 ? "查看票券" : ""}
         </Button>
       </Space>
     );
-  };
+  }
 
-  return {
-    ticketTools: renderTicketTools(),
-    actions: renderActions(),
-  };
+  // Actions rendering
+  if (screenWidth <= 768) {
+    return (
+      <Dropdown menu={{ items: getActionMenuItems() }} trigger={["click"]}>
+        <Button icon={<EllipsisOutlined />} />
+      </Dropdown>
+    );
+  }
+  
+  return (
+    <Space wrap>
+      <Button
+        icon={<BarChartOutlined />}
+        onClick={() => router.push(`/client/live-vote-count?eventId=${record.id}`)}
+      >
+        查看結果
+      </Button>
+
+      {record.isArchived && (
+        <Button
+          icon={<DownloadOutlined />}
+          onClick={() => onExportVoteData(record)}
+        >
+          下載資料
+        </Button>
+      )}
+
+      {!record.isVotingStarted && !record.isArchived && (
+        <Button
+          icon={<EditOutlined />}
+          onClick={() => onOpenVoteModal(record)}
+        >
+          編輯
+        </Button>
+      )}
+
+      {!record.isArchived && (
+        <Button
+          type={record.isVotingStarted ? "default" : "primary"}
+          danger={record.isVotingStarted}
+          icon={
+            record.isVotingStarted ? (
+              <StopOutlined />
+            ) : (
+              <PlayCircleOutlined />
+            )
+          }
+          onClick={() => onToggleVoting(record.id, !record.isVotingStarted)}
+        >
+          {record.isVotingStarted ? "停止投票" : "開始投票"}
+        </Button>
+      )}
+
+      <Button
+        danger
+        icon={<DeleteOutlined />}
+        onClick={() => {
+          setEventToDelete(record);
+          setIsDeleteModalOpen(true);
+        }}
+      >
+        刪除
+      </Button>
+    </Space>
+  );
 } 

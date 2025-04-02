@@ -62,6 +62,7 @@ async def get_events(
     page_size: int = 10,
     title: Optional[str] = None,
     status: Optional[str] = None,
+    group_id: Optional[str] = None,
     body: dict = None,
     authorization: Optional[str] = Header(None),
     current_user: dict = None
@@ -69,12 +70,13 @@ async def get_events(
     events, total = event_service.get_events(
         db, 
         page=page, 
-        page_size=page_size, 
-        title=title, 
+        page_size=page_size,
+        title=title,
         status=status,
-        current_user=current_user
+        group_id=group_id,
+        current_user=current_user,
     )
-    
+
     camel_case_events = to_camel_case(events)
     return {"data": camel_case_events, "total": total, "page": page, "pageSize": page_size}
 

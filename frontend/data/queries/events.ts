@@ -29,11 +29,12 @@ export const useEvents = (initialFilters: EventSearchFilters = {}) => {
   });
 
   const updateFilters = (newFilters: EventSearchFilters) => {
+    
     setFilters((prevFilters) => ({
       ...prevFilters,
       ...newFilters,
       // Reset to page 1 if search criteria changes but not if just changing page
-      ...(newFilters.hasOwnProperty('title') || newFilters.hasOwnProperty('status') 
+      ...(newFilters.hasOwnProperty('title') || newFilters.hasOwnProperty('status') || newFilters.hasOwnProperty('group_id')
           ? { page: 1 } 
           : {})
     }));

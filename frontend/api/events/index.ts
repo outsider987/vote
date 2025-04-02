@@ -13,14 +13,14 @@ export function useEventsAPI() {
       });
     },
 
-    GET_EVENTS: (params: { page?: number; pageSize?: number; title?: string; status?: string } = {}) => {
+    GET_EVENTS: (params: { page?: number; pageSize?: number; title?: string; status?: string, group_id?: string } = {}) => {
       const queryParams = new URLSearchParams();
       
       if (params.page) queryParams.append('page', params.page.toString());
       if (params.pageSize) queryParams.append('page_size', params.pageSize.toString());
       if (params.title) queryParams.append('title', params.title);
       if (params.status) queryParams.append('status', params.status);
-      
+      if (params.group_id) queryParams.append('group_id', params.group_id);
       const queryString = queryParams.toString() ? `?${queryParams.toString()}` : '';
       
       return request({

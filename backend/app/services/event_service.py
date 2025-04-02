@@ -66,6 +66,7 @@ class EventService:
         page_size: int = 10,
         title: str = None,
         status: str = None,
+        group_id: str = None,
         current_user: Admin = None,
     ) -> tuple[list[Event], int]:
         try:
@@ -88,6 +89,10 @@ class EventService:
                     query = query.filter(Event.is_voting_started == False)
                 elif status == "archived":
                     query = query.filter(Event.is_archived == True)
+
+            # Apply group filter if provided
+            if group_id:
+                query = query.filter(Event.group_id == group_id)
 
             # Get total count before pagination
             total = query.count()

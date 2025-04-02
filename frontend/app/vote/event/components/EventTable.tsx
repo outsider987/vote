@@ -115,18 +115,18 @@ export default function EventTable({
       key: "ticketTools",
       dataIndex: "id",
       render: (_, record) => {
-        const eventActions = EventActions({
-          record,
-          screenWidth,
-          onToggleVoting,
-          onPrint,
-          onOpenTicketsModal,
-          onOpenVoteModal,
-          onExportVoteData,
-          setEventToDelete,
-          setIsDeleteModalOpen,
-        });
-        return eventActions.ticketTools;
+        return <EventActions
+          record={record}
+          screenWidth={screenWidth}
+          onToggleVoting={onToggleVoting}
+          onPrint={onPrint}
+          onOpenTicketsModal={onOpenTicketsModal}
+          onOpenVoteModal={onOpenVoteModal}
+          onExportVoteData={onExportVoteData}
+          setEventToDelete={setEventToDelete}
+          setIsDeleteModalOpen={setIsDeleteModalOpen}
+          actionType="ticketTools"
+        />;
       },
     });
 
@@ -136,18 +136,18 @@ export default function EventTable({
       key: "action",
       dataIndex: "id",
       render: (_, record) => {
-        const eventActions = EventActions({
-          record,
-          screenWidth,
-          onToggleVoting,
-          onPrint,
-          onOpenTicketsModal,
-          onOpenVoteModal,
-          onExportVoteData,
-          setEventToDelete,
-          setIsDeleteModalOpen,
-        });
-        return eventActions.actions;
+        return <EventActions
+          record={record}
+          screenWidth={screenWidth}
+          onToggleVoting={onToggleVoting}
+          onPrint={onPrint}
+          onOpenTicketsModal={onOpenTicketsModal}
+          onOpenVoteModal={onOpenVoteModal}
+          onExportVoteData={onExportVoteData}
+          setEventToDelete={setEventToDelete}
+          setIsDeleteModalOpen={setIsDeleteModalOpen}
+          actionType="actions"
+        />;
       },
     });
 

@@ -3,12 +3,13 @@ import { SearchColumn, SearchFormProps } from "../member/types";
 export interface EventSearchFilters {
   title?: string;
   status?: string;
+  group_id?: string;
   page?: number;
   pageSize?: number;
 }
 
 export interface EventSearchColumn extends SearchColumn {
-  name: 'title' | 'status' | 'page' | 'pageSize';
+  name: 'title' | 'status' | 'page' | 'pageSize' | 'group_id';
 }
 
 export interface EventSearchFormProps extends SearchFormProps {

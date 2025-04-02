@@ -70,7 +70,7 @@ export default function RootLayout({ children }: { children: ReactNode }) {
                   }}
                 >
                   <TabNavigation />
-                  <ProCard>{children}</ProCard>
+                  <ProCard style={{ overflow: "auto" }}>{children}</ProCard>
                 </Layout>
               ) : (
                 children

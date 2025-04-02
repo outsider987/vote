@@ -38,6 +38,7 @@ const EventList = forwardRef<EventListRef>((props, ref) => {
   const [searchFilters, setSearchFilters] = useState<EventSearchFilters>({
     title: "",
     status: "",
+    group_id: "1",
   });
 
   const { 

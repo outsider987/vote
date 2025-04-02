@@ -5,6 +5,7 @@ import { useState } from "react";
 import { SearchForm } from "../../../../components/SearchForm";
 import { EventSearchFilters, EventSearchColumn } from "../types";
 import CreateVoteModal from "./CreateVoteModal";
+import { useGroups } from "@/data/queries/groups";
 
 interface EventHeaderProps {
   updateFilters: (filters: EventSearchFilters) => void;
@@ -13,7 +14,7 @@ interface EventHeaderProps {
 
 export default function EventHeader({ updateFilters, refetchEvents }: EventHeaderProps) {
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
-
+  const { data: groups, isLoading: isGroupsLoading } = useGroups();
   // Search columns definition
   const searchColumns: EventSearchColumn[] = [
     {
@@ -35,6 +36,17 @@ export default function EventHeader({ updateFilters, refetchEvents }: EventHeade
         { label: "已封存", value: "archived" },
       ],
     },
+    {
+      name: "group_id",
+      label: "群組",
+      type: "select",
+      placeholder: "選擇群組",
+      options: groups?.map((group) => ({
+        label: group.name,
+        value: group.id,
+      })),
+      width: 200,
+    },
   ];
 
   return (
@@ -45,16 +57,19 @@ export default function EventHeader({ updateFilters, refetchEvents }: EventHeade
           updateFilters({
             title: values.title || "",
             status: values.status || "",
+            group_id: values.group_id || "",
           });
         }}
         onReset={() => {
           updateFilters({
             title: "",
             status: "",
+            group_id: "",
             page: 1,
           });
         }}
       >
+        {}
         <Button type="primary" onClick={() => setIsCreateModalOpen(true)}>
           新增活動
         </Button>
