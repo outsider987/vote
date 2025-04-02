@@ -12,7 +12,7 @@ class EventBase(BaseModel):
     votes_per_user: int = Field(gt=0)
     required_count: int = Field(gt=0)
     backup_count: int = Field(gt=0)
-    group_id: Optional[UUID] = None
+    group_id: Optional[int] = None
 
 
 class EventCreate(EventBase):

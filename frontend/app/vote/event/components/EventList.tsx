@@ -8,7 +8,7 @@ import { useEvents } from "../../../../data/queries/events";
 import { useTickets } from "../../../../data/queries/tickets";
 import { useDeleteEvent, useToggleVoting } from "../../../../data/mutations/events";
 import { useVotesAPI } from "../../../../api/votes";
-import CreateVoteModal from "../../../../components/CreateVoteModal";
+import CreateVoteModal from "./CreateVoteModal";
 import VoteListModal from "../../../../components/VoteListModal";
 import { EventSearchFilters } from "../types";
 import EventHeader from "./EventHeader";

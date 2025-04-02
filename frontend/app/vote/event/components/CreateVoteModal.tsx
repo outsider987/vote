@@ -1,13 +1,24 @@
 "use client";
 
 import { useRef, useState, useEffect } from "react";
-import { Form, Input, Button, Modal, DatePicker, InputNumber, Upload, message, Select } from "antd";
+import {
+  Form,
+  Input,
+  Button,
+  Modal,
+  DatePicker,
+  InputNumber,
+  Upload,
+  message,
+  Select,
+  Spin,
+} from "antd";
 import { UploadOutlined, DownloadOutlined } from "@ant-design/icons";
 import DynamicOptionsInput from "@/components/DynamicOptionsInput";
 import moment from "moment";
-import { useEventsAPI } from "../api/events";
+import { useEventsAPI } from "../../../../api/events";
 import * as XLSX from "xlsx";
-import type { Event } from "../data/types";
+import type { Event } from "../../../../data/types";
 import { useGroups } from "@/data/queries/groups";
 
 interface Option {
@@ -45,7 +56,10 @@ export default function CreateVoteModal({
   const [form] = Form.useForm();
   const voteApi = useEventsAPI();
   const uploadInputRef = useRef<HTMLInputElement>(null);
-
+  const { data: groups, isLoading: isGroupsLoading } = useGroups();
+  // if(isGroupsLoading) {
+  //   return <Spin />;
+  // }
   useEffect(() => {
     if (isOpen) {
       if (mode === "edit" && event) {
@@ -104,7 +118,9 @@ export default function CreateVoteModal({
       // Reset form
       form.resetFields();
     } catch (error) {
-      message.error(mode === "edit" ? "活動更新失敗，請重試" : "活動建立失敗，請重試");
+      message.error(
+        mode === "edit" ? "活動更新失敗，請重試" : "活動建立失敗，請重試"
+      );
     }
   };
 
@@ -129,7 +145,7 @@ export default function CreateVoteModal({
     };
 
     reader.readAsArrayBuffer(file);
-    
+
     // Return false to prevent default upload behavior
     return false;
   };
@@ -185,10 +201,10 @@ export default function CreateVoteModal({
             label="活動日期"
             rules={[{ required: true, message: "請選擇活動日期" }]}
           >
-            <DatePicker 
-              showTime 
-              format="YYYY-MM-DD HH:mm:ss" 
-              style={{ width: '100%' }}
+            <DatePicker
+              showTime
+              format="YYYY-MM-DD HH:mm:ss"
+              style={{ width: "100%" }}
             />
           </Form.Item>
         )}
@@ -200,7 +216,7 @@ export default function CreateVoteModal({
             label="會員人數"
             rules={[{ required: true, message: "請輸入會員人數" }]}
           >
-            <InputNumber min={1} style={{ width: '100%' }} />
+            <InputNumber min={1} style={{ width: "100%" }} />
           </Form.Item>
         )}
 
@@ -219,7 +235,7 @@ export default function CreateVoteModal({
           label="每人可投票數"
           rules={[{ required: true, message: "請輸入每人可投票數" }]}
         >
-          <InputNumber min={1} style={{ width: '100%' }} />
+          <InputNumber min={1} style={{ width: "100%" }} />
         </Form.Item>
 
         {/* Required Count */}
@@ -228,10 +244,10 @@ export default function CreateVoteModal({
           label="應選數"
           rules={[
             { required: true, message: "請輸入應選數" },
-            { type: "number", min: 1, message: "應選數必須大於0" }
+            { type: "number", min: 1, message: "應選數必須大於0" },
           ]}
         >
-          <InputNumber min={1} style={{ width: '100%' }} />
+          <InputNumber min={1} style={{ width: "100%" }} />
         </Form.Item>
 
         {/* Backup Count */}
@@ -240,18 +256,32 @@ export default function CreateVoteModal({
           label="備選數"
           rules={[
             { required: true, message: "請輸入備選數" },
-            { type: "number", min: 0, message: "備選數必須大於或等於0" }
+            { type: "number", min: 0, message: "備選數必須大於或等於0" },
           ]}
         >
-          <InputNumber min={0} style={{ width: '100%' }} />
+          <InputNumber min={0} style={{ width: "100%" }} />
         </Form.Item>
 
+        {/* Group */}
+        <Form.Item
+          name="group_id"
+          label="群組"
+          rules={[{ required: true, message: "請選擇群組" }]}
+        >
+          <Select>
+            {groups?.map((group) => (
+              <Select.Option key={group.id} value={group.id}>
+                {group.name}
+              </Select.Option>
+            ))}
+          </Select>
+        </Form.Item>
         {/* Excel Upload Section */}
         {mode === "create" && (
           <Form.Item label="Excel 上傳">
             <div className="flex gap-2">
-              <Button 
-                icon={<DownloadOutlined />} 
+              <Button
+                icon={<DownloadOutlined />}
                 onClick={handleDownloadTemplate}
               >
                 下載範本
@@ -283,9 +313,7 @@ export default function CreateVoteModal({
 
         {/* Buttons */}
         <div className="flex justify-end gap-2 mt-4">
-          <Button onClick={onClose}>
-            取消
-          </Button>
+          <Button onClick={onClose}>取消</Button>
           <Button type="primary" htmlType="submit">
             {mode === "edit" ? "更新活動" : "建立活動"}
           </Button>

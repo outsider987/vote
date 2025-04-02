@@ -14,6 +14,9 @@ export interface Event {
   showCount: number;
   votesPerUser: number;
   isArchived: boolean;
+  group: {
+    name: string;
+  };
 }
 
 export interface Ticket {

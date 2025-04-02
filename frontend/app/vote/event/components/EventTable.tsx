@@ -45,7 +45,6 @@ export default function EventTable({
   setEventToDelete,
   setIsDeleteModalOpen,
 }: EventTableProps) {
-
   // Define columns based on screen width
   const getColumns = (): ColumnsType<Event> => {
     // Base columns for all screen sizes
@@ -70,6 +69,16 @@ export default function EventTable({
         ),
       },
     ];
+    baseColumns.push({
+      title: "群組",
+      dataIndex: "group",
+      key: "group",
+      // sorter: (a, b) => a.group.name.localeCompare(b.group.name),
+      render: (text, record) =>
+        record?.group?.name ? (
+          <Tag color="blue">{record?.group?.name}</Tag>
+        ) : null,
+    });
 
     // Medium screen columns
     if (screenWidth > 768) {
@@ -78,7 +87,8 @@ export default function EventTable({
           title: "投票日期",
           dataIndex: "eventDate",
           key: "eventDate",
-          sorter: (a, b) => moment(a.eventDate).unix() - moment(b.eventDate).unix(),
+          sorter: (a, b) =>
+            moment(a.eventDate).unix() - moment(b.eventDate).unix(),
           render: (date) => moment(date).format("YYYY-MM-DD HH:mm:ss"),
         },
         {
@@ -161,7 +171,7 @@ export default function EventTable({
         loading={isLoading}
         pagination={false}
         scroll={{ x: "max-content" }}
-        sortDirections={['ascend', 'descend']}
+        sortDirections={["ascend", "descend"]}
         expandable={{
           expandedRowRender: (record) => (
             <div style={{ padding: 16 }}>
@@ -211,7 +221,7 @@ export default function EventTable({
           ),
         }}
       />
-      
+
       <div style={{ marginTop: 16, textAlign: "right" }}>
         <Pagination
           current={filters.page || 1}
@@ -224,4 +234,4 @@ export default function EventTable({
       </div>
     </>
   );
-} 
+}

@@ -4,7 +4,7 @@ import { Button } from "antd";
 import { useState } from "react";
 import { SearchForm } from "../../../../components/SearchForm";
 import { EventSearchFilters, EventSearchColumn } from "../types";
-import CreateVoteModal from "../../../../components/CreateVoteModal";
+import CreateVoteModal from "./CreateVoteModal";
 
 interface EventHeaderProps {
   updateFilters: (filters: EventSearchFilters) => void;
