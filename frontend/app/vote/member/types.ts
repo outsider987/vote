@@ -57,4 +57,5 @@ export interface SearchFormProps {
   onSearch: (values: Record<string, any>) => void;
   onReset: () => void;
   className?: string;
+  children?: React.ReactNode;
 } 

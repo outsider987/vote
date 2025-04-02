@@ -248,6 +248,7 @@ export default function NavBar({ collapsed, setCollapsed }: NavBarProps) {
         }}
       >
         <Header
+        
           style={{
             padding: "0 24px",
             background: "#fff",
@@ -257,6 +258,7 @@ export default function NavBar({ collapsed, setCollapsed }: NavBarProps) {
             position: "sticky",
             top: 0,
             zIndex: 9,
+            
             boxShadow: "0 1px 4px rgba(0,21,41,.08)",
           }}
         >
@@ -284,6 +286,7 @@ export default function NavBar({ collapsed, setCollapsed }: NavBarProps) {
           display: "flex",
           flexDirection: "column",
           boxShadow: "0 1px 4px rgba(0,21,41,.08)",
+          
         }}
       >
         <div

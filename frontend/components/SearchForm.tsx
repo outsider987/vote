@@ -6,12 +6,13 @@ import {
   ProCard,
   ProFormGroup,
   ProFormSwitch,
-} from '@ant-design/pro-components';
+} from "@ant-design/pro-components";
 export const SearchForm = ({
   columns,
   onSearch,
   onReset,
   className = "bg-white p-4 rounded-lg shadow-sm",
+  children,
 }: SearchFormProps) => {
   const renderFormItem = (column: SearchColumn) => {
     const commonProps = {
@@ -23,7 +24,7 @@ export const SearchForm = ({
     switch (column.type) {
       case "select":
         return (
-          <Form.Item {...commonProps} >
+          <Form.Item {...commonProps}>
             <Select
               style={{ width: column.width || 200 }}
               placeholder={column.placeholder || `請選擇${column.label}`}
@@ -53,17 +54,22 @@ export const SearchForm = ({
 
   return (
     <ProCard boxShadow>
-      <Form layout="inline" onFinish={onSearch} className={clsx(className,'gap-2 flex')}>
+      <Form
+        layout="inline"
+        onFinish={onSearch}
+        className={clsx(className, "gap-2 flex")}
+      >
         {columns.map(renderFormItem)}
         <Form.Item>
-        <Space>
-          <Button type="primary" htmlType="submit" icon={<SearchOutlined />}>
-            搜尋
-          </Button>
-          <Button onClick={onReset}>重置</Button>
-        </Space>
-      </Form.Item>
-    </Form>
+          <Space>
+            <Button type="primary" htmlType="submit" icon={<SearchOutlined />}>
+              搜尋
+            </Button>
+            <Button onClick={onReset}>重置</Button>
+          </Space>
+        </Form.Item>
+      </Form>
+      {children}
     </ProCard>
   );
-}; 
+};

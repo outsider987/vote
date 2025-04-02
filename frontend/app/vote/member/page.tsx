@@ -169,21 +169,6 @@ export default function MemberPage() {
   return (
     <ProtectedRoute requiredPermission="/vote/member">
       <div className="space-y-4">
-        <div className="flex justify-between items-center">
-          <Title level={2}>成員管理</Title>
-          <Button
-            type="primary"
-            icon={<PlusOutlined />}
-            onClick={() => {
-              setSelectedMember(null);
-              form.resetFields();
-              setIsMemberModalOpen(true);
-            }}
-          >
-            新增成員
-          </Button>
-        </div>
-
         <SearchForm
           columns={searchColumns}
           onSearch={(values) =>
@@ -197,7 +182,19 @@ export default function MemberPage() {
             setSearchText({ name: "", email: "", phone: "" });
             setSelectedGroupId(null);
           }}
-        />
+        >
+          <Button
+            type="primary"
+            icon={<PlusOutlined />}
+            onClick={() => {
+              setSelectedMember(null);
+              form.resetFields();
+              setIsMemberModalOpen(true);
+            }}
+          >
+            新增成員
+          </Button>
+        </SearchForm>
 
         <Table
           columns={getMemberColumns(
@@ -216,7 +213,9 @@ export default function MemberPage() {
               member.name.toLowerCase().includes(searchText.name.toLowerCase());
             const emailMatch =
               !searchText.email ||
-              member.email.toLowerCase().includes(searchText.email.toLowerCase());
+              member.email
+                .toLowerCase()
+                .includes(searchText.email.toLowerCase());
             const phoneMatch =
               !searchText.phone ||
               (member.phone && member.phone.includes(searchText.phone));

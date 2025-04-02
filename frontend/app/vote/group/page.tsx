@@ -65,7 +65,7 @@ export default function GroupPage() {
     <ProtectedRoute requiredPermission="/vote/group">
       <div className="space-y-4">
         <div className="flex justify-between items-center">
-          <Title level={2}>群組管理</Title>
+        
           <Button
             type="primary"
             icon={<PlusOutlined />}

@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import { Typography, Button } from "antd";
 import { PlusOutlined } from "@ant-design/icons";
 import CreateVoteModal from "../components/CreateVoteModal";
-import EventList from "../components/EventList";
+import EventList from "./vote/event/components/EventList";
 
 const { Title } = Typography;
 

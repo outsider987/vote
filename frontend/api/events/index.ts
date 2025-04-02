@@ -13,13 +13,22 @@ export function useEventsAPI() {
       });
     },
 
-    GET_EVENTS: () => {
+    GET_EVENTS: (params: { page?: number; pageSize?: number; title?: string; status?: string } = {}) => {
+      const queryParams = new URLSearchParams();
+      
+      if (params.page) queryParams.append('page', params.page.toString());
+      if (params.pageSize) queryParams.append('page_size', params.pageSize.toString());
+      if (params.title) queryParams.append('title', params.title);
+      if (params.status) queryParams.append('status', params.status);
+      
+      const queryString = queryParams.toString() ? `?${queryParams.toString()}` : '';
+      
       return request({
         method: "GET",
         headers: {
           Authorization: `Bearer ${getToken()}`,
         },
-        url: "/events",
+        url: `/events${queryString}`,
       });
     },
 

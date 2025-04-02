@@ -58,16 +58,25 @@ async def toggle_voting(
 async def get_events(
     request: Request,
     db: Session = Depends(get_db),
+    page: int = 1,
+    page_size: int = 10,
+    title: Optional[str] = None,
+    status: Optional[str] = None,
     body: dict = None,
     authorization: Optional[str] = Header(None),
     current_user: dict = None
 ):
-    if(current_user.role == 'admin'):
-        events = db.query(Event).all()
-    else:
-        events = db.query(Event).filter(Event.admin_id == current_user.id).all()
+    events, total = event_service.get_events(
+        db, 
+        page=page, 
+        page_size=page_size, 
+        title=title, 
+        status=status,
+        current_user=current_user
+    )
+    
     camel_case_events = to_camel_case(events)
-    return camel_case_events
+    return {"data": camel_case_events, "total": total, "page": page, "pageSize": page_size}
 
 
 @router.delete("/{event_id}")

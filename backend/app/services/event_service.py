@@ -57,10 +57,35 @@ class EventService:
         return event
 
     @staticmethod
-    def get_events(db: Session) -> list[Event]:
+    def get_events(db: Session, page: int = 1, page_size: int = 10, title: str = None, status: str = None, current_user: Admin = None) -> tuple[list[Event], int]:
         try:
-            events = db.query(Event).all()
-            return events
+            # Start with a base query
+            query = db.query(Event)
+            
+            # Apply user filter (admin sees all, others see only their events)
+            if current_user.role != 'admin':
+                query = query.filter(Event.admin_id == current_user.id)
+            
+            # Apply title filter if provided
+            if title:
+                query = query.filter(Event.title.ilike(f'%{title}%'))
+                
+            # Apply status filter if provided
+            if status:
+                if status == 'active':
+                    query = query.filter(Event.is_voting_started == True)
+                elif status == 'inactive':
+                    query = query.filter(Event.is_voting_started == False)
+                elif status == 'archived':
+                    query = query.filter(Event.is_archived == True)
+                
+            # Get total count before pagination
+            total = query.count()
+            
+            # Apply pagination
+            events = query.order_by(Event.created_at.desc()).offset((page - 1) * page_size).limit(page_size).all()
+            
+            return events, total
         except Exception as e:
             logger.error(f"Failed to fetch events: {str(e)}")
             raise VotingError(
@@ -68,7 +93,7 @@ class EventService:
                 message="Failed to fetch events",
                 error_code="EVENT_FETCH_FAILED",
                 details={"error": str(e)}
-            ) 
+            )
 
     @staticmethod
     def delete_event(db: Session, event_id: str) -> None:
