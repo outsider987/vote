@@ -1,7 +1,18 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { Table, Button, Modal, Form, Input, Space, message, Popconfirm, Select, Tag } from "antd";
+import {
+  Table,
+  Button,
+  Modal,
+  Form,
+  Input,
+  Space,
+  message,
+  Popconfirm,
+  Select,
+  Tag,
+} from "antd";
 import { PlusOutlined, EditOutlined, DeleteOutlined } from "@ant-design/icons";
 import { usePermissions } from "../../../api/permissions";
 import ProtectedRoute from "../../../components/ProtectedRoute";
@@ -47,10 +58,10 @@ export default function PermissionsPage() {
 
   const handleCreate = (row?: Permission) => {
     form.resetFields();
-    form.setFieldValue('parent_id', row?.id);
-    form.setFieldValue('name', row?.name);
-    form.setFieldValue('type', row?.type);
-    form.setFieldValue('path', row?.path);
+    form.setFieldValue("parent_id", row?.id);
+    form.setFieldValue("name", row?.name);
+    form.setFieldValue("type", row?.type);
+    form.setFieldValue("path", row?.path);
     setEditingId(null);
     setIsModalVisible(true);
   };
@@ -63,7 +74,7 @@ export default function PermissionsPage() {
       type: record.type,
       path: record.path,
       parent_id: record.parent_id,
-      order: record.order
+      order: record.order,
     });
     setEditingId(record.id);
     setIsModalVisible(true);
@@ -85,7 +96,7 @@ export default function PermissionsPage() {
   const handleSubmit = async () => {
     try {
       const values = await form.validateFields();
-      
+
       if (editingId) {
         const response = await api.UPDATE_PERMISSION(editingId, values);
         if (response.status === 200) {
@@ -109,60 +120,60 @@ export default function PermissionsPage() {
 
   const columns = [
     {
-      title: '權限名稱',
-      dataIndex: 'name',
-      key: 'name',
+      title: "權限名稱",
+      dataIndex: "name",
+      key: "name",
       sorter: (a: Permission, b: Permission) => a.name.localeCompare(b.name),
       render: (text: string, record: Permission) => (
         <Space>
-          {record.children ? '📁' : '📄'} {text}
+          {record.children ? "📁" : "📄"} {text}
         </Space>
       ),
     },
-   
+
     {
-      title: '路徑',
-      dataIndex: 'path',
-      key: 'path',
+      title: "路徑",
+      dataIndex: "path",
+      key: "path",
       sorter: (a: Permission, b: Permission) => a.path.localeCompare(b.path),
     },
     {
-      title: '類型',
-      dataIndex: 'type',
-      key: 'type',
+      title: "類型",
+      dataIndex: "type",
+      key: "type",
       render: (type: string) => (
-        <Tag color={type === 'ui' ? 'blue' : 'green'}>
-          {type === 'ui' ? '頁面權限' : 'API權限'}
+        <Tag color={type === "ui" ? "blue" : "green"}>
+          {type === "ui" ? "頁面權限" : "API權限"}
         </Tag>
       ),
     },
     {
-      title: '描述',
-      dataIndex: 'description',
-      key: 'description',
-      render: (text: string | null) => text || '-',
+      title: "描述",
+      dataIndex: "description",
+      key: "description",
+      render: (text: string | null) => text || "-",
     },
     {
-      title: '排序',
-      dataIndex: 'order',
-      key: 'order',
+      title: "排序",
+      dataIndex: "order",
+      key: "order",
       sorter: (a: Permission, b: Permission) => a.order - b.order,
     },
     {
-      title: '操作',
-      key: 'action',
+      title: "操作",
+      key: "action",
       render: (_: any, record: Permission) => (
         <Space size="middle">
-          <Button 
-            type="text" 
+          <Button
+            type="text"
             icon={<PlusOutlined />}
             onClick={() => handleCreate(record)}
           >
             新增子權限
           </Button>
-          <Button 
-            type="text" 
-            icon={<EditOutlined />} 
+          <Button
+            type="text"
+            icon={<EditOutlined />}
             onClick={() => handleEdit(record)}
           >
             編輯
@@ -181,108 +192,91 @@ export default function PermissionsPage() {
       ),
     },
   ];
- 
+
   return (
     <ProtectedRoute requiredPermission="/">
-      <div className="p-6">
-        <div className="flex justify-between items-center mb-6">
-          <h1 className="text-2xl font-bold">權限管理</h1>
-          <Button
-            type="primary"
-            icon={<PlusOutlined />}
-            onClick={() => handleCreate()}
-          >
-            新增權限
-          </Button>
-        </div>
-
-        <Table
-          columns={columns}
-          dataSource={permissions}
-          rowKey="id"
-          loading={loading}
-          expandable={{
-            childrenColumnName: 'children',
-            defaultExpandAllRows: true,
-            expandRowByClick: true,
-          }}
-          scroll={{ x: true }}
-          className="overflow-x-auto"
-        />
-
-        <Modal
-          title={editingId ? "編輯權限" : "新增權限"}
-          open={isModalVisible}
-          onCancel={() => setIsModalVisible(false)}
-          onOk={handleSubmit}
-          okText={editingId ? "更新" : "創建"}
-          cancelText="取消"
-          width={600}
-          className="max-w-[95vw]"
+      <div className="flex justify-between items-center mb-6">
+        <Button
+          type="primary"
+          icon={<PlusOutlined />}
+          onClick={() => handleCreate()}
         >
-          <Form
-            form={form}
-            layout="vertical"
-          >
-            <Form.Item
-              name="name"
-              label="權限名稱"
-              rules={[{ required: true, message: '請輸入權限名稱' }]}
-            >
-              <Input placeholder="例如：查看使用者" />
-            </Form.Item>
-            
-           
-
-            <Form.Item
-              name="path"
-              label="路徑"
-              rules={[{ required: true, message: '請輸入路徑' }]}
-            >
-              <Input placeholder="例如：admin/roles" />
-            </Form.Item>
-            
-            <Form.Item
-              name="type"
-              label="權限類型"
-              rules={[{ required: true, message: '請選擇權限類型' }]}
-            >
-              <Select placeholder="請選擇權限類型">
-                <Select.Option value="ui">頁面權限</Select.Option>
-                <Select.Option value="api">API權限</Select.Option>
-              </Select>
-            </Form.Item>
-
-            <Form.Item
-              name="parent_id"
-              label="父級權限"
-            >
-              <Select
-                placeholder="請選擇父級權限"
-                allowClear
-                options={permissions.map(p => ({
-                  label: p.name,
-                  value: p.id
-                }))}
-              />
-            </Form.Item>
-
-            <Form.Item
-              name="order"
-              label="排序"
-            >
-              <Input type="number" placeholder="請輸入排序數字" />
-            </Form.Item>
-            
-            <Form.Item
-              name="description"
-              label="權限描述"
-            >
-              <Input.TextArea placeholder="請輸入權限描述" />
-            </Form.Item>
-          </Form>
-        </Modal>
+          新增權限
+        </Button>
       </div>
+
+      <Table
+        columns={columns}
+        dataSource={permissions}
+        rowKey="id"
+        loading={loading}
+        expandable={{
+          childrenColumnName: "children",
+          defaultExpandAllRows: true,
+          expandRowByClick: true,
+        }}
+        scroll={{ x: true }}
+        className="overflow-x-auto"
+      />
+
+      <Modal
+        title={editingId ? "編輯權限" : "新增權限"}
+        open={isModalVisible}
+        onCancel={() => setIsModalVisible(false)}
+        onOk={handleSubmit}
+        okText={editingId ? "更新" : "創建"}
+        cancelText="取消"
+        width={600}
+        className="max-w-[95vw]"
+      >
+        <Form form={form} layout="vertical">
+          <Form.Item
+            name="name"
+            label="權限名稱"
+            rules={[{ required: true, message: "請輸入權限名稱" }]}
+          >
+            <Input placeholder="例如：查看使用者" />
+          </Form.Item>
+
+          <Form.Item
+            name="path"
+            label="路徑"
+            rules={[{ required: true, message: "請輸入路徑" }]}
+          >
+            <Input placeholder="例如：admin/roles" />
+          </Form.Item>
+
+          <Form.Item
+            name="type"
+            label="權限類型"
+            rules={[{ required: true, message: "請選擇權限類型" }]}
+          >
+            <Select placeholder="請選擇權限類型">
+              <Select.Option value="ui">頁面權限</Select.Option>
+              <Select.Option value="api">API權限</Select.Option>
+            </Select>
+          </Form.Item>
+
+          <Form.Item name="parent_id" label="父級權限">
+            <Select
+              placeholder="請選擇父級權限"
+              allowClear
+              options={permissions.map((p) => ({
+                label: p.name,
+                value: p.id,
+              }))}
+            />
+          </Form.Item>
+
+          <Form.Item name="order" label="排序">
+            <Input type="number" placeholder="請輸入排序數字" />
+          </Form.Item>
+
+          <Form.Item name="description" label="權限描述">
+            <Input.TextArea placeholder="請輸入權限描述" />
+          </Form.Item>
+        </Form>
+      </Modal>
     </ProtectedRoute>
   );
-} 
+}

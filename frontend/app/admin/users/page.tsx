@@ -1,7 +1,18 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { Table, Button, Modal, Form, Input, Space, message, Select, Tag, Popconfirm } from "antd";
+import {
+  Table,
+  Button,
+  Modal,
+  Form,
+  Input,
+  Space,
+  message,
+  Select,
+  Tag,
+  Popconfirm,
+} from "antd";
 import { EditOutlined, DeleteOutlined, PlusOutlined } from "@ant-design/icons";
 import { usePermissions } from "../../../api/permissions";
 import ProtectedRoute from "../../../components/ProtectedRoute";
@@ -82,7 +93,7 @@ export default function UsersPage() {
     try {
       const values = await createForm.validateFields();
       const response = await api.CREATE_ADMIN(values);
-      
+
       if (response.status === 200) {
         message.success("管理員創建成功");
         setIsCreateModalVisible(false);
@@ -110,19 +121,19 @@ export default function UsersPage() {
   const handleSubmit = async () => {
     try {
       const values = await form.validateFields();
-      
+
       if (editingId) {
         // Only send values that have been changed
         const dataToUpdate: any = {};
-        
+
         if (values.username) {
           dataToUpdate.username = values.username;
         }
-        
+
         if (values.password) {
           dataToUpdate.password = values.password;
         }
-        
+
         if (values.role_id !== undefined) {
           dataToUpdate.role_id = values.role_id;
         }
@@ -130,7 +141,7 @@ export default function UsersPage() {
           dataToUpdate.admin_id = userId;
         }
         const response = await api.ASSIGN_ROLE(editingId, dataToUpdate);
-        
+
         if (response.status === 200) {
           message.success("管理員更新成功");
           setIsModalVisible(false);
@@ -145,27 +156,27 @@ export default function UsersPage() {
 
   const columns = [
     {
-      title: '使用者名稱',
-      dataIndex: 'username',
-      key: 'username',
+      title: "使用者名稱",
+      dataIndex: "username",
+      key: "username",
     },
     {
-      title: '角色',
-      dataIndex: 'role',
-      key: 'role',
-      render: (role: Role | null) => (
-        role ? <Tag color="blue">{role.name}</Tag> : <Tag color="red">未分配</Tag>
-      ),
+      title: "角色",
+      dataIndex: "role",
+      key: "role",
+      render: (role: Role | null) =>
+        role ? (
+          <Tag color="blue">{role.name}</Tag>
+        ) : (
+          <Tag color="red">未分配</Tag>
+        ),
     },
     {
-      title: '操作',
-      key: 'action',
+      title: "操作",
+      key: "action",
       render: (_: any, record: Admin) => (
         <Space>
-          <Button 
-            icon={<EditOutlined />} 
-            onClick={() => handleEdit(record)}
-          >
+          <Button icon={<EditOutlined />} onClick={() => handleEdit(record)}>
             編輯
           </Button>
           <Popconfirm
@@ -174,10 +185,7 @@ export default function UsersPage() {
             okText="確定"
             cancelText="取消"
           >
-            <Button 
-              icon={<DeleteOutlined />} 
-              danger
-            >
+            <Button icon={<DeleteOutlined />} danger>
               刪除
             </Button>
           </Popconfirm>
@@ -188,125 +196,106 @@ export default function UsersPage() {
 
   return (
     <ProtectedRoute requiredPermission="/admin/users">
-      <div className="p-6">
-        <div className="flex justify-between items-center mb-6">
-          <h1 className="text-2xl font-bold">使用者管理</h1>
-          <Button 
-            type="primary" 
-            icon={<PlusOutlined />}
-            onClick={handleCreate}
-          >
-            新增管理員
-          </Button>
-        </div>
-
-        <Table
-          columns={columns}
-          dataSource={admins}
-          rowKey="id"
-          loading={loading}
-          scroll={{ x: true }}
-          className="overflow-x-auto"
-        />
-
-        {/* Edit Modal */}
-        <Modal
-          title="編輯使用者"
-          open={isModalVisible}
-          onCancel={() => setIsModalVisible(false)}
-          onOk={handleSubmit}
-          okText="更新"
-          cancelText="取消"
-          className="max-w-[95vw]"
-        >
-          <Form
-            form={form}
-            layout="vertical"
-          >
-            <Form.Item
-              name="username"
-              label="使用者名稱"
-              rules={[{ required: true, message: '請輸入使用者名稱' }]}
-            >
-              <Input placeholder="請輸入使用者名稱" />
-            </Form.Item>
-            
-            <Form.Item
-              name="password"
-              label="密碼"
-              extra="如果不需要更改密碼，請留空"
-            >
-              <Input.Password placeholder="請輸入新密碼" />
-            </Form.Item>
-            
-            <Form.Item
-              name="role_id"
-              label="角色"
-            >
-              <Select
-                placeholder="請選擇角色"
-                allowClear
-                style={{ width: '100%' }}
-              >
-                {roles.map(role => (
-                  <Select.Option key={role.id} value={role.id}>
-                    {role.name}
-                  </Select.Option>
-                ))}
-              </Select>
-            </Form.Item>
-          </Form>
-        </Modal>
-
-        {/* Create Modal */}
-        <Modal
-          title="新增管理員"
-          open={isCreateModalVisible}
-          onCancel={() => setIsCreateModalVisible(false)}
-          onOk={handleCreateSubmit}
-          okText="創建"
-          cancelText="取消"
-          className="max-w-[95vw]"
-        >
-          <Form
-            form={createForm}
-            layout="vertical"
-          >
-            <Form.Item
-              name="username"
-              label="使用者名稱"
-              rules={[{ required: true, message: '請輸入使用者名稱' }]}
-            >
-              <Input placeholder="請輸入使用者名稱" />
-            </Form.Item>
-            
-            <Form.Item
-              name="password"
-              label="密碼"
-              rules={[{ required: true, message: '請輸入密碼' }]}
-            >
-              <Input.Password placeholder="請輸入密碼" />
-            </Form.Item>
-            
-            <Form.Item
-              name="role_id"
-              label="角色"
-            >
-              <Select
-                placeholder="請選擇角色"
-                allowClear
-                style={{ width: '100%' }}
-              >
-                {roles.map(role => (
-                  <Select.Option key={role.id} value={role.id}>
-                    {role.name}
-                  </Select.Option>
-                ))}
-              </Select>
-            </Form.Item>
-          </Form>
-        </Modal>
+      <div className="flex justify-between items-center mb-6">
+        <Button type="primary" icon={<PlusOutlined />} onClick={handleCreate}>
+          新增管理員
+        </Button>
       </div>
+
+      <Table
+        columns={columns}
+        dataSource={admins}
+        rowKey="id"
+        loading={loading}
+        scroll={{ x: true }}
+        className="overflow-x-auto"
+      />
+
+      {/* Edit Modal */}
+      <Modal
+        title="編輯使用者"
+        open={isModalVisible}
+        onCancel={() => setIsModalVisible(false)}
+        onOk={handleSubmit}
+        okText="更新"
+        cancelText="取消"
+        className="max-w-[95vw]"
+      >
+        <Form form={form} layout="vertical">
+          <Form.Item
+            name="username"
+            label="使用者名稱"
+            rules={[{ required: true, message: "請輸入使用者名稱" }]}
+          >
+            <Input placeholder="請輸入使用者名稱" />
+          </Form.Item>
+
+          <Form.Item
+            name="password"
+            label="密碼"
+            extra="如果不需要更改密碼，請留空"
+          >
+            <Input.Password placeholder="請輸入新密碼" />
+          </Form.Item>
+
+          <Form.Item name="role_id" label="角色">
+            <Select
+              placeholder="請選擇角色"
+              allowClear
+              style={{ width: "100%" }}
+            >
+              {roles.map((role) => (
+                <Select.Option key={role.id} value={role.id}>
+                  {role.name}
+                </Select.Option>
+              ))}
+            </Select>
+          </Form.Item>
+        </Form>
+      </Modal>
+
+      {/* Create Modal */}
+      <Modal
+        title="新增管理員"
+        open={isCreateModalVisible}
+        onCancel={() => setIsCreateModalVisible(false)}
+        onOk={handleCreateSubmit}
+        okText="創建"
+        cancelText="取消"
+        className="max-w-[95vw]"
+      >
+        <Form form={createForm} layout="vertical">
+          <Form.Item
+            name="username"
+            label="使用者名稱"
+            rules={[{ required: true, message: "請輸入使用者名稱" }]}
+          >
+            <Input placeholder="請輸入使用者名稱" />
+          </Form.Item>
+
+          <Form.Item
+            name="password"
+            label="密碼"
+            rules={[{ required: true, message: "請輸入密碼" }]}
+          >
+            <Input.Password placeholder="請輸入密碼" />
+          </Form.Item>
+
+          <Form.Item name="role_id" label="角色">
+            <Select
+              placeholder="請選擇角色"
+              allowClear
+              style={{ width: "100%" }}
+            >
+              {roles.map((role) => (
+                <Select.Option key={role.id} value={role.id}>
+                  {role.name}
+                </Select.Option>
+              ))}
+            </Select>
+          </Form.Item>
+        </Form>
+      </Modal>
     </ProtectedRoute>
   );
-} 
+}

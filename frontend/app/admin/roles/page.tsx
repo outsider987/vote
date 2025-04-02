@@ -1,8 +1,19 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { Table, Button, Modal, Form, Input, Space, message, Popconfirm, Tree, Tag } from "antd";
-import type { TreeDataNode, TreeProps } from 'antd';
+import {
+  Table,
+  Button,
+  Modal,
+  Form,
+  Input,
+  Space,
+  message,
+  Popconfirm,
+  Tree,
+  Tag,
+} from "antd";
+import type { TreeDataNode, TreeProps } from "antd";
 import { PlusOutlined, EditOutlined, DeleteOutlined } from "@ant-design/icons";
 import { usePermissions } from "../../../api/permissions";
 import ProtectedRoute from "../../../components/ProtectedRoute";
@@ -80,9 +91,9 @@ export default function RolesPage() {
     form.setFieldsValue({
       name: record.name,
       description: record.description,
-      permission_ids: record.permissions.map(p => p.id),
+      permission_ids: record.permissions.map((p) => p.id),
     });
-    setCheckedKeys(record.permissions.map(p => p.id));
+    setCheckedKeys(record.permissions.map((p) => p.id));
     setEditingId(record.id);
     setIsModalVisible(true);
   };
@@ -103,16 +114,15 @@ export default function RolesPage() {
   const handleSubmit = async () => {
     try {
       const values = await form.validateFields();
-      
+
       if (editingId) {
         // Update existing role
         const response = await api.UPDATE_ROLE(editingId, {
-          
           name: values.name,
           description: values.description,
           permission_ids: values.permission_ids,
         });
-        
+
         if (response.status === 200) {
           message.success("角色更新成功");
           setIsModalVisible(false);
@@ -125,7 +135,7 @@ export default function RolesPage() {
           description: values.description,
           permission_ids: values.permission_ids,
         });
-        
+
         if (response.status === 200) {
           message.success("角色建立成功");
           setIsModalVisible(false);
@@ -138,51 +148,57 @@ export default function RolesPage() {
     }
   };
 
-  const transformToTreeData = (permissions: PermissionTree[]): TreeDataNode[] => {
-    return permissions.map(permission => ({
+  const transformToTreeData = (
+    permissions: PermissionTree[]
+  ): TreeDataNode[] => {
+    return permissions.map((permission) => ({
       key: permission.id,
       title: (
         <div>
           <div>{permission.name}</div>
           {permission.description && (
-            <div style={{ fontSize: '12px', color: '#888' }}>
+            <div style={{ fontSize: "12px", color: "#888" }}>
               {permission.description}
             </div>
           )}
         </div>
       ),
       disabled: false,
-      children: permission.children ? transformToTreeData(permission.children) : undefined
+      children: permission.children
+        ? transformToTreeData(permission.children)
+        : undefined,
     }));
   };
 
-  const onCheck: TreeProps['onCheck'] = (checkedKeys, info) => {
+  const onCheck: TreeProps["onCheck"] = (checkedKeys, info) => {
     setCheckedKeys(checkedKeys as React.Key[]);
-    form.setFieldValue('permission_ids', checkedKeys);
+    form.setFieldValue("permission_ids", checkedKeys);
   };
 
   const columns = [
     {
-      title: '角色名稱',
-      dataIndex: 'name',
-      key: 'name',
+      title: "角色名稱",
+      dataIndex: "name",
+      key: "name",
     },
     {
-      title: '描述',
-      dataIndex: 'description',
-      key: 'description',
-      render: (text: string | null) => text || '-',
+      title: "描述",
+      dataIndex: "description",
+      key: "description",
+      render: (text: string | null) => text || "-",
     },
     {
-      title: '權限',
-      dataIndex: 'permissions',
-      key: 'permissions',
+      title: "權限",
+      dataIndex: "permissions",
+      key: "permissions",
       render: (permissions: PermissionTree[]) => (
-        <div style={{ maxWidth: '400px', overflowX: 'auto' }}>
+        <div style={{ maxWidth: "400px", overflowX: "auto" }}>
           {permissions?.length > 0 ? (
             <Space wrap>
-              {permissions.map(perm => (
-                <Tag color="blue" key={perm.id}>{perm.name}</Tag>
+              {permissions.map((perm) => (
+                <Tag color="blue" key={perm.id}>
+                  {perm.name}
+                </Tag>
               ))}
             </Space>
           ) : (
@@ -192,14 +208,11 @@ export default function RolesPage() {
       ),
     },
     {
-      title: '操作',
-      key: 'action',
+      title: "操作",
+      key: "action",
       render: (_: any, record: Role) => (
         <Space size="middle">
-          <Button 
-            icon={<EditOutlined />} 
-            onClick={() => handleEdit(record)}
-          >
+          <Button icon={<EditOutlined />} onClick={() => handleEdit(record)}>
             編輯
           </Button>
           <Popconfirm
@@ -219,75 +232,65 @@ export default function RolesPage() {
 
   return (
     <ProtectedRoute requiredPermission="/admin/roles">
-      <div className="p-6">
-        <div className="flex justify-between items-center mb-6">
-          <h1 className="text-2xl font-bold">角色管理</h1>
-          <Button
-            type="primary"
-            icon={<PlusOutlined />}
-            onClick={handleCreate}
-          >
-            新增角色
-          </Button>
-        </div>
-
-        <Table
-          columns={columns}
-          dataSource={roles}
-          rowKey="id"
-          loading={loading}
-          scroll={{ x: true }}
-          className="overflow-x-auto"
-        />
-
-        <Modal
-          title={editingId ? "編輯角色" : "新增角色"}
-          open={isModalVisible}
-          onCancel={() => setIsModalVisible(false)}
-          onOk={handleSubmit}
-          okText={editingId ? "更新" : "創建"}
-          cancelText="取消"
-          width={600}
-          className="max-w-[95vw]"
-        >
-          <Form
-            form={form}
-            layout="vertical"
-          >
-            <Form.Item
-              name="name"
-              label="角色名稱"
-              rules={[{ required: true, message: '請輸入角色名稱' }]}
-            >
-              <Input placeholder="例如：管理員" />
-            </Form.Item>
-            
-            <Form.Item
-              name="description"
-              label="角色描述"
-            >
-              <Input.TextArea placeholder="請輸入角色描述" />
-            </Form.Item>
-            
-            <Form.Item
-              name="permission_ids"
-              label="權限"
-              rules={[{ required: true, message: '請選擇至少一個權限' }]}
-            >
-              <div style={{ maxHeight: '400px', overflow: 'auto' }} className="mobile-tree-container">
-                <Tree
-                  checkable
-                  treeData={transformToTreeData(permissions)}
-                  checkedKeys={checkedKeys}
-                  onCheck={onCheck}
-                  defaultExpandAll
-                  className="mobile-tree"
-                />
-              </div>
-            </Form.Item>
-          </Form>
-        </Modal>
+      <div className="flex justify-between items-center mb-6">
+        <Button type="primary" icon={<PlusOutlined />} onClick={handleCreate}>
+          新增角色
+        </Button>
       </div>
+
+      <Table
+        columns={columns}
+        dataSource={roles}
+        rowKey="id"
+        loading={loading}
+        scroll={{ x: true }}
+        className="overflow-x-auto"
+      />
+
+      <Modal
+        title={editingId ? "編輯角色" : "新增角色"}
+        open={isModalVisible}
+        onCancel={() => setIsModalVisible(false)}
+        onOk={handleSubmit}
+        okText={editingId ? "更新" : "創建"}
+        cancelText="取消"
+        width={600}
+        className="max-w-[95vw]"
+      >
+        <Form form={form} layout="vertical">
+          <Form.Item
+            name="name"
+            label="角色名稱"
+            rules={[{ required: true, message: "請輸入角色名稱" }]}
+          >
+            <Input placeholder="例如：管理員" />
+          </Form.Item>
+
+          <Form.Item name="description" label="角色描述">
+            <Input.TextArea placeholder="請輸入角色描述" />
+          </Form.Item>
+
+          <Form.Item
+            name="permission_ids"
+            label="權限"
+            rules={[{ required: true, message: "請選擇至少一個權限" }]}
+          >
+            <div
+              style={{ maxHeight: "400px", overflow: "auto" }}
+              className="mobile-tree-container"
+            >
+              <Tree
+                checkable
+                treeData={transformToTreeData(permissions)}
+                checkedKeys={checkedKeys}
+                onCheck={onCheck}
+                defaultExpandAll
+                className="mobile-tree"
+              />
+            </div>
+          </Form.Item>
+        </Form>
+      </Modal>
     </ProtectedRoute>
   );
-} 
+}
