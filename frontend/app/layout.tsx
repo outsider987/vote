@@ -3,12 +3,13 @@
 import { Inter } from "next/font/google";
 import "./globals.css";
 import "antd/dist/reset.css";
-import { Layout } from "antd";
+import { Grid, Layout } from "antd";
 import NavBar from "./layouts/NavBar";
 import { ReactNode, useState, useEffect } from "react";
 import RootContextProvider from "./store";
 import { getCookie } from "./store/Auth";
 import { usePathname } from "next/navigation";
+const { useBreakpoint } = Grid;
 
 const { Content } = Layout;
 const inter = Inter({ subsets: ["latin"] });
@@ -19,7 +20,7 @@ export default function RootLayout({ children }: { children: ReactNode }) {
   // Token state
   const [token, setToken] = useState<string | null>(null);
   const pathname = usePathname();
-
+  const screens = useBreakpoint();
   // Adjust sidebar collapse based on window width
   useEffect(() => {
     if (typeof window !== "undefined") {
@@ -60,25 +61,17 @@ export default function RootLayout({ children }: { children: ReactNode }) {
               {!pathname.split("/").includes("client") ? (
                 <Layout
                   style={{
-                    marginLeft: sidebarCollapsed ? 80 : 200,
+                    marginLeft: screens.lg ? sidebarCollapsed ? 80 : 200 : 0,
                     transition: "margin-left 0.2s",
                     height: "100vh",
                     padding: "24px 16px",
                   }}
                 >
-                  <div className="max-w-[calc(100%-24px)]">
-                    <Content
-                      style={{
-                        overflow: "initial",
-                        padding: "8px 16px",
-                        minHeight: "calc(100vh - 48px)",
-                        background: "#fff",
-                        borderRadius: 4,
-                      }}
+                  <Content
+                    
                     >
                       {children}
                     </Content>
-                  </div>
                 </Layout>
               ) : (
                 children

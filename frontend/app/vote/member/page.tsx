@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { Button, Table, Modal, Form, message, Space, Typography } from "antd";
 import {
   PlusOutlined,
@@ -15,17 +15,11 @@ import {
   useUpdateMember,
   useDeleteMember,
 } from "@/data/mutations/members";
-import {
-  useCreateGroup,
-  useUpdateGroup,
-  useDeleteGroup,
-} from "@/data/mutations/groups";
 import { useMembersAPI } from "@/api/members";
 import { MemberModal } from "./components/MemberModal";
-import { GroupModal } from "./components/GroupModal";
 import { PreviewModal } from "./components/PreviewModal";
 import { SearchForm } from "../../../components/SearchForm";
-import { getMemberColumns, getGroupColumns } from "./components/tableConfigs";
+import { getMemberColumns } from "./components/tableConfigs";
 import { processExcelFile, createExcelFile } from "./utils/excel";
 import {
   Member,
@@ -39,13 +33,10 @@ const { Title } = Typography;
 
 export default function MemberPage() {
   const [isMemberModalOpen, setIsMemberModalOpen] = useState(false);
-  const [isGroupModalOpen, setIsGroupModalOpen] = useState(false);
   const [isPreviewModalOpen, setIsPreviewModalOpen] = useState(false);
   const [selectedMember, setSelectedMember] = useState<Member | null>(null);
-  const [selectedGroup, setSelectedGroup] = useState<Group | null>(null);
   const [excelData, setExcelData] = useState<ExcelMemberData[]>([]);
   const [form] = Form.useForm();
-  const [groupForm] = Form.useForm();
   const [previewForm] = Form.useForm();
   const [selectedGroupId, setSelectedGroupId] = useState<string | null>(null);
   const [searchText, setSearchText] = useState<SearchFilters>({
@@ -54,16 +45,13 @@ export default function MemberPage() {
     phone: "",
   });
 
-  const { data: groups = [], refetch: refetchGroups } = useGroups();
+  const { data: groups = [] } = useGroups();
   const { data: members = [], refetch: refetchMembers } = useMembers(
     selectedGroupId || undefined
   );
   const createMember = useCreateMember();
   const updateMember = useUpdateMember();
   const deleteMember = useDeleteMember();
-  const createGroup = useCreateGroup();
-  const updateGroup = useUpdateGroup();
-  const deleteGroup = useDeleteGroup();
   const membersApi = useMembersAPI();
 
   const searchColumns: SearchColumn[] = [
@@ -116,23 +104,6 @@ export default function MemberPage() {
     }
   };
 
-  const handleGroupSubmit = async (values: any) => {
-    try {
-      if (selectedGroup) {
-        await updateGroup.mutateAsync({ id: selectedGroup.id, ...values });
-        message.success("群組更新成功");
-      } else {
-        await createGroup.mutateAsync(values);
-        message.success("群組建立成功");
-      }
-      setIsGroupModalOpen(false);
-      groupForm.resetFields();
-      refetchGroups();
-    } catch (error) {
-      message.error("操作失敗，請稍後再試");
-    }
-  };
-
   const handleDeleteMember = async (id: string) => {
     Modal.confirm({
       title: "確認刪除",
@@ -144,24 +115,6 @@ export default function MemberPage() {
           await deleteMember.mutateAsync(id);
           message.success("成員刪除成功");
           refetchMembers();
-        } catch (error) {
-          message.error("刪除失敗，請稍後再試");
-        }
-      },
-    });
-  };
-
-  const handleDeleteGroup = async (id: string) => {
-    Modal.confirm({
-      title: "確認刪除",
-      content: "確定要刪除此群組嗎？",
-      okText: "確定",
-      cancelText: "取消",
-      onOk: async () => {
-        try {
-          await deleteGroup.mutateAsync(id);
-          message.success("群組刪除成功");
-          refetchGroups();
         } catch (error) {
           message.error("刪除失敗，請稍後再試");
         }
@@ -215,49 +168,20 @@ export default function MemberPage() {
 
   return (
     <ProtectedRoute requiredPermission="/vote/member">
-      <div className="space-y-2">
+      <div className="space-y-4">
         <div className="flex justify-between items-center">
-          <Title level={2}>群組管理</Title>
+          <Title level={2}>成員管理</Title>
           <Button
             type="primary"
             icon={<PlusOutlined />}
             onClick={() => {
-              setSelectedGroup(null);
-              groupForm.resetFields();
-              setIsGroupModalOpen(true);
+              setSelectedMember(null);
+              form.resetFields();
+              setIsMemberModalOpen(true);
             }}
           >
-            新增群組
+            新增成員
           </Button>
-        </div>
-
-        <Table
-          columns={getGroupColumns((record) => {
-            setSelectedGroup(record);
-            groupForm.setFieldsValue(record);
-            setIsGroupModalOpen(true);
-          }, handleDeleteGroup)}
-          dataSource={groups}
-          rowKey="id"
-          scroll={{ x: true }}
-          pagination={{ pageSize: 10 }}
-        />
-
-        <div className="flex justify-between items-center ">
-          <Title level={2}>成員管理</Title>
-          <Space>
-            <Button
-              type="primary"
-              icon={<PlusOutlined />}
-              onClick={() => {
-                setSelectedMember(null);
-                form.resetFields();
-                setIsMemberModalOpen(true);
-              }}
-            >
-              新增成員
-            </Button>
-          </Space>
         </div>
 
         <SearchForm
@@ -292,9 +216,7 @@ export default function MemberPage() {
               member.name.toLowerCase().includes(searchText.name.toLowerCase());
             const emailMatch =
               !searchText.email ||
-              member.email
-                .toLowerCase()
-                .includes(searchText.email.toLowerCase());
+              member.email.toLowerCase().includes(searchText.email.toLowerCase());
             const phoneMatch =
               !searchText.phone ||
               (member.phone && member.phone.includes(searchText.phone));
@@ -316,17 +238,6 @@ export default function MemberPage() {
           form={form}
           onExcelUpload={handleExcelUpload}
           onDownloadTemplate={handleDownloadTemplate}
-        />
-
-        <GroupModal
-          isOpen={isGroupModalOpen}
-          onClose={() => {
-            setIsGroupModalOpen(false);
-            groupForm.resetFields();
-          }}
-          onSubmit={handleGroupSubmit}
-          selectedGroup={selectedGroup}
-          form={groupForm}
         />
 
         <PreviewModal

@@ -51,5 +51,5 @@ export default function ProtectedRoute({ children, requiredPermission }: Protect
     return null;
   }
 
-  return <>{children}</>;
+  return <div className="max-h-screen">{children}</div>;
 } 

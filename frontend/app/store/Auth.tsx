@@ -14,6 +14,7 @@ interface AuthContextType {
   role: string | null;
   userId: string | null;
   username: string | null;
+  user: { username: string } | null;
   hasUIPermission: (permission: string) => boolean;
   hasAPIPermission: (permission: string) => boolean;
 }
@@ -56,6 +57,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const [role, setRole] = useState<string | null>(null);
   const [userId, setUserId] = useState<string | null>(null);
   const [username, setUsername] = useState<string | null>(null);
+  const [user, setUser] = useState<{ username: string } | null>(null);
   const router = useRouter();
   const pathname = usePathname();
 
@@ -66,6 +68,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     setRole(null);
     setUserId(null);
     setUsername(null);
+    setUser(null);
 
     // Clear all auth cookies
     deleteCookie("token");
@@ -128,7 +131,9 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         }
 
         if (storedUsername) {
-          setUsername(decodeURIComponent(storedUsername));
+          const decodedUsername = decodeURIComponent(storedUsername);
+          setUsername(decodedUsername);
+          setUser({ username: decodedUsername });
         }
       } catch (error) {
         console.error("Failed to parse stored permissions:", error);
@@ -141,6 +146,9 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
             setRole(payload.role || null);
             setUserId(payload.user_id || null);
             setUsername(payload.sub || null);
+            if (payload.sub) {
+              setUser({ username: payload.sub });
+            }
           }
         } catch (jwtError) {
           console.error("Failed to parse token:", jwtError);
@@ -168,6 +176,9 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       setRole(role);
       setUserId(user_id);
       setUsername(user);
+      if (user) {
+        setUser({ username: user });
+      }
 
       // Store in cookies
       setCookie("token", access_token);
@@ -190,7 +201,8 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       apiPermissions,
       role, 
       userId, 
-      username, 
+      username,
+      user,
       hasUIPermission,
       hasAPIPermission
     }}>
