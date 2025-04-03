@@ -20,6 +20,10 @@ class GroupService:
             db.commit()
             db.refresh(db_group)
             return db_group
+        except VotingError:
+            db.rollback()
+            # Re-raise VotingError without catching it
+            raise
         except Exception as e:
             db.rollback()
             logger.error(f"Failed to create group: {str(e)}")
@@ -34,6 +38,9 @@ class GroupService:
     def get_groups(db: Session, admin_id: int) -> list[Group]:
         try:
             return db.query(Group).filter(Group.admin_id == admin_id).all()
+        except VotingError:
+            # Re-raise VotingError without catching it
+            raise
         except Exception as e:
             logger.error(f"Failed to fetch groups: {str(e)}")
             raise VotingError(
@@ -61,6 +68,10 @@ class GroupService:
             db.commit()
             db.refresh(group)
             return group
+        except VotingError:
+            db.rollback()
+            # Re-raise VotingError without catching it
+            raise
         except Exception as e:
             db.rollback()
             logger.error(f"Failed to update group: {str(e)}")
@@ -83,6 +94,10 @@ class GroupService:
                 )
             db.delete(group)
             db.commit()
+        except VotingError:
+            db.rollback()
+            # Re-raise VotingError without catching it
+            raise
         except Exception as e:
             db.rollback()
             logger.error(f"Failed to delete group: {str(e)}")

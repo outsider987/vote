@@ -53,7 +53,7 @@ async def get_permission_tree(
     return build_permission_tree(permissions)
 
 @router.post("/")
-@require_auth()
+@require_auth(body_model=PermissionTreeCreate)
 async def create_permission(
     request: Request,
     body: Optional[PermissionTreeCreate] = None,

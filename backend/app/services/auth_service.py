@@ -33,7 +33,7 @@ def get_current_user(token: str = Depends(oauth2_scheme)):
 
         # Create a dictionary with user information from payload
         user_info = {
-            "id": payload.get("user_id"),
+            "id": int(payload.get("user_id")),
             "username": payload.get("sub"),
             "role": payload.get("role"),
             "email": payload.get("email"),

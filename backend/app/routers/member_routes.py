@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Body, Depends, Header, Request, UploadFile, File
+from fastapi import APIRouter, Body, Depends, HTTPException, Header, Request, UploadFile, File
 from sqlalchemy.orm import Session
 from app.db.database import get_db
 from app.schemas.vote import (
@@ -16,6 +16,7 @@ from app.utils.case_utils import to_camel_case
 from app.services.auth_service import require_auth
 from typing import Optional
 from io import BytesIO
+from app.errors.handlers import VotingError, ErrorCodes
 
 router = APIRouter(prefix="/members", tags=["members"])
 member_service = MemberService()
@@ -32,7 +33,7 @@ async def create_group(
     current_user: dict = None,
 ):
     group = group_service.create_group(db, body, current_user.id)
-    return JSONResponse({"message": "群組建立成功", "group_id": group.id})
+    return {"message": "群組建立成功", "group_id": group.id}
 
 
 @router.get("/groups")
@@ -44,7 +45,6 @@ async def get_groups(
     authorization: Optional[str] = Header(None),
     current_user: dict = None,
 ):
-
     groups = group_service.get_groups(db, current_user.id)
     return to_camel_case(groups)
 
@@ -60,7 +60,7 @@ async def update_group(
     current_user: dict = None,
 ):
     group = group_service.update_group(db, group_id, body)
-    return JSONResponse({"message": "群組更新成功"})
+    return {"message": "群組更新成功"}
 
 
 @router.delete("/groups/{group_id}")
@@ -74,7 +74,7 @@ async def delete_group(
     current_user: dict = None,
 ):
     group_service.delete_group(db, group_id)
-    return JSONResponse({"message": "群組刪除成功"})
+    return {"message": "群組刪除成功"}
 
 
 # Member routes
@@ -87,8 +87,8 @@ async def create_member(
     authorization: Optional[str] = Header(None),
     current_user: dict = None,
 ):
-    member = member_service.create_member(db, body)
-    return JSONResponse({"message": "成員建立成功", "member_id": member.id})
+    member = member_service.create_member(db, body, current_user.id)
+    return {"message": "成員建立成功", "member_id": member.id}
 
 
 @router.get("")
@@ -101,7 +101,18 @@ async def get_members(
     authorization: Optional[str] = Header(None),
     current_user: dict = None,
 ):
-    members = member_service.get_members(db, group_id)
+    groups = group_service.get_groups(db, current_user.id)
+    if group_id:
+        group = next((g for g in groups if g.id == group_id), None)
+        if not group:
+            raise VotingError(
+                status_code=404,
+                message="群組不存在",
+                error_code=ErrorCodes.GROUP_NOT_FOUND,
+            )
+        group_id = group.id
+    
+    members = member_service.get_members(db, group_id, current_user)
     return to_camel_case(members)
 
 
@@ -116,7 +127,7 @@ async def update_member(
     current_user: dict = None,
 ):
     member = member_service.update_member(db, member_id, body)
-    return JSONResponse({"message": "成員更新成功"})
+    return {"message": "成員更新成功"}
 
 
 @router.delete("/{member_id}")
@@ -130,7 +141,7 @@ async def delete_member(
     current_user: dict = None,
 ):
     member_service.delete_member(db, member_id)
-    return JSONResponse({"message": "成員刪除成功"})
+    return {"message": "成員刪除成功"}
 
 
 # Excel routes
@@ -160,5 +171,5 @@ async def upload_excel(
     """Upload Excel file and create members"""
     contents = await file.read()
     members = member_service.process_excel_upload(BytesIO(contents), current_user.id)
-    created_members = member_service.create_members_bulk(db, members)
-    return JSONResponse({"message": f"成功建立 {len(created_members)} 位成員"})
+    created_members = member_service.create_members_bulk(db, members, current_user.id)
+    return {"message": f"成功建立 {len(created_members)} 位成員"}

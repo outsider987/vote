@@ -180,9 +180,8 @@ class Member(Base):
     __table_args__ = {"extend_existing": True}
 
     id = Column(Integer, primary_key=True, autoincrement=True)
-   
     name = Column(String(255), nullable=False)
-    email = Column(String(255), nullable=False, unique=True)
+    email = Column(String(255), nullable=False)
     phone = Column(String(20), nullable=True)
     group_id = Column(String(36), ForeignKey("groups.id", ondelete="CASCADE"), nullable=False)
     # New foreign key linking Member to Event
@@ -190,5 +189,5 @@ class Member(Base):
     
     # Relationships
     group = relationship("Group", back_populates="members")
-   
+
   

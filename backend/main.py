@@ -30,20 +30,20 @@ app.add_middleware(
 
 # Add exception handlers
 @app.exception_handler(VotingError)
-async def voting_error_handler(request: Request, exc: VotingError):
-    return voting_exception_handler(request, exc)
+async def handle_voting_error(request: Request, exc: VotingError):
+    return await voting_exception_handler(request, exc)
 
-@app.exception_handler(Exception)
-async def global_exception_handler(request: Request, exc: Exception):
-    logger.error(f"Global error handler caught: {str(exc)}", exc_info=True)
-    return JSONResponse(
-        status_code=500,
-        content={
-            "error": "Internal Server Error",
-            "message": "An unexpected error occurred",
-            "detail": str(exc) if settings.DEBUG else None
-        }
-    )
+# @app.exception_handler(Exception)
+# async def global_exception_handler(request: Request, exc: Exception):
+#     logger.error(f"Global error handler caught: {str(exc)}", exc_info=True)
+#     return JSONResponse(
+#         status_code=500,
+#         content={
+#             "error": "Internal Server Error",
+#             "message": "An unexpected error occurred",
+#             "detail": str(exc) if settings.DEBUG else None
+#         }
+#     )
 
 # 儲存連線中的 WebSocket 客戶端
 active_websockets: List[WebSocket] = []
