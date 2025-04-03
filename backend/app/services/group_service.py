@@ -1,4 +1,4 @@
-from sqlalchemy.orm import Session
+from sqlalchemy.orm import Session, joinedload
 from app.models.models import Group
 from app.schemas.vote import GroupCreate, GroupUpdate
 from app.errors.handlers import VotingError, ErrorCodes
@@ -38,7 +38,7 @@ class GroupService:
     def get_groups(db: Session, current_user: dict) -> list[Group]:
         try:
             if current_user.role == "admin":
-                return db.query(Group).all()
+                return db.query(Group).options(joinedload(Group.role)).all()
             else:
                 return db.query(Group).filter(Group.admin_id == current_user.id).all()
         except VotingError:
