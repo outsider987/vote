@@ -45,7 +45,7 @@ async def get_groups(
     authorization: Optional[str] = Header(None),
     current_user: dict = None,
 ):
-    groups = group_service.get_groups(db, current_user.id)
+    groups = group_service.get_groups(db, current_user)
     return to_camel_case(groups)
 
 
@@ -101,7 +101,7 @@ async def get_members(
     authorization: Optional[str] = Header(None),
     current_user: dict = None,
 ):
-    groups = group_service.get_groups(db, current_user.id)
+    groups = group_service.get_groups(db, current_user)
     if group_id:
         group = next((g for g in groups if g.id == group_id), None)
         if not group:
