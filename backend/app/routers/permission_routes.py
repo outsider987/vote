@@ -24,17 +24,22 @@ router = APIRouter(prefix="/permissions", tags=["permissions"])
 
 def build_permission_tree(permissions: List[Permission]) -> List[dict]:
     """Build a tree structure from flat permissions list"""
-    permission_dict = {p.id: p.to_dict() for p in permissions}
+    # Create a dictionary to store permissions by ID
+    permission_dict = {}
     tree = []
     
+    # First pass: create all permission dictionaries
+    for permission in permissions:
+        permission_dict[permission.id] = permission.to_dict()
+        permission_dict[permission.id]['children'] = []
+    
+    # Second pass: build the tree structure
     for permission in permissions:
         if permission.parent_id is None:
             tree.append(permission_dict[permission.id])
         else:
             parent = permission_dict.get(permission.parent_id)
             if parent:
-                if 'children' not in parent:
-                    parent['children'] = []
                 parent['children'].append(permission_dict[permission.id])
     
     return tree
