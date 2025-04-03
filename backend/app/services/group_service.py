@@ -35,9 +35,12 @@ class GroupService:
             )
 
     @staticmethod
-    def get_groups(db: Session, admin_id: int) -> list[Group]:
+    def get_groups(db: Session, current_user: dict) -> list[Group]:
         try:
-            return db.query(Group).filter(Group.admin_id == admin_id).all()
+            if current_user.role == "admin":
+                return db.query(Group).all()
+            else:
+                return db.query(Group).filter(Group.admin_id == current_user.id).all()
         except VotingError:
             # Re-raise VotingError without catching it
             raise
