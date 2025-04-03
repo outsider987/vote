@@ -25,6 +25,7 @@ class EventUpdate(BaseModel):
     required_count: int | None = None
     backup_count: int | None = None
     votes_per_user: int | None = None
+    group_id: int | None = None
 
 
 class EventResponse(EventBase):

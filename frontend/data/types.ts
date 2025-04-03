@@ -15,6 +15,7 @@ export interface Event {
   votesPerUser: number;
   isArchived: boolean;
   group: {
+    id: number;
     name: string;
   };
 }

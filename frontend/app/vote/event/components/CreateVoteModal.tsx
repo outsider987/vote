@@ -44,6 +44,7 @@ interface CreateVoteModalProps {
   isOpen: boolean;
   onClose: () => void;
   mode: "create" | "edit";
+  groupId?: number;
 }
 
 export default function CreateVoteModal({
@@ -75,6 +76,7 @@ export default function CreateVoteModal({
           event_date: moment(event.eventDate),
           member_count: event.memberCount,
           show_count: event.showCount,
+          group_id: event.group?.id,
         });
       } else {
         form.resetFields();
@@ -101,6 +103,7 @@ export default function CreateVoteModal({
           required_count: values.required_count,
           backup_count: values.backup_count,
           options: values.options,
+          group_id: values.group_id,
         };
         await voteApi.UPDATE_EVENT(event.id, editData);
         message.success("活動更新成功");
