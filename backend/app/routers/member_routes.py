@@ -14,7 +14,7 @@ from app.services.member_service import MemberService
 from app.services.group_service import GroupService
 from app.utils.case_utils import to_camel_case
 from app.services.auth_service import require_auth
-from typing import Optional
+from typing import Optional, Union
 from io import BytesIO
 from app.errors.handlers import VotingError, ErrorCodes
 
@@ -95,15 +95,16 @@ async def create_member(
 @require_auth()
 async def get_members(
     request: Request,
-    group_id: Optional[str] = None,
+    group_id: Optional[Union[int, str]] = None,
     db: Session = Depends(get_db),
     body: dict = None,
     authorization: Optional[str] = Header(None),
     current_user: dict = None,
 ):
     groups = group_service.get_groups(db, current_user)
+    group_id = int(group_id) if group_id else None
     if group_id:
-        group = next((g for g in groups if g.id == group_id), None)
+        group = next((g for g in groups if g.id == int(group_id)), None)
         if not group:
             raise VotingError(
                 status_code=404,
