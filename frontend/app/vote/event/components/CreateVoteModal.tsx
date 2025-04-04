@@ -280,39 +280,35 @@ export default function CreateVoteModal({
           </Select>
         </Form.Item>
         {/* Excel Upload Section */}
-        {mode === "create" && (
-          <Form.Item label="Excel 上傳">
-            <div className="flex gap-2">
-              <Button
-                icon={<DownloadOutlined />}
-                onClick={handleDownloadTemplate}
-              >
-                下載範本
-              </Button>
-              <Upload
-                beforeUpload={handleFileUpload}
-                accept=".xlsx,.xls"
-                showUploadList={false}
-              >
-                <Button icon={<UploadOutlined />}>上傳 Excel</Button>
-              </Upload>
-            </div>
-            <div className="text-sm text-gray-500 mt-1">
-              請先下載範本，填寫後再上傳
-            </div>
-          </Form.Item>
-        )}
+        <Form.Item label="Excel 上傳">
+          <div className="flex gap-2">
+            <Button
+              icon={<DownloadOutlined />}
+              onClick={handleDownloadTemplate}
+            >
+              下載範本
+            </Button>
+            <Upload
+              beforeUpload={handleFileUpload}
+              accept=".xlsx,.xls"
+              showUploadList={false}
+            >
+              <Button icon={<UploadOutlined />}>上傳 Excel</Button>
+            </Upload>
+          </div>
+          <div className="text-sm text-gray-500 mt-1">
+            請先下載範本，填寫後再上傳
+          </div>
+        </Form.Item>
 
         {/* Dynamic Options */}
-        {mode === "create" && (
-          <Form.Item
-            name="options"
-            label="投票選項"
-            rules={[{ required: true, message: "請至少添加一個選項" }]}
-          >
-            <DynamicOptionsInput />
-          </Form.Item>
-        )}
+        <Form.Item
+          name="options"
+          label="投票選項"
+          rules={[{ required: true, message: "請至少添加一個選項" }]}
+        >
+          <DynamicOptionsInput />
+        </Form.Item>
 
         {/* Buttons */}
         <div className="flex justify-end gap-2 mt-4">

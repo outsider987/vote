@@ -230,6 +230,15 @@ class EventService:
             # Update only provided fields
             for field, value in event_data.items():
                 if value is not None:
+                    if field == 'options':
+                        # Validate options format
+                        for option in value:
+                            if not isinstance(option, dict) or 'number' not in option or 'text' not in option:
+                                raise VotingError(
+                                    status_code=400,
+                                    message="選項格式錯誤",
+                                    error_code="INVALID_OPTIONS_FORMAT",
+                                )
                     setattr(event, field, value)
 
             db.commit()
