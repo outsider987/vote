@@ -14,6 +14,7 @@ import {
   DialogFooter,
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
+import { useMembers } from "@/data/queries/members";
 
 interface VoteFormProps {
   voteInfo: {
@@ -21,6 +22,7 @@ interface VoteFormProps {
       options: { text: string; number: number }[];
       votesPerUser: number;
       id: string; // Used when navigating to live vote count
+      groupId: string;
     };
   };
   voteCode: string;
@@ -28,7 +30,7 @@ interface VoteFormProps {
 }
 
 interface VoteFormData {
-  candidates: { text: string; number: number }[];
+  candidates: { text: string; number?: number; id?: string }[];
 }
 
 export function VoteForm({
@@ -42,6 +44,7 @@ export function VoteForm({
   const [manualNumber, setManualNumber] = useState("");
   const [inputError, setInputError] = useState("");
   const router = useRouter();
+  const { data: members } = useMembers(voteInfo.event.groupId);
   const { register, handleSubmit, watch, setValue } = useForm<VoteFormData>({
     defaultValues: {
       candidates: [],
@@ -50,7 +53,11 @@ export function VoteForm({
   const { enqueueSnackbar } = useSnackbar();
   const selectedCount = watch("candidates").length;
 
-  const toggleCandidate = (candidate: { text: string; number: number }) => {
+  const toggleCandidate = (candidate: {
+    text: string;
+    number?: number;
+    id?: string;
+  }) => {
     if (isSuccess) return; // Prevent changes after submission
     const currentCandidates = watch("candidates");
 
@@ -72,8 +79,25 @@ export function VoteForm({
     }
   };
 
+  const toggleMember = (member: { text: string; id: string }) => {
+    if (isSuccess) return;
+    const currentCandidates = watch("candidates");
+    const isAlreadySelected = currentCandidates.some((c) => c.id === member.id);
+    if (isAlreadySelected) {
+      setValue(
+        "candidates",
+        currentCandidates.filter((c) => c.id !== member.id)
+      );
+    } else if (currentCandidates.length < voteInfo.event.votesPerUser) {
+      setValue("candidates", [...currentCandidates, { text: member.text, id: member.id }]);
+    } else {
+      enqueueSnackbar(`最多只能選擇 ${voteInfo.event.votesPerUser} 人`, {
+        variant: "error",
+      });
+    }
+  };
+
   const onSubmit = async (data: VoteFormData) => {
-    
     if (data.candidates.length === 0) {
       enqueueSnackbar("請至少選擇 1 人", {
         variant: "error",
@@ -83,7 +107,7 @@ export function VoteForm({
 
     const res = await POST_VOTE({
       vote_code,
-      candidate: data.candidates,
+      candidate: data.candidates.map(c => JSON.stringify(c)),
       event_id: voteInfo.event.id,
     });
     enqueueSnackbar(res.data.message, {
@@ -91,46 +115,53 @@ export function VoteForm({
     });
     if (res.status === 200) {
       setIsSuccess(true); // Disable further interactions
-    
     }
   };
 
   const handleManualInput = () => {
     setInputError("");
     const numberValue = parseInt(manualNumber);
-    
+
     // Validate input is a number
     if (isNaN(numberValue)) {
       setInputError("請輸入有效的數字");
       return;
     }
-    
+
     // Check if candidate exists
-    const candidate = voteInfo.event.options.find(option => option.number === numberValue);
+    const candidate = voteInfo.event.options.find(
+      (option) => option.number === numberValue
+    );
     if (!candidate) {
       setInputError(`編號 ${numberValue} 不存在於候選人名單中`);
       return;
     }
-    
+
     // Check if already selected
     const currentCandidates = watch("candidates");
-    const isAlreadySelected = currentCandidates.some(c => c.number === numberValue);
-    
+    const isAlreadySelected = currentCandidates.some(
+      (c) => c.number === numberValue
+    );
+
     if (isAlreadySelected) {
       // If already selected, remove it
       setValue(
         "candidates",
-        currentCandidates.filter(c => c.number !== numberValue)
+        currentCandidates.filter((c) => c.number !== numberValue)
       );
       setIsModalOpen(false);
       setManualNumber("");
-      enqueueSnackbar(`已移除編號 ${numberValue} 的候選人`, { variant: "info" });
+      enqueueSnackbar(`已移除編號 ${numberValue} 的候選人`, {
+        variant: "info",
+      });
     } else if (currentCandidates.length < voteInfo.event.votesPerUser) {
       // Add if not at max selection
       setValue("candidates", [...currentCandidates, candidate]);
       setIsModalOpen(false);
       setManualNumber("");
-      enqueueSnackbar(`已選擇編號 ${numberValue} 的候選人`, { variant: "success" });
+      enqueueSnackbar(`已選擇編號 ${numberValue} 的候選人`, {
+        variant: "success",
+      });
     } else {
       setInputError(`最多只能選擇 ${voteInfo.event.votesPerUser} 人`);
     }
@@ -188,23 +219,24 @@ export function VoteForm({
       <Dialog open={isModalOpen} onOpenChange={setIsModalOpen}>
         <DialogContent>
           <DialogHeader>
-            <DialogTitle>手動輸入候選人編號</DialogTitle>
+            <DialogTitle>會員列表</DialogTitle>
           </DialogHeader>
-          <div className="py-4">
-            <Input
-              type="number"
-              placeholder="請輸入候選人編號"
-              value={manualNumber}
-              onChange={(e) => setManualNumber(e.target.value)}
-              className="w-full"
-            />
+          <div className="py-4 flex flex-col gap-2">
+            {members?.map((member) => (
+              <CandidateCard
+                key={member.id}
+                option={{ text: member.name, id: member.id }}
+                isSelected={watch("candidates").some(c => c.id === member.id)}
+                onToggle={toggleMember}
+                register={register}
+              />
+            ))}
             {inputError && <p className="text-red-500 mt-2">{inputError}</p>}
           </div>
           <DialogFooter>
             <Button variant="outline" onClick={() => setIsModalOpen(false)}>
               取消
             </Button>
-            <Button onClick={handleManualInput}>確認</Button>
           </DialogFooter>
         </DialogContent>
       </Dialog>
@@ -223,9 +255,9 @@ const CandidateCard = ({
   register,
   disabled = false,
 }: {
-  option: { text: string; number: number };
+  option: { text: string; number?: number; id?: string };
   isSelected: boolean;
-  onToggle: (option: { text: string; number: number }) => void;
+  onToggle: (option: { text: string; number?: number; id?: string }) => void;
   register: any;
   disabled?: boolean;
 }) => (
@@ -253,7 +285,7 @@ const CandidateCard = ({
       />
       <div className="flex flex-col items-center gap-2 m-auto">
         <span className="text-lg min-w-[50px] min-h-[50px] flex items-center justify-center font-medium rounded-full border-2 border-solid border-red p-1">
-          {option.number}
+          {option.number }
         </span>
         <span className="text-lg font-medium">{option.text}</span>
       </div>

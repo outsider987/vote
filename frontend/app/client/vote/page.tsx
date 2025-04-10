@@ -19,6 +19,7 @@ interface VoteInfo {
     isVotingStarted: boolean;
     votesPerUser: number;
     id: string;
+    groupId: string;
   };
 }
 

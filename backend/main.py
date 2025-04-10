@@ -8,6 +8,7 @@ from app.errors.handlers import VotingError, voting_exception_handler, ErrorCode
 from app.core.config import settings
 import logging
 from app.routers import router
+import traceback
 
 logger = logging.getLogger(__name__)
 app = FastAPI(title="Voting System API")
@@ -33,17 +34,32 @@ app.add_middleware(
 async def handle_voting_error(request: Request, exc: VotingError):
     return await voting_exception_handler(request, exc)
 
-# @app.exception_handler(Exception)
-# async def global_exception_handler(request: Request, exc: Exception):
-#     logger.error(f"Global error handler caught: {str(exc)}", exc_info=True)
-#     return JSONResponse(
-#         status_code=500,
-#         content={
-#             "error": "Internal Server Error",
-#             "message": "An unexpected error occurred",
-#             "detail": str(exc) if settings.DEBUG else None
-#         }
-#     )
+@app.exception_handler(Exception)
+async def global_exception_handler(request: Request, exc: Exception):
+    # Get the full stack trace
+    stack_trace = traceback.format_exc()
+    
+    # Log the error with stack trace
+    logger.error(f"Unhandled error occurred: {str(exc)}\nStack trace:\n{stack_trace}")
+    
+    # Determine if we should show detailed error info
+    error_detail = str(exc) if settings.DEBUG else "An unexpected error occurred"
+    
+    return JSONResponse(
+        status_code=500,
+        content={
+            "error": {
+                "message": "Internal Server Error",
+                "code": "INTERNAL_SERVER_ERROR",
+                "details": {
+                    "error": error_detail,
+                    "path": request.url.path,
+                    # Only include stack trace in debug mode
+                    "stack_trace": stack_trace if settings.DEBUG else None
+                }
+            }
+        }
+    )
 
 # 儲存連線中的 WebSocket 客戶端
 active_websockets: List[WebSocket] = []
