@@ -80,7 +80,6 @@ export default function RootLayout({ children }: { children: ReactNode }) {
                     background: "black",
                     marginLeft: screens.lg ? (sidebarCollapsed ? 80 : 200) : 0,
                     transition: "margin-left 0.2s",
-                    height: "100vh",
                     padding: "12px 16px",
                   }}
                 >
