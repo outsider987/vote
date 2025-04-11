@@ -52,6 +52,7 @@ export default function RootLayout({ children }: { children: ReactNode }) {
               style={{
                 minHeight: "100vh",
                 background: "black",
+
                 width: "100%",
                 height: "100vh",
               }}
@@ -73,7 +74,18 @@ export default function RootLayout({ children }: { children: ReactNode }) {
                   <ProCard style={{ overflow: "auto" }}>{children}</ProCard>
                 </Layout>
               ) : (
-                children
+                <Layout
+                  style={{
+                    height: "100vh",
+                    background: "black",
+                    marginLeft: screens.lg ? (sidebarCollapsed ? 80 : 200) : 0,
+                    transition: "margin-left 0.2s",
+                    height: "100vh",
+                    padding: "12px 16px",
+                  }}
+                >
+                  {children}
+                </Layout>
               )}
             </Layout>
           ) : (
