@@ -14,7 +14,6 @@ import {
   DialogFooter,
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
-import { useMembers } from "@/data/queries/members";
 
 interface VoteFormProps {
   voteInfo: {
@@ -23,6 +22,7 @@ interface VoteFormProps {
       votesPerUser: number;
       id: string; // Used when navigating to live vote count
       groupId: string;
+      groupMembers: { id: string; text: string }[];
     };
   };
   voteCode: string;
@@ -44,7 +44,6 @@ export function VoteForm({
   const [manualNumber, setManualNumber] = useState("");
   const [inputError, setInputError] = useState("");
   const router = useRouter();
-  const { data: members } = useMembers(voteInfo.event.groupId);
   const { register, handleSubmit, watch, setValue } = useForm<VoteFormData>({
     defaultValues: {
       candidates: [],
@@ -89,7 +88,10 @@ export function VoteForm({
         currentCandidates.filter((c) => c.id !== member.id)
       );
     } else if (currentCandidates.length < voteInfo.event.votesPerUser) {
-      setValue("candidates", [...currentCandidates, { text: member.text, id: member.id }]);
+      setValue("candidates", [
+        ...currentCandidates,
+        { text: member.text, id: member.id },
+      ]);
     } else {
       enqueueSnackbar(`最多只能選擇 ${voteInfo.event.votesPerUser} 人`, {
         variant: "error",
@@ -107,7 +109,7 @@ export function VoteForm({
 
     const res = await POST_VOTE({
       vote_code,
-      candidate: data.candidates.map(c => JSON.stringify(c)),
+      candidate: data.candidates.map((c) => JSON.stringify(c)),
       event_id: voteInfo.event.id,
     });
     enqueueSnackbar(res.data.message, {
@@ -115,55 +117,6 @@ export function VoteForm({
     });
     if (res.status === 200) {
       setIsSuccess(true); // Disable further interactions
-    }
-  };
-
-  const handleManualInput = () => {
-    setInputError("");
-    const numberValue = parseInt(manualNumber);
-
-    // Validate input is a number
-    if (isNaN(numberValue)) {
-      setInputError("請輸入有效的數字");
-      return;
-    }
-
-    // Check if candidate exists
-    const candidate = voteInfo.event.options.find(
-      (option) => option.number === numberValue
-    );
-    if (!candidate) {
-      setInputError(`編號 ${numberValue} 不存在於候選人名單中`);
-      return;
-    }
-
-    // Check if already selected
-    const currentCandidates = watch("candidates");
-    const isAlreadySelected = currentCandidates.some(
-      (c) => c.number === numberValue
-    );
-
-    if (isAlreadySelected) {
-      // If already selected, remove it
-      setValue(
-        "candidates",
-        currentCandidates.filter((c) => c.number !== numberValue)
-      );
-      setIsModalOpen(false);
-      setManualNumber("");
-      enqueueSnackbar(`已移除編號 ${numberValue} 的候選人`, {
-        variant: "info",
-      });
-    } else if (currentCandidates.length < voteInfo.event.votesPerUser) {
-      // Add if not at max selection
-      setValue("candidates", [...currentCandidates, candidate]);
-      setIsModalOpen(false);
-      setManualNumber("");
-      enqueueSnackbar(`已選擇編號 ${numberValue} 的候選人`, {
-        variant: "success",
-      });
-    } else {
-      setInputError(`最多只能選擇 ${voteInfo.event.votesPerUser} 人`);
     }
   };
 
@@ -207,6 +160,50 @@ export function VoteForm({
             送出投票
           </Button>
         </CardFooter>
+        {/* Manual Input Modal */}
+        <Dialog open={isModalOpen} onOpenChange={setIsModalOpen}>
+          <DialogContent>
+            <DialogHeader>
+              <DialogTitle>會員列表</DialogTitle>
+            </DialogHeader>
+            <div className="py-4 flex flex-col gap-2">
+              {voteInfo.event.groupMembers?.map((member) => (
+                <CandidateCard
+                  key={member.id}
+                  option={{ text: member.text, id: member.id }}
+                  isSelected={watch("candidates").some(
+                    (c) => c.id === member.id
+                  )}
+                  onToggle={toggleMember}
+                  register={register}
+                />
+              ))}
+              {inputError && <p className="text-red-500 mt-2">{inputError}</p>}
+            </div>
+            <DialogFooter>
+              <div className="flex gap-2 justify-end">
+                <Button
+                  className="w-1/2"
+                  variant="outline"
+                  onClick={() => {
+                    setIsModalOpen(false);
+                    setValue("candidates", []);
+                  }}
+                >
+                  取消
+                </Button>
+                <Button
+                  type="button"
+                  onClick={handleSubmit(onSubmit)}
+                  className="w-1/2"
+                  variant="default"
+                >
+                  確認
+                </Button>
+              </div>
+            </DialogFooter>
+          </DialogContent>
+        </Dialog>
       </form>
       <div className="fixed right-3 bottom-3 text-primary flex flex-col gap-2">
         <span className="text-primary">
@@ -214,32 +211,6 @@ export function VoteForm({
         </span>
         <span className="text-primary">已選擇 {selectedCount} 人</span>
       </div>
-
-      {/* Manual Input Modal */}
-      <Dialog open={isModalOpen} onOpenChange={setIsModalOpen}>
-        <DialogContent>
-          <DialogHeader>
-            <DialogTitle>會員列表</DialogTitle>
-          </DialogHeader>
-          <div className="py-4 flex flex-col gap-2">
-            {members?.map((member) => (
-              <CandidateCard
-                key={member.id}
-                option={{ text: member.name, id: member.id }}
-                isSelected={watch("candidates").some(c => c.id === member.id)}
-                onToggle={toggleMember}
-                register={register}
-              />
-            ))}
-            {inputError && <p className="text-red-500 mt-2">{inputError}</p>}
-          </div>
-          <DialogFooter>
-            <Button variant="outline" onClick={() => setIsModalOpen(false)}>
-              取消
-            </Button>
-          </DialogFooter>
-        </DialogContent>
-      </Dialog>
     </div>
   ) : (
     <div className="shadow-lg p-4">
@@ -285,7 +256,7 @@ const CandidateCard = ({
       />
       <div className="flex flex-col items-center gap-2 m-auto">
         <span className="text-lg min-w-[50px] min-h-[50px] flex items-center justify-center font-medium rounded-full border-2 border-solid border-red p-1">
-          {option.number }
+          {option.number}
         </span>
         <span className="text-lg font-medium">{option.text}</span>
       </div>

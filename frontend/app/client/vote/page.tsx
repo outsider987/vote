@@ -20,7 +20,9 @@ interface VoteInfo {
     votesPerUser: number;
     id: string;
     groupId: string;
+    groupMembers: { id: string; text: string }[];
   };
+
 }
 
 interface VoteFormData {

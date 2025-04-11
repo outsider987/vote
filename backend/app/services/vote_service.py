@@ -3,7 +3,7 @@ from sqlalchemy.orm import Session, joinedload
 from sqlalchemy import String, cast, func
 from app.models.models import Vote, Ticket, Event, Archived
 from app.errors.handlers import VotingError, ErrorCodes
-from typing import Any, Dict, List,Tuple
+from typing import Any, Dict, List, Tuple
 import uuid
 from collections import defaultdict
 
@@ -50,9 +50,9 @@ class VoteService:
         event_options = event.options
         if isinstance(event_options, str):
             event_options = json.loads(event_options)
-            
+
         valid_numbers = [option.get("number") for option in event_options]
-        
+
         for candidate in candidates:
             # Check if this is a group member candidate (has id) or event option candidate (has number)
             if "id" in candidate:
@@ -94,36 +94,43 @@ class VoteService:
             )
 
     @staticmethod
-    def get_vote_counts(db: Session, event_id: str) -> Tuple[List[Dict[str, Any]], Event]:
+    def get_vote_counts(
+        db: Session, event_id: str
+    ) -> Tuple[List[Dict[str, Any]], Event]:
         try:
             # 1) Query all votes for the event
             all_votes = db.query(Vote).filter(Vote.event_id == event_id).all()
-            
+
             # 2) Fetch the event itself
             event = db.query(Event).filter(Event.id == event_id).first()
             if not event:
                 raise VotingError(
                     status_code=404,
                     message="找不到對應的投票事件",
-                    error_code="EVENT_NOT_FOUND"
+                    error_code="EVENT_NOT_FOUND",
                 )
 
             # 3) Build a mapping from candidate number -> aggregated vote count
             vote_mapping = defaultdict(int)
-
+            member_mapping = defaultdict(int)
+            member_candidates = []
             for vote in all_votes:
                 # If vote.candidate is already a dict, no need to json.loads()
                 if isinstance(vote.candidate, str):
                     candidate_data = json.loads(vote.candidate)
                 else:
                     candidate_data = vote.candidate
-                
+
                 candidate_number = candidate_data.get("number")
                 if candidate_number is not None:
                     vote_mapping[candidate_number] += 1
 
+                if candidate_data.get("id"):
+                    member_mapping[candidate_data.get("id")] += 1
+                    member_candidates.append(candidate_data)
             # 4) Parse event.options if it's stored as JSON text
             options = event.options
+
             if isinstance(options, str):
                 options = json.loads(options)
 
@@ -131,12 +138,16 @@ class VoteService:
             result = []
             for candidate in options:
                 number = candidate.get("number")
+
                 count = vote_mapping.get(number, 0)  # default to 0 if no votes
-                result.append({
-                    "candidate": candidate,
-                    "count": count
-                })
-                
+
+                result.append({"candidate": candidate, "count": count})
+
+            for candidate in member_candidates:
+                id = candidate.get("id")
+                count = member_mapping.get(id, 0)
+                result.append({"candidate": candidate, "count": count})
+
             total_votes = sum(vote["count"] for vote in result)
 
             return result, event, total_votes
@@ -149,15 +160,12 @@ class VoteService:
                 details={"error": str(e)},
             )
 
-
     @staticmethod
     def create_archived_record(db: Session, event_id: str, vote_result: dict) -> None:
         try:
             # Create archived record
             archived = Archived(
-                id=str(uuid.uuid4()),
-                event_id=event_id,
-                vote_result=vote_result
+                id=str(uuid.uuid4()), event_id=event_id, vote_result=vote_result
             )
             db.add(archived)
 
@@ -194,25 +202,36 @@ class VoteService:
                 .order_by(Vote.created_at.desc())
                 .all()
             )
-            
+
             result = []
             for vote in votes:
-                candidate_data = json.loads(vote.candidate) if isinstance(vote.candidate, str) else vote.candidate
-                result.append({
-                    "vote_id": vote.id,
-                    "vote_code": vote.vote_code,
-                    "candidate": candidate_data,
-                    "created_at": vote.created_at,
-                    "event": {
-                        "id": vote.event.id,
-                        "title": vote.event.title
-                    } if vote.event else None,
-                    "ticket": {
-                        "vote_code": vote.ticket.vote_code,
-                        "used": vote.ticket.used
-                    } if vote.ticket else None
-                })
-            
+                candidate_data = (
+                    json.loads(vote.candidate)
+                    if isinstance(vote.candidate, str)
+                    else vote.candidate
+                )
+                result.append(
+                    {
+                        "vote_id": vote.id,
+                        "vote_code": vote.vote_code,
+                        "candidate": candidate_data,
+                        "created_at": vote.created_at,
+                        "event": (
+                            {"id": vote.event.id, "title": vote.event.title}
+                            if vote.event
+                            else None
+                        ),
+                        "ticket": (
+                            {
+                                "vote_code": vote.ticket.vote_code,
+                                "used": vote.ticket.used,
+                            }
+                            if vote.ticket
+                            else None
+                        ),
+                    }
+                )
+
             return result
         except Exception as e:
             raise VotingError(
@@ -221,5 +240,3 @@ class VoteService:
                 error_code="GET_VOTES_FAILED",
                 details={"error": str(e)},
             )
-
-                

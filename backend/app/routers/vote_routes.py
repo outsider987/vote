@@ -70,6 +70,10 @@ async def submit_vote(vote: Vote = Form(...), db: Session = Depends(get_db)):
 
         for candidate in candidate_list:
             candidate_number = candidate.get("number")
+            candidate_id = candidate.get("id")
+            if candidate_id:
+                continue
+            
             if candidate_number not in valid_numbers:
                 raise VotingError(
                     status_code=400,

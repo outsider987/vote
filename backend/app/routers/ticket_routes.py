@@ -26,14 +26,8 @@ async def get_ticket(
     vote_code: str,
     db: Session = Depends(get_db)
 ):
-    ticket = db.query(Ticket).filter(Ticket.vote_code == vote_code).first()
-    if ticket:
-        ticket_with_event = {
-            **to_camel_case(ticket.__dict__),
-            "event": to_camel_case(ticket.event.__dict__)
-        }
-        return ticket_with_event
-    return None
+    ticket = ticket_service.get_vote_info(db, vote_code)
+    return to_camel_case(ticket)
 
 @router.get("/event/{event_id}")
 async def get_ticket(
