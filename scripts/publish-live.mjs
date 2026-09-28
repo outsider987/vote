@@ -8,14 +8,14 @@
 //
 //   node scripts/publish-live.mjs [--out apps/poller/out] [--once]
 //
-// Needs Cloudflare credentials: `npx wrangler login` on this machine, or CLOUDFLARE_API_TOKEN and
-// CLOUDFLARE_ACCOUNT_ID in the environment.
+// Needs this project's Cloudflare credentials in deploy/.env (see deploy/.env.example) or the environment.
 import { execFile } from "node:child_process";
 import { createHash } from "node:crypto";
 import { copyFileSync, existsSync, mkdirSync, readFileSync, rmSync, statSync, writeFileSync } from "node:fs";
 import { dirname, join, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 import { promisify } from "node:util";
+import { cloudflareEnv } from "./cloudflare-env.mjs";
 
 const run = promisify(execFile);
 const root = resolve(dirname(fileURLToPath(import.meta.url)), "..");
@@ -30,6 +30,7 @@ const wrangler = join(root, "node_modules/.bin/wrangler");
 const CHECK_MS = 3_000;          // how often to look for a new results.json
 const RETRY_MS = 15_000;         // wait after a failed deploy
 const log = (msg) => console.log(`${new Date().toISOString()} ${msg}`);
+const env = cloudflareEnv(root);   // fail fast, before watching anything
 
 let published = "";
 let lastStat = "";
@@ -58,7 +59,7 @@ async function publishIfChanged() {
   files.forEach((f, i) => writeFileSync(join(stage, f), bodies[i]));
   copyFileSync(join(liveDir, "_headers"), join(stage, "_headers"));
   const started = Date.now();
-  await run(wrangler, ["deploy", "--config", join(liveDir, "wrangler.jsonc")], { cwd: root, timeout: 120_000 });
+  await run(wrangler, ["deploy", "--config", join(liveDir, "wrangler.jsonc")], { cwd: root, env, timeout: 120_000 });
   published = hash;
   lastStat = stamp;
   const what = snap ? `${snap.election}, ${snap.stage}, generated ${snap.generatedAt}` : "candidates only";

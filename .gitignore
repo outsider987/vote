@@ -9,3 +9,5 @@ apps/web/public/data/
 drafts/**/preview.webm
 # vote-live assets staged by scripts/publish-live.mjs
 deploy/live/public/
+# this project's Cloudflare credentials
+deploy/.env

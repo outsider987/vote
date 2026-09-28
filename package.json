@@ -13,6 +13,7 @@
     "poll": "npm run poll -w @vote/poller --",
     "mock-cec": "npm run mock-cec -w @vote/poller --",
     "import-candidates": "npm run import-candidates -w @vote/poller --",
+    "deploy:site": "node scripts/deploy-site.mjs",
     "test": "npm test --workspaces --if-present",
     "typecheck": "npm run typecheck --workspaces --if-present"
   },

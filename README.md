@@ -108,14 +108,17 @@ npm run dev                                                             # 開 ht
 | `vote` | 網站本身（`deploy/site/wrangler.jsonc`） | push 到 `main` 時由 `.github/workflows/deploy.yml` 部署，先跑型別檢查與測試 |
 | `vote-live` | 只有 `results.json` 與 `candidates.json`（`deploy/live/wrangler.jsonc`） | 選舉夜由 `scripts/publish-live.mjs` 直接部署 |
 
-兩者分開，程式與資料的部署就不會互相覆蓋。網站透過 repo 變數 `VITE_LIVE_URL` 讀取 `vote-live` 的資料，這個變數已設好。Pull request 另有 `ci.yml` 檢查。
+兩者分開，程式與資料的部署就不會互相覆蓋。網站透過 `VITE_LIVE_URL` 讀取 `vote-live` 的資料。Pull request 另有 `ci.yml` 檢查。
 
-- **第一次設定：** GitHub Actions 需要一組 Cloudflare API Token 才能部署。
-  1. 在 Cloudflare 後台的 My Profile → API Tokens → Create Token，選 **Edit Cloudflare Workers** 範本。
-  2. 執行 `gh secret set CLOUDFLARE_API_TOKEN -R outsider987/vote`，把 token 貼上。
-  3. `CLOUDFLARE_ACCOUNT_ID` 已設好。
+- **帳號：** 這個專案用獨立的 Cloudflare 帳號，不跟其他專案共用 workers.dev 子網域。部署腳本一律讀 `deploy/.env` 裡這個帳號的憑證，不會用本機 `wrangler login` 的預設帳號；沒設就拒絕執行。
+- **第一次設定：**
+  1. 在這個帳號的 My Profile → API Tokens → Create Token，選 **Edit Cloudflare Workers** 範本。
+  2. 把 `deploy/.env.example` 複製成 `deploy/.env`（不進版控），填入帳號 ID、token 和 `VITE_LIVE_URL`。
+  3. 在 GitHub repo 的 Settings → Secrets and variables → Actions 設定：
+     - secrets `CLOUDFLARE_ACCOUNT_ID`、`CLOUDFLARE_API_TOKEN`
+     - variable `VITE_LIVE_URL`
 
-  沒設 token 時，workflow 只會建置並提醒，不會部署。
+  沒設 token 時，workflow 只會建置並提醒，不會部署。手動部署網站用 `npm run deploy:site`。
 - **預設版本：** 平常不用設 repo 變數 `VITE_SOURCE`，網站就是 2026 正式版（倒數後自動即時）。選舉夜萬一即時資料出問題，可以先把首頁切回 2022 重播：
 
   ```sh
@@ -126,7 +129,7 @@ npm run dev                                                             # 開 ht
   問題排除後，執行 `gh variable delete VITE_SOURCE` 再重跑部署即可恢復。
 - **選舉夜的即時資料：** `scripts/publish-live.mjs` 每 3 秒檢查一次 poller 的輸出。檔案一變，就把它部署成 `vote-live` 的靜態檔。實測從寫出檔案到上線約 10–20 秒。
 
-  執行的機器要先 `npx wrangler login`，或設好 `CLOUDFLARE_API_TOKEN` 與 `CLOUDFLARE_ACCOUNT_ID`。
+  執行的機器需要同一份 `deploy/.env`。
 
 免費額度：
 
