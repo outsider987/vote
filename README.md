@@ -37,7 +37,7 @@ npm run build          # 輸出 apps/web/dist/，可放任何靜態主機或 CDN
 - `?t=0.6`：重播跳到 60% 並暫停
 - `?intro=0`：略過開場
 - `?source=live`：改讀即時資料
-- `?poll=5`：即時模式每 5 秒更新，彩排用（預設 30 秒，範圍 5–120）
+- `?poll=5`：即時模式每 5 秒更新，彩排用（預設 60 秒，範圍 5–120）
 
 ## 資料流程
 
@@ -46,12 +46,12 @@ npm run build          # 輸出 apps/web/dist/，可放任何靜態主機或 CDN
         │  apps/poller：條件式請求、限速、斷路器；解析失敗時保留上一筆正確資料
         ▼
 results.json（packages/shared 的 LiveResults）
-        │  發布到靜態主機，Cache-Control: max-age=15
+        │  scripts/publish-live.mjs：推到 live-data 分支並觸發 GitHub Pages 部署（約 1 分鐘）
         ▼
-瀏覽器每 30 秒讀一次（ETag 重新驗證），不直接連中選會
+瀏覽器每 60 秒讀一次（ETag 重新驗證），不直接連中選會
 ```
 
-流量都落在 CDN 上。poller 只有一個，對中選會的請求量固定，不會隨觀看人數增加。
+觀眾的流量都由 GitHub Pages 的 CDN 承擔。poller 只有一個，對中選會的請求量固定，不會隨觀看人數增加。
 
 前端的資料來源層（`apps/web/src/model/`）有兩種實作，畫面程式只讀共同的 `RaceState`：
 
@@ -78,14 +78,35 @@ npm run dev                                                             # 開 ht
 - **約開票前一週**：中選會公布 2026 開票網站。
   - 把主機與代碼填進 `apps/poller/poller.config.json`。
   - 從台灣的機器跑 `npm run probe -w @vote/poller -- --config poller.config.json`，每一項都要通過。
-- **11/28 16:00 前**：
-  - 啟動 `npm run poll -w @vote/poller -- --config poller.config.json`。
-  - 把 `out/results.json` 持續同步到網站主機的 `live/results.json`。
+- **11/28 開票當天**：
+  - 把 repo 變數 `VITE_SOURCE` 改成 `live`（見下方「部署」），讓網站預設顯示即時資料。
+  - 16:00 前在台灣的機器上啟動 `npm run poll -w @vote/poller -- --config poller.config.json`。
+  - 同一台機器另開 `node scripts/publish-live.mjs`，把結果持續發布到 GitHub Pages。
 
-前端建置選項：
+## 部署（GitHub Pages）
 
-- `VITE_SOURCE=live npm run build`：預設讀即時資料。不設時預設重播，也可以隨時用 `?source=live` 切換。
-- `VITE_LIVE_URL=https://…/results.json`：`results.json` 不在同一路徑時使用。
+網站網址是 https://outsider987.github.io/vote/ 。
+
+- **自動部署：** push 到 `main` 就會觸發 `.github/workflows/pages.yml`：先跑型別檢查與測試，再建置並部署。Pull request 另有 `ci.yml` 檢查。
+- **預設資料來源：** 由 repo 變數 `VITE_SOURCE` 決定，可設 `replay`（預設）或 `live`。改完到 Actions 手動重跑一次 Deploy to GitHub Pages：
+
+  ```sh
+  gh variable set VITE_SOURCE --body live
+  gh workflow run pages.yml
+  ```
+
+  不論預設是哪一種，都可以用 `?source=live` 或 `?source=replay` 切換。
+- **選舉夜的即時資料：** `scripts/publish-live.mjs` 每 60 秒檢查一次 poller 的輸出。檔案有變時：
+  1. 把 `results.json`（以及有的話 `candidates.json`）force-push 到只保留一個 commit 的 `live-data` 分支。
+  2. 觸發 Pages 部署，約一分鐘後上線。
+
+  執行的機器需要能 push 這個 repo，並設好 `GITHUB_TOKEN` 或登入 GitHub CLI（`gh auth login`），才能觸發 workflow。
+- **其他主機：** `results.json` 放在別的主機時，建置時設 `VITE_LIVE_URL=https://…/results.json`。
+
+GitHub Pages 的限制：
+
+- **快取時間無法自訂：** 固定 10 分鐘。前端每次都用 ETag 重新驗證，所以不會讀到舊資料，但更新會比中選會晚約 1–2 分鐘。
+- **頻寬有每月 100 GB 軟上限：** `results.json` 壓縮後約 59 KB，一位觀眾看一整晚約用 10–20 MB。觀看人數很多時，可以改把 `results.json` 放到 Cloudflare R2 這類 CDN，網站本身留在 GitHub Pages。
 
 即時模式下，頁尾會顯示中選會資料時間與投開票所回報進度，資料停止更新時會標示出來。
 

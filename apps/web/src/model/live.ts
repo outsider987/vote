@@ -168,7 +168,7 @@ export class LiveSource implements Source {
   private primed = false;
   private timer = 0;
 
-  constructor(readonly url: string, readonly intervalMs = 30_000) {}
+  constructor(readonly url: string, readonly intervalMs = 60_000) {}
 
   /** Fetch results.json; resolves true when it holds a new snapshot. */
   async fetch(): Promise<boolean> {

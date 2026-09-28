@@ -23,8 +23,9 @@ import { updateTip } from "./ui/tips";
 const SOURCE = (params.get("source") ?? import.meta.env.VITE_SOURCE ?? "replay") === "live" ? "live" : "replay";
 const LIVE_URL: string = import.meta.env.VITE_LIVE_URL ?? "live/results.json";
 const LIVE_RETRY_MS = 15_000;
-// ?poll=seconds shortens the refresh for rehearsals (5–120 s; default 30 s).
-const POLL_MS = Math.min(120, Math.max(5, Number(params.get("poll")) || 30)) * 1000;
+// Results reach GitHub Pages about once a minute, so the default refresh is 60 s;
+// ?poll=seconds changes it (5–120 s), e.g. ?poll=5 for local rehearsals.
+const POLL_MS = Math.min(120, Math.max(5, Number(params.get("poll")) || 60)) * 1000;
 
 const loadingText = $("loading").querySelector("p")!;
 const wait = (ms: number) => new Promise((r) => setTimeout(r, ms));
@@ -125,7 +126,7 @@ function frame() {
 function applyLiveCopy(stage: string) {
   document.title = "開票所｜2026 地方選舉即時開票";
   $("brand-sub").innerHTML = '<span class="sub-long">2026 地方選舉・即時開票</span><span class="sub-short">2026 即時開票</span>';
-  $("text-credit").textContent = "資料來源：中央選舉委員會開票網站，約每 30 秒更新；以中選會公告為準。黨徽：維基共享資源，公有領域（中國國民黨、民主進步黨黨旗中央、台灣民眾黨）；無黨籍及其他政黨以文字圓印表示。";
+  $("text-credit").textContent = "資料來源：中央選舉委員會開票網站，約每分鐘更新；以中選會公告為準。黨徽：維基共享資源，公有領域（中國國民黨、民主進步黨黨旗中央、台灣民眾黨）；無黨籍及其他政黨以文字圓印表示。";
   const now = new Intl.DateTimeFormat("zh-TW", { timeZone: "Asia/Taipei", hour: "2-digit", minute: "2-digit", hourCycle: "h23" }).format(new Date());
   $("intro-time").textContent = now;
   $("intro-line").textContent = stage === "prior" ? "16:00 開始開票" : stage === "final" ? "開票結束" : "即時開票中";
