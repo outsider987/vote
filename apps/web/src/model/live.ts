@@ -1,5 +1,6 @@
 import { COUNTIES } from "@vote/shared";
 import type { CandidateList, CandidateProfile, DistrictType, LiveResults, RaceTally } from "@vote/shared";
+import { ELECTION } from "../config";
 import { decodeName, niceUnit } from "../util";
 import { councilKind, estimateUnit, type Source } from "./source";
 import { emptyCouncilState, emptyState } from "./types";
@@ -75,7 +76,7 @@ const districtOrder = (a: string, b: string) => {
 export function buildLive(snap: LiveResults, mayorFile: MayorFile, councilFile: CouncilFile, list?: CandidateList | null): County[] {
   const m22 = new Map(mayorFile.counties.map((c) => [c.code, c]));
   const d22 = new Map(councilFile.counties.flatMap((cc) => cc.districts.map((d) => [d.id, d] as const)));
-  const redrawn = /2026/.test(snap.election) ? REDRAWN_2026 : new Set<string>();
+  const redrawn = snap.election === ELECTION ? REDRAWN_2026 : new Set<string>();
 
   return COUNTIES.map((info): County => {
     const old = m22.get(info.code);
@@ -218,6 +219,11 @@ export class LiveSource implements Source {
 
   get started() {
     return !!this.snapshot && this.snapshot.stage !== "prior";
+  }
+
+  /** Results from another election (e.g. the 2022 mock count) are a rehearsal, never presented as live. */
+  get rehearsal() {
+    return !!this.snapshot && this.snapshot.election !== ELECTION;
   }
 
   tick() {}

@@ -3,7 +3,7 @@ import type { LiveResults, RaceTally } from "@vote/shared";
 import { partyLabel, partyOf } from "../src/config";
 import { councilAggregate, duelOf } from "../src/model/analysis";
 import type { CouncilFile, MayorFile } from "../src/model/data";
-import { buildLive, liveUnit, stateFromTally } from "../src/model/live";
+import { LiveSource, buildLive, liveUnit, stateFromTally } from "../src/model/live";
 import { buildReplay, simState } from "../src/model/replay";
 import { emptyState, type Race } from "../src/model/types";
 
@@ -157,6 +157,14 @@ describe("buildLive", () => {
     const tp = withList.find((c) => c.code === "63000")!;
     expect(tp.mayor.candidates.map((x) => x.name)).toEqual(["甲", "乙"]);
     expect(tp.council.districts.map((d) => [d.id, d.seats])).toEqual([["63000-T1-01", 12]]);
+  });
+
+  it("treats results from another election as a rehearsal", () => {
+    const src = new LiveSource("live/results.json");
+    src.snapshot = { ...snap, election: "2022-local" };
+    expect(src.rehearsal).toBe(true);
+    src.snapshot = snap;
+    expect(src.rehearsal).toBe(false);
   });
 
   it("drops 2022 town lists for districts redrawn in 2026", () => {

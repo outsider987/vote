@@ -123,13 +123,23 @@ function frame() {
 
 /* ---------- boot ---------- */
 
-function applyLiveCopy(stage: string) {
-  document.title = "開票所｜2026 地方選舉即時開票";
-  $("brand-sub").innerHTML = '<span class="sub-long">2026 地方選舉・即時開票</span><span class="sub-short">2026 即時開票</span>';
-  $("text-credit").textContent = "資料來源：中央選舉委員會開票網站，約每分鐘更新；以中選會公告為準。黨徽：維基共享資源，公有領域（中國國民黨、民主進步黨黨旗中央、台灣民眾黨）；無黨籍及其他政黨以文字圓印表示。";
+function applyLiveCopy(live: LiveSource) {
+  const snap = live.snapshot!;
+  const emblems = "黨徽：維基共享資源，公有領域（中國國民黨、民主進步黨黨旗中央、台灣民眾黨）；無黨籍及其他政黨以文字圓印表示。";
   const now = new Intl.DateTimeFormat("zh-TW", { timeZone: "Asia/Taipei", hour: "2-digit", minute: "2-digit", hourCycle: "h23" }).format(new Date());
   $("intro-time").textContent = now;
-  $("intro-line").textContent = stage === "prior" ? "16:00 開始開票" : stage === "final" ? "開票結束" : "即時開票中";
+  if (live.rehearsal) {
+    // accuracy first: rehearsal numbers must never read as the real count
+    document.title = "開票所｜彩排資料";
+    $("brand-sub").innerHTML = `<span class="sub-long">彩排・以 ${snap.election} 資料模擬開票，非即時結果</span><span class="sub-short">彩排資料・非即時</span>`;
+    $("text-credit").textContent = `彩排資料：以 ${snap.election} 選舉結果模擬中選會開票網站，並非即時開票結果。${emblems}`;
+    $("intro-line").textContent = "彩排資料，非即時開票";
+    return;
+  }
+  document.title = "開票所｜2026 地方選舉即時開票";
+  $("brand-sub").innerHTML = '<span class="sub-long">2026 地方選舉・即時開票</span><span class="sub-short">2026 即時開票</span>';
+  $("text-credit").textContent = `資料來源：中央選舉委員會開票網站，約每分鐘更新；以中選會公告為準。${emblems}`;
+  $("intro-line").textContent = snap.stage === "prior" ? "16:00 開始開票" : snap.stage === "final" ? "開票結束" : "即時開票中";
 }
 
 async function boot() {
@@ -183,7 +193,7 @@ async function boot() {
     initReplayClock(replay);
     if (startT !== null && Number.isFinite(startT)) { replay.seek(startT); replay.commit(); replay.playing = false; }
   } else if (live) {
-    applyLiveCopy(live.snapshot!.stage);
+    applyLiveCopy(live);
     initLiveClock();
     updateLiveClock(live);
     live.start(() => updateLiveClock(live));

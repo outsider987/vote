@@ -48,6 +48,9 @@ export const SHORT: Record<string, string> = Object.fromEntries(COUNTIES.map((c)
 export const SHIFT: Record<string, [number, number]> = { "09020": [0.95, 0.35], "09007": [-0.1, -0.95] };
 export const INSET_SCALE = 1.8;   // their footprint is enlarged too (labelled 非等比例)
 
+/** The election this site covers; live results from any other election are shown as a rehearsal. */
+export const ELECTION = "2026-local";
+
 export type Mode = "mayor" | "council" | "close";
 
 export function modeCopy(mode: Mode, councilSeats: number) {

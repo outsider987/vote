@@ -87,7 +87,9 @@ export function updateLiveClock(src: LiveSource) {
   const offline = src.status === "error" && Date.now() - src.lastOk > 90_000;
   const stalled = !offline && snap.stage !== "final" && age > 180_000;
   $("clock").classList.toggle("is-stale", offline || stalled);
-  $("live-note").textContent = offline ? "連線中斷，稍後自動重試"
+  $("live-badge").textContent = src.rehearsal ? "彩排" : "即時";
+  $("live-note").textContent = src.rehearsal ? "彩排資料，非即時開票"
+    : offline ? "連線中斷，稍後自動重試"
     : stalled ? `資料 ${Math.round(age / 60_000)} 分鐘未更新`
     : snap.stage === "prior" ? "尚未開票，16:00 起自動更新"
     : snap.stage === "final" ? "開票結束"
