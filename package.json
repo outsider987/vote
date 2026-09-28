@@ -1,0 +1,16 @@
+{
+  "name": "vote",
+  "private": true,
+  "license": "MIT",
+  "type": "module",
+  "workspaces": ["apps/*", "packages/*"],
+  "scripts": {
+    "dev": "npm run dev -w @vote/web",
+    "build": "npm run build -w @vote/web",
+    "poll": "npm run poll -w @vote/poller --",
+    "mock-cec": "npm run mock-cec -w @vote/poller --",
+    "import-candidates": "npm run import-candidates -w @vote/poller --",
+    "test": "npm test --workspaces --if-present",
+    "typecheck": "npm run typecheck --workspaces --if-present"
+  }
+}

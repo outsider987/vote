@@ -1,0 +1,20 @@
+{
+ "kmt": {
+  "file": "kmt.svg",
+  "source": "https://commons.wikimedia.org/wiki/File:Emblem_of_the_Kuomintang.svg",
+  "license": "Public domain",
+  "note": "party emblem"
+ },
+ "dpp": {
+  "file": "dpp.svg",
+  "source": "https://commons.wikimedia.org/wiki/File:Green_Taiwan_White_Cross.svg",
+  "license": "Public domain",
+  "note": "party flag, cropped to its centre"
+ },
+ "tpp": {
+  "file": "tpp.svg",
+  "source": "https://commons.wikimedia.org/wiki/File:Emblem_of_Taiwan_People%27s_Party_2019.svg",
+  "license": "Public domain",
+  "note": "cropped to the 眾 mark (wordmark removed)"
+ }
+}

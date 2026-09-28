@@ -1,0 +1,66 @@
+<!doctype html>
+<html lang="zh-Hant-TW">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#090e1c">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' fill='%230a1020'/%3E%3Cpath d='M5 26V15h4v11m4 0V7h4v19m4 0V11h4v15' stroke='%23f8c891' stroke-width='3' fill='none'/%3E%3C/svg%3E">
+  <title>開票天際線｜2026 地方選舉</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700;800&family=Noto+Sans+TC:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="./style.css">
+  <script type="importmap">
+    {"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.186.1/build/three.module.js","three/addons/":"https://cdn.jsdelivr.net/npm/three@0.186.1/examples/jsm/","topojson-client":"https://cdn.jsdelivr.net/npm/topojson-client@3/+esm"}}
+  </script>
+</head>
+<body>
+  <div id="loading" role="status" aria-live="polite"><span class="loading-line"></span><b>開票天際線</b><small>正在載入選舉資料</small></div>
+  <div id="intro" aria-hidden="true"><div class="intro-inner"><span>2022 年結果模擬重播</span><strong>16:00</strong><i></i><b>22 縣市開票進度</b></div></div>
+
+  <main id="app">
+    <div id="scene" aria-label="互動式縣市開票天際線。左右拖曳或使用方向鍵切換縣市。">
+      <div class="scene-shade" aria-hidden="true"></div>
+      <div id="countyLabels"></div>
+      <div id="leaderFlag" aria-hidden="true"><small></small><strong></strong></div>
+      <div id="towerTip" role="tooltip"></div>
+    </div>
+
+    <header class="masthead">
+      <div class="brand"><div class="brand-mark" aria-hidden="true"><i></i><i></i><i></i><i></i></div><div><strong>開票天際線</strong><span>2026 地方選舉 · 2022 年結果重播</span></div></div>
+      <nav class="mode-switch" aria-label="選舉種類"><button id="mayorMode" class="active" type="button" aria-pressed="true">縣市長</button><button id="councilMode" type="button" aria-pressed="false">議員</button></nav>
+      <button id="textToggle" class="text-toggle" type="button" aria-label="文字結果" aria-expanded="false" aria-controls="textView"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 6h16M4 12h16M4 18h10"/></svg><span>文字結果</span></button>
+    </header>
+
+    <section class="sky-caption" aria-label="目前模擬時間與計票狀態">
+      <p>模擬計票時間 <span class="live-dot"></span></p>
+      <div id="heroClock">16:00</div>
+      <div class="caption-rule"></div>
+      <div class="caption-meta"><strong id="overallProgress">0%</strong><span>全國計票進度</span></div>
+      <div class="caption-note" id="sceneNote">每座塔代表一位候選人<br>塔高依各縣市最高票獨立換算</div>
+    </section>
+
+    <section id="detail" class="detail" aria-label="縣市開票明細">
+      <div class="detail-topline"><span id="detailRegion">北部</span><span id="detailStatus">模擬計票中</span></div>
+      <div class="detail-head"><div><h1 id="detailCounty">臺北市</h1><p id="detailSub">市長選舉 · 已開票 0%</p></div><div class="detail-arrows"><button id="prevCounty" type="button" aria-label="上一縣市">‹</button><button id="nextCounty" type="button" aria-label="下一縣市">›</button></div></div>
+      <div id="districtChooser" class="district-chooser" hidden><label for="districtSelect">選舉區</label><div class="select-wrap"><select id="districtSelect"></select><svg viewBox="0 0 20 20" aria-hidden="true"><path d="m4 7 6 6 6-6"/></svg></div></div>
+      <div id="leader" class="leader"></div>
+      <div class="candidate-heading"><span id="candidateHeading">候選人得票</span><span id="countedVotes">已計有效票 0</span></div>
+      <div id="candidateList" class="candidate-list"></div>
+      <p class="detail-footnote" id="detailFootnote">候選人票數隨模擬計票更新；當選於開票完成後標示。</p>
+    </section>
+
+    <nav id="regionNav" class="region-nav" aria-label="地區導覽"></nav>
+
+    <footer class="playback">
+      <div class="playback-main"><button id="playButton" class="play-button" type="button" aria-label="暫停重播"><svg class="pause-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M7 5v14M17 5v14"/></svg><svg class="play-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="m8 5 11 7-11 7z"/></svg></button><div class="timeline-wrap"><div class="timeline-top"><strong id="currentTime">16:00</strong><span>計票重播</span><strong>23:00</strong></div><input id="timeline" type="range" min="0" max="1000" value="0" aria-label="計票重播時間，16 時至 23 時"><div class="timeline-ticks" aria-hidden="true"><span>16</span><span>17</span><span>18</span><span>19</span><span>20</span><span>21</span><span>22</span><span>23</span></div></div><button id="speedButton" class="speed-button" type="button" aria-label="播放速度 1 倍">1×</button></div>
+      <div class="tally-bar"><div class="tally-title"><span id="tallyLabel">縣市長席次</span><strong id="decidedCount">0 / 22</strong></div><div id="partyTally" class="party-tally"></div><button id="legendButton" class="legend-button" type="button" aria-expanded="false" aria-controls="legend">圖例 <span>＋</span></button></div>
+      <div id="legend" class="legend" hidden></div>
+      <div class="source">資料來源：中央選舉委員會選舉資料庫（2022 年結果重播）<span>嘉義市 2022 年市長選舉於 12 月 18 日舉行</span></div>
+    </footer>
+
+    <section id="textView" class="text-view" hidden aria-label="文字版開票結果"><div class="text-view-head"><div><span>2022 年結果模擬重播</span><h2>文字版開票結果</h2><p id="textSummary"></p></div><button id="textClose" type="button" aria-label="關閉文字結果">×</button></div><div id="textResults"></div></section>
+  </main>
+  <script type="module" src="./app.js"></script>
+</body>
+</html>

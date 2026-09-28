@@ -1,0 +1,88 @@
+<!doctype html>
+<html lang="zh-Hant-TW">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#0b111a">
+  <link rel="icon" href="data:,">
+  <title>開票之夜｜2026 地方選舉・2022 結果模擬重播</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;600;700&family=Noto+Serif+TC:wght@500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="./style.css">
+  <script type="importmap">
+    {"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.186.1/build/three.module.js","three/addons/":"https://cdn.jsdelivr.net/npm/three@0.186.1/examples/jsm/","topojson-client":"https://cdn.jsdelivr.net/npm/topojson-client@3/+esm"}}
+  </script>
+  <script type="module" src="./main.js"></script>
+</head>
+<body>
+  <div id="loading" role="status" aria-live="polite"><div class="load-mark">開票之夜</div><div class="load-line"><i></i></div><p>正在載入選舉資料與地圖</p></div>
+  <div id="scene" aria-hidden="true"></div>
+  <div class="scene-vignette" aria-hidden="true"></div>
+
+  <header class="site-header">
+    <a class="brand" href="#opening" aria-label="開票之夜，回到開場"><span class="brand-dot"></span><span>開票之夜</span></a>
+    <div class="header-center">2026 地方選舉 <span class="header-divider">／</span> <strong>2022 結果模擬重播</strong></div>
+    <button id="text-toggle" class="text-toggle" type="button" aria-controls="text-view" aria-expanded="false">文字結果 <span aria-hidden="true">↗</span></button>
+  </header>
+
+  <div id="reading-progress" aria-hidden="true"><i></i></div>
+  <nav id="chapter-nav" aria-label="章節導覽"></nav>
+
+  <div id="chapter-panel" class="chapter-panel" aria-live="polite"></div>
+  <div id="map-caption" class="map-caption" aria-live="off"></div>
+  <div id="island-inset" class="island-inset" aria-label="離島縣市"><span>離島縣市</span><button type="button" data-code="09007"><i class="party-dot"></i>連江縣 <b>↗</b></button><button type="button" data-code="09020"><i class="party-dot"></i>金門縣 <b>↗</b></button></div>
+  <div class="map-legend" aria-label="地圖政黨顏色圖例"><span><i style="--party:#668bd5"></i>國民黨</span><span><i style="--party:#5ab991"></i>民進黨</span><span><i style="--party:#61c5cd"></i>民眾黨</span><span><i style="--party:#b7b8b7"></i>無黨籍</span><span><i style="--party:#dec45f"></i>時代力量</span></div>
+  <div id="map-hint" class="map-hint">拖曳旋轉地圖 · 點選縣市查看</div>
+
+  <main id="story">
+    <section id="opening" class="scroll-step" aria-label="開場，16 時投票結束"></section>
+    <section id="national" class="scroll-step" aria-label="全國開票概況"></section>
+    <section id="taipei" class="scroll-step" aria-label="臺北市"></section>
+    <section id="new-taipei" class="scroll-step" aria-label="新北市"></section>
+    <section id="taichung" class="scroll-step" aria-label="臺中市"></section>
+    <section id="hsinchu" class="scroll-step" aria-label="新竹市"></section>
+    <section id="pingtung" class="scroll-step" aria-label="屏東縣"></section>
+    <section id="kinmen" class="scroll-step" aria-label="金門縣與連江縣"></section>
+    <section id="final" class="scroll-step final-step" aria-label="完整結果與自由探索">
+      <div class="final-content">
+        <div class="final-heading"><span class="chapter-index">09 / 09</span><h2>完整結果<span>，</span><br>自由探索。</h2><p>點選地圖上的縣市，或依欄位排序檢視結果。</p></div>
+        <div class="final-tools"><span id="final-summary"></span><button id="explore-reset" type="button">檢視全臺</button></div>
+        <div class="results-surface">
+          <div class="table-heading"><h3>縣市長選舉</h3><span>22 縣市</span><label class="mobile-sort-label">排序<select id="mobile-sort"><option value="name">縣市</option><option value="votes">得票</option><option value="margin">領先差距</option><option value="progress">開票進度</option></select></label></div>
+          <div class="table-wrap"><table id="mayor-table"><thead><tr>
+            <th><button type="button" data-sort="name">縣市 <span>↕</span></button></th>
+            <th><button type="button" data-sort="leader">領先候選人 <span>↕</span></button></th>
+            <th><button type="button" data-sort="party">政黨 <span>↕</span></button></th>
+            <th class="numeric"><button type="button" data-sort="votes">得票 <span>↕</span></button></th>
+            <th class="numeric"><button type="button" data-sort="margin">領先差距 <span>↕</span></button></th>
+            <th class="numeric"><button type="button" data-sort="progress">開票 <span>↕</span></button></th>
+          </tr></thead><tbody></tbody></table></div>
+        </div>
+        <div class="council-surface"><div><h3>議員選舉</h3><p>215 選區 · 910 席</p></div><div id="council-party-tally"></div><button id="open-council" type="button">查看各選區與候選人 <span aria-hidden="true">↗</span></button></div>
+        <p class="source">資料來源：中央選舉委員會選舉資料庫（2022 年結果重播）。嘉義市 2022 年市長選舉於 12 月 18 日重行投票。</p>
+      </div>
+    </section>
+  </main>
+
+  <div id="explore-detail" class="explore-detail" hidden></div>
+  <div id="hover-name" class="hover-name" aria-hidden="true"></div>
+
+  <div id="replay-controls" class="replay-controls" aria-label="模擬開票控制">
+    <button id="play" class="round-button" type="button" aria-label="播放重播"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5.5 18 12 8 18.5z"/></svg></button>
+    <div class="replay-label"><span>開票重播</span><strong id="replay-number">00.0%</strong></div>
+    <input id="scrub" type="range" min="0" max="1000" value="0" aria-label="開票進度">
+    <button id="speed" class="speed-button" type="button" aria-label="播放速度 1 倍">1×</button>
+  </div>
+
+  <section id="text-view" class="text-view" aria-label="文字結果" hidden>
+    <div class="text-inner">
+      <div class="text-heading"><div><p>2022 結果模擬重播</p><h2>文字結果</h2></div><button id="text-close" type="button" aria-label="關閉文字結果">關閉 ×</button></div>
+      <div id="text-summary" class="text-summary" aria-live="polite"></div>
+      <div class="text-controls"><label>縣市<select id="county-select"></select></label><label>選舉<select id="election-select"><option value="mayor">縣市長</option><option value="council">議員</option></select></label><label id="district-control" hidden>選區<select id="district-select"></select></label></div>
+      <div id="text-detail"></div>
+      <p class="source">資料來源：中央選舉委員會選舉資料庫（2022 年結果重播）。嘉義市 2022 年市長選舉於 12 月 18 日重行投票。</p>
+    </div>
+  </section>
+</body>
+</html>

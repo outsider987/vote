@@ -1,0 +1,56 @@
+import type { CountyKind, DistrictType } from "@vote/shared";
+import type { Topology } from "topojson-specification";
+import type { TownRecord } from "./types";
+
+/** data/mayor-2022.json */
+export interface MayorFile {
+  election: string;
+  counties: {
+    code: string;
+    name: string;
+    type: CountyKind;
+    electors: number;
+    votesCast: number;
+    valid: number;
+    turnout: number;
+    candidates: { no: number; name: string; party: string; votes: number; elected: boolean }[];
+  }[];
+}
+
+/** data/council-2022.json */
+export interface CouncilFile {
+  election: string;
+  counties: {
+    code: string;
+    name: string;
+    kind: string;
+    seats: number;
+    districts: {
+      id: string;
+      type: DistrictType;
+      no: string;
+      name: string;
+      seats: number;
+      electors: number;
+      votesCast: number;
+      valid: number;
+      towns: { code: string; name: string }[];
+      candidates: { no: number; name: string; party: string; votes: number; elected: boolean; womenQuota?: boolean }[];
+    }[];
+  }[];
+}
+
+/** data/mayor-2022-towns.json */
+export type TownsFile = Record<string, TownRecord[]>;
+
+async function getJSON<T>(url: string): Promise<T> {
+  const r = await fetch(url);
+  if (!r.ok) throw new Error(`${url}: HTTP ${r.status}`);
+  return (await r.json()) as T;
+}
+
+export const loadMayors = () => getJSON<MayorFile>("data/mayor-2022.json");
+export const loadCouncils = () => getJSON<CouncilFile>("data/council-2022.json");
+export const loadTowns = () => getJSON<TownsFile>("data/mayor-2022-towns.json");
+export const loadCountyTopo = () => getJSON<Topology>("data/taiwan-atlas-counties-10t.json");
+export const loadTownTopo = () => getJSON<Topology>("data/taiwan-atlas-towns-10t.json");

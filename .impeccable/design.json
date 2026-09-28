@@ -1,0 +1,688 @@
+{
+  "schemaVersion": 2,
+  "generatedAt": "2026-09-28T11:11:46.215Z",
+  "title": "Design System: 開票所",
+  "extensions": {
+    "colorMeta": {
+      "counting-board": {
+        "role": "neutral",
+        "displayName": "Counting Board",
+        "canonical": "oklch(97.1% 0.002 165.1)",
+        "tonalRamp": [
+          "#0A0B0B",
+          "#242525",
+          "#414242",
+          "#606261",
+          "#818382",
+          "#A4A5A4",
+          "#C8CAC9",
+          "#EDEFEE"
+        ]
+      },
+      "board-rule": {
+        "role": "neutral",
+        "displayName": "Board Rule",
+        "canonical": "oklch(91.0% 0.008 164.9)",
+        "tonalRamp": [
+          "#080C0A",
+          "#222624",
+          "#3E4341",
+          "#5D6360",
+          "#7E8481",
+          "#A1A7A4",
+          "#C5CBC8",
+          "#EAF0ED"
+        ]
+      },
+      "desk-sage": {
+        "role": "neutral",
+        "displayName": "Desk Sage",
+        "canonical": "oklch(90.0% 0.009 161.3)",
+        "tonalRamp": [
+          "#080C0A",
+          "#212624",
+          "#3E4440",
+          "#5D635F",
+          "#7E8480",
+          "#A0A7A3",
+          "#C4CBC7",
+          "#E9F0EC"
+        ]
+      },
+      "desk-deep": {
+        "role": "neutral",
+        "displayName": "Desk Deep",
+        "canonical": "oklch(85.5% 0.012 162.0)",
+        "tonalRamp": [
+          "#070D0A",
+          "#202723",
+          "#3D4440",
+          "#5C635F",
+          "#7C8580",
+          "#9FA7A3",
+          "#C3CCC7",
+          "#E8F1EC"
+        ]
+      },
+      "frame-gray": {
+        "role": "neutral",
+        "displayName": "Frame Gray",
+        "canonical": "oklch(80.6% 0.011 167.7)",
+        "tonalRamp": [
+          "#070D0A",
+          "#202724",
+          "#3C4441",
+          "#5B6360",
+          "#7C8581",
+          "#9FA7A3",
+          "#C3CCC8",
+          "#E8F1ED"
+        ]
+      },
+      "ink": {
+        "role": "neutral",
+        "displayName": "Ink",
+        "canonical": "oklch(24.7% 0.013 233.1)",
+        "tonalRamp": [
+          "#060C10",
+          "#1F262A",
+          "#3C4348",
+          "#5A6367",
+          "#7B8489",
+          "#9EA7AC",
+          "#C1CBD0",
+          "#E7F0F6"
+        ]
+      },
+      "ink-soft": {
+        "role": "neutral",
+        "displayName": "Ink Soft",
+        "canonical": "oklch(43.9% 0.016 234.1)",
+        "tonalRamp": [
+          "#050C11",
+          "#1E262C",
+          "#3A4449",
+          "#596369",
+          "#79848B",
+          "#9CA7AE",
+          "#C0CBD2",
+          "#E5F1F8"
+        ]
+      },
+      "ink-faint": {
+        "role": "neutral",
+        "displayName": "Ink Faint",
+        "canonical": "oklch(52.5% 0.015 234.0)",
+        "tonalRamp": [
+          "#050C11",
+          "#1E262B",
+          "#3A4449",
+          "#596369",
+          "#7A848A",
+          "#9CA7AD",
+          "#C0CBD2",
+          "#E5F0F7"
+        ]
+      },
+      "paper-white": {
+        "role": "neutral",
+        "displayName": "Paper White",
+        "canonical": "oklch(100.0% 0.000 89.9)",
+        "tonalRamp": [
+          "#0B0B0B",
+          "#252525",
+          "#424242",
+          "#616161",
+          "#828282",
+          "#A5A5A5",
+          "#C9C9C9",
+          "#EEEEEE"
+        ]
+      },
+      "pending-outline": {
+        "role": "neutral",
+        "displayName": "Pending Outline",
+        "canonical": "oklch(71.2% 0.014 229.0)",
+        "tonalRamp": [
+          "#060C10",
+          "#1E262A",
+          "#3B4448",
+          "#5A6367",
+          "#7A8489",
+          "#9DA7AC",
+          "#C1CBD0",
+          "#E6F0F6"
+        ]
+      },
+      "dashed-rule": {
+        "role": "neutral",
+        "displayName": "Dashed Rule",
+        "canonical": "oklch(83.7% 0.012 162.0)",
+        "tonalRamp": [
+          "#070D0A",
+          "#202723",
+          "#3D4440",
+          "#5B635F",
+          "#7C8580",
+          "#9FA7A3",
+          "#C3CCC7",
+          "#E8F1EC"
+        ]
+      },
+      "track-gray": {
+        "role": "neutral",
+        "displayName": "Track Gray",
+        "canonical": "oklch(88.2% 0.009 161.3)",
+        "tonalRamp": [
+          "#080C0A",
+          "#212624",
+          "#3E4440",
+          "#5D635F",
+          "#7E8480",
+          "#A0A7A3",
+          "#C4CBC7",
+          "#E9F0EC"
+        ]
+      },
+      "well-gray": {
+        "role": "neutral",
+        "displayName": "Well Gray",
+        "canonical": "oklch(92.6% 0.007 160.1)",
+        "tonalRamp": [
+          "#090C0A",
+          "#222624",
+          "#3F4341",
+          "#5E6260",
+          "#7F8481",
+          "#A2A6A3",
+          "#C6CAC8",
+          "#EBF0ED"
+        ]
+      },
+      "scrollbar-gray": {
+        "role": "neutral",
+        "displayName": "Scrollbar Gray",
+        "canonical": "oklch(76.1% 0.013 164.7)",
+        "tonalRamp": [
+          "#060D0A",
+          "#1F2723",
+          "#3C4440",
+          "#5B645F",
+          "#7B8580",
+          "#9EA8A3",
+          "#C2CCC7",
+          "#E7F1EC"
+        ]
+      },
+      "ballot-paper": {
+        "role": "neutral",
+        "displayName": "Ballot Paper",
+        "canonical": "oklch(96.9% 0.003 128.5)",
+        "tonalRamp": [
+          "#0B0B0A",
+          "#252524",
+          "#414241",
+          "#616160",
+          "#828381",
+          "#A4A5A3",
+          "#C8C9C7",
+          "#EEEFED"
+        ]
+      },
+      "receded-paper": {
+        "role": "neutral",
+        "displayName": "Receded Paper",
+        "canonical": "oklch(86.0% 0.010 164.8)",
+        "tonalRamp": [
+          "#070D0A",
+          "#212724",
+          "#3D4441",
+          "#5C6360",
+          "#7D8481",
+          "#9FA7A3",
+          "#C3CBC7",
+          "#E9F1ED"
+        ]
+      },
+      "masking-tape": {
+        "role": "neutral",
+        "displayName": "Masking Tape",
+        "canonical": "oklch(92.3% 0.046 94.9)",
+        "tonalRamp": [
+          "#110A00",
+          "#2C2507",
+          "#4A4225",
+          "#696143",
+          "#8B8263",
+          "#AEA585",
+          "#D2C9A8",
+          "#F8EFCD"
+        ]
+      },
+      "tape-edge": {
+        "role": "neutral",
+        "displayName": "Tape Edge",
+        "canonical": "oklch(84.4% 0.066 95.0)",
+        "tonalRamp": [
+          "#140900",
+          "#2F2400",
+          "#4D4112",
+          "#6D6133",
+          "#8F8254",
+          "#B2A575",
+          "#D6C998",
+          "#FCEFBD"
+        ]
+      },
+      "stamp-red": {
+        "role": "primary",
+        "displayName": "Stamp Red",
+        "canonical": "oklch(52.3% 0.203 27.0)",
+        "tonalRamp": [
+          "#350000",
+          "#610000",
+          "#8F0000",
+          "#B90010",
+          "#E23D38",
+          "#FF685D",
+          "#FF9789",
+          "#FFC5B7"
+        ]
+      },
+      "kmt-blue": {
+        "role": "secondary",
+        "displayName": "KMT Marker Blue",
+        "canonical": "oklch(47.7% 0.176 264.9)",
+        "tonalRamp": [
+          "#030043",
+          "#02116F",
+          "#12339D",
+          "#2E57C3",
+          "#4D7BEA",
+          "#6E9FFF",
+          "#97C6FF",
+          "#C2EDFF"
+        ]
+      },
+      "dpp-green": {
+        "role": "secondary",
+        "displayName": "DPP Marker Green",
+        "canonical": "oklch(56.3% 0.153 140.4)",
+        "tonalRamp": [
+          "#001400",
+          "#003200",
+          "#005300",
+          "#24750D",
+          "#499839",
+          "#6CBC5C",
+          "#96DF88",
+          "#C2FFB5"
+        ]
+      },
+      "tpp-teal": {
+        "role": "secondary",
+        "displayName": "TPP Marker Teal",
+        "canonical": "oklch(61.5% 0.113 225.5)",
+        "tonalRamp": [
+          "#000E29",
+          "#002C4D",
+          "#004C6F",
+          "#006D91",
+          "#0E8FB5",
+          "#46B3DB",
+          "#71D8FF",
+          "#A4FDFF"
+        ]
+      },
+      "npp-ochre": {
+        "role": "secondary",
+        "displayName": "NPP Marker Ochre",
+        "canonical": "oklch(64.8% 0.133 85.4)",
+        "tonalRamp": [
+          "#1E0100",
+          "#3F1A00",
+          "#613800",
+          "#835900",
+          "#A67B00",
+          "#CB9E2E",
+          "#EEC362",
+          "#FFEA97"
+        ]
+      },
+      "independent-gray": {
+        "role": "secondary",
+        "displayName": "Independent Graphite",
+        "canonical": "oklch(60.2% 0.013 240.0)",
+        "tonalRamp": [
+          "#060C10",
+          "#1F262B",
+          "#3C4348",
+          "#5B6268",
+          "#7C848A",
+          "#9EA6AD",
+          "#C2CAD1",
+          "#E7F0F7"
+        ]
+      },
+      "other-party-violet": {
+        "role": "secondary",
+        "displayName": "Other-Party Violet",
+        "canonical": "oklch(57.3% 0.122 296.8)",
+        "tonalRamp": [
+          "#120030",
+          "#2D0F55",
+          "#4A2F7A",
+          "#69509D",
+          "#8A71C2",
+          "#AD94E8",
+          "#D1B9FF",
+          "#F5E1FF"
+        ]
+      },
+      "highlighter-20": {
+        "role": "tertiary",
+        "displayName": "Highlighter · within 20%",
+        "canonical": "oklch(75.2% 0.125 74.6)",
+        "tonalRamp": [
+          "#220000",
+          "#441400",
+          "#673300",
+          "#8A5400",
+          "#AE750D",
+          "#D3983F",
+          "#F7BD6C",
+          "#FFE59E"
+        ]
+      },
+      "highlighter-10": {
+        "role": "tertiary",
+        "displayName": "Highlighter · within 10%",
+        "canonical": "oklch(68.0% 0.124 65.3)",
+        "tonalRamp": [
+          "#240000",
+          "#480E00",
+          "#6C2E00",
+          "#8F4F00",
+          "#B47120",
+          "#DA9449",
+          "#FEB973",
+          "#FFE1A3"
+        ]
+      },
+      "highlighter-5": {
+        "role": "tertiary",
+        "displayName": "Highlighter · within 5%",
+        "canonical": "oklch(60.1% 0.120 57.6)",
+        "tonalRamp": [
+          "#260000",
+          "#4A0A00",
+          "#6E2B00",
+          "#924C00",
+          "#B76E30",
+          "#DD9155",
+          "#FFB67C",
+          "#FFDEAB"
+        ]
+      },
+      "highlighter-2": {
+        "role": "tertiary",
+        "displayName": "Highlighter · within 2%",
+        "canonical": "oklch(51.2% 0.111 52.5)",
+        "tonalRamp": [
+          "#260000",
+          "#4A0A00",
+          "#6D2C00",
+          "#914C1A",
+          "#B66E3F",
+          "#DC9161",
+          "#FFB586",
+          "#FFDDB2"
+        ]
+      }
+    },
+    "typographyMeta": {
+      "display": {
+        "displayName": "Display",
+        "purpose": "The 開票所 wordmark only."
+      },
+      "hand-headline": {
+        "displayName": "Hand Headline",
+        "purpose": "The board's county or race title, written in the room's handwriting."
+      },
+      "hand-callout": {
+        "displayName": "Hand Callout",
+        "purpose": "The winner's name in the 當選確定 band."
+      },
+      "hand-name": {
+        "displayName": "Hand Name",
+        "purpose": "Candidate names on the board; tape labels use the same face at 15px."
+      },
+      "numeral-stat": {
+        "displayName": "Numeral Stat",
+        "purpose": "Seat count, board stats and the clock; tabular figures."
+      },
+      "numeral-votes": {
+        "displayName": "Numeral Votes",
+        "purpose": "Vote counts on board rows; tabular figures."
+      },
+      "body": {
+        "displayName": "Body",
+        "purpose": "Default interface text."
+      },
+      "label": {
+        "displayName": "Label",
+        "purpose": "Buttons, tabs, pills and tooltips."
+      },
+      "caption": {
+        "displayName": "Caption",
+        "purpose": "Party names, legends and notes."
+      }
+    },
+    "shadows": [
+      {
+        "name": "tape",
+        "value": "0 1px 2px rgba(27, 34, 38, .18)",
+        "purpose": "Masking-tape labels lying on the map."
+      },
+      {
+        "name": "pill",
+        "value": "0 2px 6px rgba(27, 34, 38, .12)",
+        "purpose": "Floating scene controls."
+      },
+      {
+        "name": "card",
+        "value": "0 8px 20px rgba(27, 34, 38, .14), 0 1px 3px rgba(27, 34, 38, .1)",
+        "purpose": "拉鋸戰 cards."
+      },
+      {
+        "name": "board",
+        "value": "inset 0 0 0 1px #aeb8b3, 0 10px 24px rgba(27, 34, 38, .16), 0 2px 4px rgba(27, 34, 38, .1)",
+        "purpose": "The framed whiteboard."
+      },
+      {
+        "name": "band",
+        "value": "0 10px 22px rgba(27, 34, 38, .18), 0 2px 5px rgba(27, 34, 38, .1)",
+        "purpose": "The 當選確定 paper band."
+      },
+      {
+        "name": "tooltip",
+        "value": "0 6px 16px rgba(27, 34, 38, .28)",
+        "purpose": "The dark scene tip."
+      },
+      {
+        "name": "drawer",
+        "value": "-12px 0 30px rgba(27, 34, 38, .18)",
+        "purpose": "The text view sliding over the room."
+      }
+    ],
+    "motion": [
+      {
+        "name": "ease-out",
+        "value": "cubic-bezier(.16, 1, .3, 1)",
+        "purpose": "Every count-driven transition."
+      },
+      {
+        "name": "row-flip",
+        "value": "520ms ease-out",
+        "purpose": "Board and leaderboard rows re-ranking."
+      },
+      {
+        "name": "stroke-draw",
+        "value": "320ms ease-out",
+        "purpose": "Each new 正 stroke drawing itself."
+      },
+      {
+        "name": "stamp-press",
+        "value": "450–500ms ease-out",
+        "purpose": "卜 stamps and seat stamps pressing down on a decision."
+      },
+      {
+        "name": "gauge",
+        "value": "450ms ease-out",
+        "purpose": "Tug-of-war knot and fill."
+      },
+      {
+        "name": "callout",
+        "value": "2400ms ÷ √speed",
+        "purpose": "當選確定 band dwell; one decision at a time."
+      },
+      {
+        "name": "camera-fly",
+        "value": "1000ms ease-in-out cubic",
+        "purpose": "Island ↔ county drill-down."
+      }
+    ],
+    "breakpoints": [
+      {
+        "name": "compact-topbar",
+        "value": "1180px"
+      },
+      {
+        "name": "single-column",
+        "value": "900px"
+      },
+      {
+        "name": "phone-floor",
+        "value": "390px"
+      }
+    ]
+  },
+  "components": [
+    {
+      "name": "Mode Switch",
+      "kind": "nav",
+      "refersTo": "button-pill-active",
+      "description": "The 縣市長／議員／最接近 switch in the top bar; the active mode fills with ink.",
+      "html": "<div class=\"ds-mode\" role=\"group\"><button class=\"ds-mode-btn\" aria-pressed=\"true\">縣市長</button><button class=\"ds-mode-btn\" aria-pressed=\"false\">議員</button><button class=\"ds-mode-btn\" aria-pressed=\"false\">最接近</button></div>",
+      "css": ":host{--board:#f4f6f5;--board-line:#dde3e0;--frame:#b9c2be;--ink:#1b2226;--ink-2:#4a545a;--ink-3:#626c72;--stamp:#c4161c;--tape:#efe6c4;--tape-edge:#d9cc9b;--focus:#1b2226;--ease-out:cubic-bezier(.16,1,.3,1)}.ds-mode{display:inline-flex;background:#e3e8e5;border-radius:999px;padding:3px;font-family:'Noto Sans TC',system-ui,sans-serif}.ds-mode-btn{border:0;background:transparent;padding:7px 16px;border-radius:999px;font-size:14px;font-weight:700;color:var(--ink-2);cursor:pointer;transition:background .2s,color .2s}.ds-mode-btn:hover{background:#fff}.ds-mode-btn[aria-pressed=true]{background:var(--ink);color:#fff}.ds-mode-btn:focus-visible{outline:2px solid var(--focus);outline-offset:3px}"
+    },
+    {
+      "name": "Scene Pill",
+      "kind": "button",
+      "refersTo": "button-pill",
+      "description": "Floating controls over the scene: 文字版結果, 返回全台.",
+      "html": "<button class=\"ds-pill\">文字版結果</button>",
+      "css": ":host{--board:#f4f6f5;--board-line:#dde3e0;--frame:#b9c2be;--ink:#1b2226;--ink-2:#4a545a;--ink-3:#626c72;--stamp:#c4161c;--tape:#efe6c4;--tape-edge:#d9cc9b;--focus:#1b2226;--ease-out:cubic-bezier(.16,1,.3,1)}.ds-pill{padding:7px 14px;border:1px solid var(--frame);border-radius:999px;background:var(--board);font:700 13px 'Noto Sans TC',system-ui,sans-serif;color:var(--ink);cursor:pointer;box-shadow:0 2px 6px rgba(27,34,38,.12);transition:background .2s}.ds-pill:hover{background:#fff}.ds-pill:focus-visible{outline:2px solid var(--focus);outline-offset:3px}"
+    },
+    {
+      "name": "Party Chip + Name",
+      "kind": "chip",
+      "refersTo": "party-chip",
+      "description": "Party identity: a 10px ink square always followed by the party name.",
+      "html": "<span class=\"ds-party\"><i class=\"ds-chip\" style=\"--c:#2A52BE\"></i>國民黨</span> <span class=\"ds-party\"><i class=\"ds-chip\" style=\"--c:#3B8A2A\"></i>民進黨</span> <span class=\"ds-party\"><i class=\"ds-chip pending\"></i>開票中</span>",
+      "css": ":host{--board:#f4f6f5;--board-line:#dde3e0;--frame:#b9c2be;--ink:#1b2226;--ink-2:#4a545a;--ink-3:#626c72;--stamp:#c4161c;--tape:#efe6c4;--tape-edge:#d9cc9b;--focus:#1b2226;--ease-out:cubic-bezier(.16,1,.3,1)}.ds-party{display:inline-flex;align-items:center;gap:6px;font:12.5px 'Noto Sans TC',system-ui,sans-serif;color:var(--ink-2)}.ds-chip{width:10px;height:10px;border-radius:3px;background:var(--c);display:inline-block}.ds-chip.pending{background:transparent;border:1.5px dashed #9aa4a9}"
+    },
+    {
+      "name": "Seat Stamp",
+      "kind": "custom",
+      "refersTo": "seat-stamp",
+      "description": "One of the 22 mayor seats in the top bar: dashed while counting, inked ring and tint when decided.",
+      "html": "<button class=\"ds-seat\">臺北</button> <button class=\"ds-seat is-decided\" style=\"--c:#2A52BE\">新北</button>",
+      "css": ":host{--board:#f4f6f5;--board-line:#dde3e0;--frame:#b9c2be;--ink:#1b2226;--ink-2:#4a545a;--ink-3:#626c72;--stamp:#c4161c;--tape:#efe6c4;--tape-edge:#d9cc9b;--focus:#1b2226;--ease-out:cubic-bezier(.16,1,.3,1)}.ds-seat{--c:var(--ink-3);width:40px;height:40px;border-radius:50%;border:1.5px dashed #9aa4a9;background:transparent;font:700 11px 'Noto Sans TC',system-ui,sans-serif;color:var(--ink-3);cursor:pointer;transition:transform .25s var(--ease-out)}.ds-seat:hover{transform:scale(1.08)}.ds-seat.is-decided{border:2px solid var(--c);background:color-mix(in srgb,var(--c) 14%,var(--board));color:var(--ink);box-shadow:0 1px 2px rgba(27,34,38,.12)}.ds-seat:focus-visible{outline:2px solid var(--focus);outline-offset:3px}"
+    },
+    {
+      "name": "Masking-Tape Label",
+      "kind": "custom",
+      "refersTo": "tape-label",
+      "description": "Handwritten county/town name on tape in the 3D scene; gains a mini 卜 when decided.",
+      "html": "<span class=\"ds-tape\">臺中市<span class=\"ds-mini\"><svg viewBox=\"0 0 40 40\" aria-hidden=\"true\"><circle cx=\"20\" cy=\"20\" r=\"16.2\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"3.2\"/><path d=\"M19 9.6V30.4M20.7 17.4l6.9 3.9\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"3.4\" stroke-linecap=\"round\"/></svg></span></span>",
+      "css": ":host{--board:#f4f6f5;--board-line:#dde3e0;--frame:#b9c2be;--ink:#1b2226;--ink-2:#4a545a;--ink-3:#626c72;--stamp:#c4161c;--tape:#efe6c4;--tape-edge:#d9cc9b;--focus:#1b2226;--ease-out:cubic-bezier(.16,1,.3,1)}.ds-tape{display:inline-flex;align-items:center;gap:4px;font:15px/1 Iansui,'Noto Sans TC',sans-serif;color:var(--ink);padding:4px 8px 5px;background:color-mix(in srgb,var(--tape) 88%,transparent);border-left:1px dashed var(--tape-edge);border-right:1px dashed var(--tape-edge);transform:rotate(-2deg);box-shadow:0 1px 2px rgba(27,34,38,.18);cursor:pointer}.ds-tape:hover{transform:rotate(-2deg) translateY(-2px)}.ds-mini{width:16px;height:16px;color:var(--stamp);display:inline-block}.ds-mini svg{width:100%;height:100%}"
+    },
+    {
+      "name": "Tally Row",
+      "kind": "custom",
+      "refersTo": "counting-board",
+      "description": "A candidate on the 計票板: ballot number, handwritten name, party, condensed votes, 正 strokes, and the red 當選 badge + 卜 stamp when elected.",
+      "html": "<div class=\"ds-row\" style=\"--c:#2A52BE\"><div class=\"ds-who\"><span class=\"ds-no\">6</span><span class=\"ds-name\">蔣萬安</span><span class=\"ds-p\"><i></i>國民黨</span><span class=\"ds-won\">當選</span><span class=\"ds-stamp\"><svg viewBox=\"0 0 40 40\" aria-hidden=\"true\"><circle cx=\"20\" cy=\"20\" r=\"16.2\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"3.2\"/><path d=\"M19 9.6V30.4M20.7 17.4l6.9 3.9\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"3.4\" stroke-linecap=\"round\"/></svg></span></div><div class=\"ds-nums\"><b>575,590</b><span>42.29%</span></div><svg class=\"ds-tally\" viewBox=\"0 0 78 24\"><path d=\"M3 4H19M11 4V19M11 11.5H17M5.5 11V19M2 19H20M29 4H45M37 4V19M37 11.5H43M31.5 11V19M28 19H46M55 4H71M63 4V19\"/></svg></div>",
+      "css": ":host{--board:#f4f6f5;--board-line:#dde3e0;--frame:#b9c2be;--ink:#1b2226;--ink-2:#4a545a;--ink-3:#626c72;--stamp:#c4161c;--tape:#efe6c4;--tape-edge:#d9cc9b;--focus:#1b2226;--ease-out:cubic-bezier(.16,1,.3,1)}.ds-row{display:grid;grid-template-columns:1fr auto;grid-template-areas:'who nums' 'tally tally';gap:4px 12px;padding:12px 0;border-bottom:1px dashed #c3ccc7;background:var(--board);font-family:'Noto Sans TC',system-ui,sans-serif}.ds-who{grid-area:who;display:flex;align-items:center;gap:8px;flex-wrap:wrap}.ds-no{font:700 15px 'Barlow Condensed',sans-serif;min-width:22px;height:22px;border:1.5px solid var(--ink);border-radius:50%;display:inline-grid;place-items:center}.ds-name{font:23px/1.2 Iansui,'Noto Sans TC',sans-serif}.ds-p{display:inline-flex;align-items:center;gap:6px;font-size:12.5px;color:var(--ink-2)}.ds-p i{width:10px;height:10px;border-radius:3px;background:var(--c)}.ds-won{font-size:12px;font-weight:900;letter-spacing:.1em;color:var(--stamp);border:1.5px solid var(--stamp);border-radius:3px;padding:0 5px;line-height:1.5}.ds-stamp{width:26px;height:26px;color:var(--stamp)}.ds-stamp svg{width:100%;height:100%}.ds-nums{grid-area:nums;text-align:right;line-height:1.05;font-family:'Barlow Condensed',sans-serif}.ds-nums b{display:block;font-size:26px;font-weight:600}.ds-nums span{font-size:15px;color:var(--ink-2)}.ds-tally{grid-area:tally;height:24px;width:78px}.ds-tally path{fill:none;stroke:var(--c);stroke-width:2.3;stroke-linecap:round}"
+    },
+    {
+      "name": "Close-Race Card",
+      "kind": "card",
+      "refersTo": "close-race-card",
+      "description": "拉鋸戰 card: two candidates, their votes, and a tug-of-war gauge whose knot moves toward the leader.",
+      "html": "<button class=\"ds-cr\" style=\"--x:38%;--fl:38%;--fr:50%;--fc:#3B8A2A\"><span class=\"ds-place\">屏東縣・縣長</span><span class=\"ds-names\"><span>周春米<b>170,665</b></span><span>蘇清泉<b>162,281</b></span></span><span class=\"ds-g\"><i class=\"t\"></i><i class=\"f\"></i><i class=\"z\"></i><i class=\"k\"></i></span><span class=\"ds-foot\">差 8,384 票　開票 78%</span></button>",
+      "css": ":host{--board:#f4f6f5;--board-line:#dde3e0;--frame:#b9c2be;--ink:#1b2226;--ink-2:#4a545a;--ink-3:#626c72;--stamp:#c4161c;--tape:#efe6c4;--tape-edge:#d9cc9b;--focus:#1b2226;--ease-out:cubic-bezier(.16,1,.3,1)}.ds-cr{display:block;width:280px;text-align:left;font:inherit;font-family:'Noto Sans TC',system-ui,sans-serif;color:var(--ink);background:var(--board);border:1px solid #c3ccc7;border-radius:6px;padding:10px 12px 9px;box-shadow:0 8px 20px rgba(27,34,38,.14),0 1px 3px rgba(27,34,38,.1);cursor:pointer;transition:transform .2s var(--ease-out),box-shadow .2s}.ds-cr:hover{transform:translateY(-2px)}.ds-cr:focus-visible{outline:2px solid var(--focus);outline-offset:3px}.ds-place{display:block;font-size:12px;font-weight:700;color:var(--ink-2)}.ds-names{display:flex;justify-content:space-between;font:18px Iansui,sans-serif;margin-top:4px}.ds-names b{display:block;font:600 20px 'Barlow Condensed',sans-serif}.ds-names span:last-child{text-align:right}.ds-g{position:relative;display:block;height:16px;margin:8px 0 4px}.ds-g .t{position:absolute;left:0;right:0;top:7px;height:3px;border-radius:3px;background:#d5dcd8}.ds-g .f{position:absolute;top:6px;left:0;right:0;height:5px;border-radius:5px;background:var(--fc);clip-path:inset(0 var(--fr) 0 var(--fl) round 5px)}.ds-g .z{position:absolute;left:50%;top:2px;width:1.5px;height:13px;background:var(--ink-3)}.ds-g .k{position:absolute;top:1px;left:var(--x);width:15px;height:15px;margin-left:-7.5px;border-radius:50%;background:#fff;border:2.5px solid var(--fc);box-shadow:0 1px 3px rgba(27,34,38,.3)}.ds-foot{display:block;font-size:12.5px;font-weight:700}"
+    },
+    {
+      "name": "當選確定 Band",
+      "kind": "custom",
+      "refersTo": "won-badge",
+      "description": "The decision callout: a paper band with the 卜 stamp, handwritten winner name underlined in party ink, and county・party.",
+      "html": "<div class=\"ds-band\" style=\"--c:#2A52BE\"><span class=\"ds-bs\"><svg viewBox=\"0 0 40 40\" aria-hidden=\"true\"><circle cx=\"20\" cy=\"20\" r=\"16.2\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"3.2\"/><path d=\"M19 9.6V30.4M20.7 17.4l6.9 3.9\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"3.4\" stroke-linecap=\"round\"/></svg></span><span class=\"ds-bl\">當選確定</span><span class=\"ds-bn\">王忠銘</span><span class=\"ds-bm\"><i></i>連江縣・國民黨</span></div>",
+      "css": ":host{--board:#f4f6f5;--board-line:#dde3e0;--frame:#b9c2be;--ink:#1b2226;--ink-2:#4a545a;--ink-3:#626c72;--stamp:#c4161c;--tape:#efe6c4;--tape-edge:#d9cc9b;--focus:#1b2226;--ease-out:cubic-bezier(.16,1,.3,1)}.ds-band{display:flex;align-items:center;gap:18px;padding:14px 32px;background:color-mix(in srgb,var(--board) 95%,transparent);border-top:1.5px solid var(--ink);border-bottom:1.5px solid var(--ink);box-shadow:0 10px 22px rgba(27,34,38,.18),0 2px 5px rgba(27,34,38,.1);font-family:'Noto Sans TC',system-ui,sans-serif}.ds-bs{width:44px;height:44px;color:var(--stamp)}.ds-bs svg{width:100%;height:100%}.ds-bl{font-size:14px;font-weight:900;letter-spacing:.14em;color:var(--stamp)}.ds-bn{font:50px/1.12 Iansui,sans-serif;box-shadow:inset 0 -12px 0 color-mix(in srgb,var(--c) 28%,transparent)}.ds-bm{display:inline-flex;align-items:center;gap:6px;font-size:15px;color:var(--ink-2)}.ds-bm i{width:10px;height:10px;border-radius:3px;background:var(--c)}"
+    }
+  ],
+  "narrative": {
+    "northStar": "The Counting Room",
+    "overview": "The results page is the polling-station counting room every Taiwanese voter has seen, under cool fluorescent light. Ballots pile up as white paper stacks on a pale sage desk. Each county's stack rises with the ballots counted and takes the leading party's marker ink on its top sheet. A whiteboard (the 計票板) fills with hand-drawn 正 strokes. When a race is decided, a red 卜 stamp comes down. The world is physical and familiar: paper, tape, marker, stamp. The spectacle comes from watching the count happen, not from glow or darkness.\n\nDensity is operational. The first viewport holds the whole island, the focused race's board, the national seat stamps and the clock, because on election night people want everything at once. Motion is driven by the count: stacks rise, strokes draw, rows re-rank, stamps press. Nothing moves just to decorate. The world explicitly rejects the dark-newsroom, neon-map, big-number-card default of results pages.",
+    "keyCharacteristics": [
+      "A light, cool, paper-and-desk palette. Color comes only from party marker inks, the closeness highlighter and the stamp.",
+      "Three typographic voices: handwriting for what people write in the room, a sans for the interface, condensed numerals for counts.",
+      "Soft ink-tinted shadows on the physical objects (board, cards, tape), and real-time three.js shadows under the stacks.",
+      "A decision is always marked the same way: solid ink, a red 卜 stamp and a 當選 badge."
+    ],
+    "rules": [
+      {
+        "name": "The Stamp Rule",
+        "body": "Red means decided. Stamp red is never decoration, a party color, a warning, or a \"live\" signal. The live label is ink.",
+        "section": "colors"
+      },
+      {
+        "name": "The Pale-Until-Decided Rule",
+        "body": "A leader's color is its party ink mixed 62% toward ballot paper. Only a decided race gets full-strength ink, and it arrives with a stamp press.",
+        "section": "colors"
+      },
+      {
+        "name": "The Ink-Follows-the-Party Rule",
+        "body": "A party keeps its ink everywhere, regardless of rank. Text stays in ink tones. Party color appears as a mark beside the name (chip, stroke, underline), never as the text color.",
+        "section": "colors"
+      },
+      {
+        "name": "The Three Voices Rule",
+        "body": "Handwriting is for things written in the room. Counts are always Barlow Condensed with tabular figures. Interface copy is always Noto Sans TC. Numbers are never handwritten; the 正 strokes are the handwritten form of a count.",
+        "section": "typography"
+      },
+      {
+        "name": "The Objects-Cast Rule",
+        "body": "Only things that would physically sit on the desk cast a shadow, and only with ink-tinted softness. Chrome and the page background stay flat.",
+        "section": "elevation"
+      }
+    ],
+    "dos": [
+      "Do keep the room light: cool counting-board surfaces on a sage desk, with ink for text.",
+      "Do reserve stamp red (`#C4161C`) for decided results.",
+      "Do pair every party ink with the party name, and keep each party's ink fixed across modes and ranks.",
+      "Do set every count in Barlow Condensed with tabular figures, and every name in Iansui.",
+      "Do tie motion to the count, with `cubic-bezier(.16, 1, .3, 1)` ease-out: stacks rise, strokes draw, rows FLIP, stamps press. Collapse all of it to instant under `prefers-reduced-motion`.",
+      "Do mirror everything in the 文字版結果 table."
+    ],
+    "donts": [
+      "Don't use a dark newsroom background, neon or glowing maps, or big-number KPI cards.",
+      "Don't use red for alerts, live indicators or decoration.",
+      "Don't color text with party inks, or encode identity with color alone.",
+      "Don't show a leader in full-strength ink before the race is decided.",
+      "Don't use the highlighter ramp outside 最接近 mode."
+    ]
+  }
+}

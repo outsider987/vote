@@ -1,0 +1,98 @@
+<!doctype html>
+<html lang="zh-Hant-TW">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#080d18">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='12' fill='%23080d18'/%3E%3Ccircle cx='32' cy='32' r='18' fill='none' stroke='%23d9c282' stroke-width='2'/%3E%3Ccircle cx='32' cy='32' r='5' fill='%23d9c282'/%3E%3C/svg%3E">
+  <title>席次星系｜2022 地方選舉計票模擬</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;600;700;800;900&family=Noto+Serif+TC:wght@600;700;900&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="./style.css">
+  <script type="importmap">
+    {"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.186.1/build/three.module.js","three/addons/":"https://cdn.jsdelivr.net/npm/three@0.186.1/examples/jsm/","topojson-client":"https://cdn.jsdelivr.net/npm/topojson-client@3/+esm"}}
+  </script>
+</head>
+<body>
+  <div id="loading" class="loading" role="status" aria-live="polite">
+    <div class="loading-orbit" aria-hidden="true"><span></span></div>
+    <p>2022 年地方選舉資料重播</p>
+    <strong>席次星系</strong>
+    <div class="loading-line"><span></span></div>
+    <small id="loading-message">正在載入選舉資料與地圖</small>
+  </div>
+
+  <main id="app" class="app" aria-label="2022 年地方選舉計票模擬">
+    <div id="scene" class="scene" aria-hidden="true"></div>
+
+    <header class="mast reveal">
+      <div class="mast-title">
+        <h1>席次星系</h1>
+        <p>2026 地方選舉 <span>／</span> 2022 年結果重播</p>
+      </div>
+      <div class="mast-actions">
+        <span class="edition"><i></i> 資料回放中</span>
+        <button id="view-toggle" class="text-toggle" type="button" aria-pressed="false">
+          <svg viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M3 5h14M3 10h14M3 15h9" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+          <span>文字結果</span>
+        </button>
+      </div>
+    </header>
+
+    <div class="filters reveal">
+      <label class="select-wrap"><span class="sr-only">篩選縣市</span><select id="county-filter" aria-label="篩選縣市"><option value="all">全臺 22 縣市</option></select></label>
+      <label class="select-wrap"><span class="sr-only">篩選政黨</span><select id="party-filter" aria-label="篩選政黨"><option value="all">所有政黨</option></select></label>
+      <div class="emphasis" role="group" aria-label="席次類型">
+        <button id="council-emphasis" class="active" type="button" aria-pressed="true">議員</button>
+        <button id="mayor-emphasis" type="button" aria-pressed="false">縣市長</button>
+      </div>
+    </div>
+
+    <div class="progress-hero reveal" aria-live="off">
+      <span>模擬計票進度</span>
+      <div><strong id="overall-progress">0</strong><em>%</em></div>
+      <small id="counting-status">尚未開始</small>
+    </div>
+    <div class="mobile-leader reveal" aria-live="off"><span id="mobile-race">臺北市長</span><strong id="mobile-name">待開票</strong><small id="mobile-share"></small></div>
+
+    <aside id="candidate-card" class="candidate-card reveal" aria-label="候選人詳情">
+      <div class="card-head"><span id="card-race">臺北市長</span><button id="card-close" type="button" aria-label="關閉候選人詳情"><svg viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="m5 5 10 10M15 5 5 15" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/></svg></button></div>
+      <div id="card-body"></div>
+    </aside>
+
+    <div id="seat-tooltip" class="seat-tooltip" role="tooltip" hidden></div>
+
+    <div id="map-inset" class="map-inset reveal" aria-label="臺灣縣市立體地圖；點選縣市可篩選">
+      <div class="map-heading"><span>縣市定位</span><strong id="map-name">臺北市</strong></div>
+      <div id="map-canvas" class="map-canvas" aria-hidden="true"></div>
+      <button class="map-island kinmen" type="button" data-code="09020">金門</button>
+      <button class="map-island lienchiang" type="button" data-code="09007">連江</button>
+    </div>
+
+    <div class="stage-note reveal"><span class="stage-note-mark"></span><span>每一點代表一席議員；內圈代表縣市長</span></div>
+
+    <section class="bottom-deck reveal" aria-label="全國席次與重播控制">
+      <div class="tally" id="tally">
+        <div class="tally-row"><div class="tally-heading"><span>縣市長</span><strong id="mayor-decided">0 <small>/ 22</small></strong></div><div id="mayor-tally" class="party-tally"></div></div>
+        <div class="tally-row"><div class="tally-heading"><span>議員</span><strong id="council-decided">0 <small>/ 910</small></strong></div><div id="council-tally" class="party-tally"></div></div>
+      </div>
+      <div class="transport">
+        <button id="play" class="play-button" type="button" aria-label="播放重播"><svg id="play-icon" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="m8 5 11 7-11 7V5Z" fill="currentColor"/></svg><span id="play-label">播放</span></button>
+        <label class="scrub"><span class="sr-only">重播進度</span><input id="timeline" type="range" min="0" max="1000" value="0" aria-label="重播進度"></label>
+        <span id="timeline-value" class="timeline-value">0%</span>
+        <button id="speed" class="speed-button" type="button" aria-label="播放速度 1 倍">1×</button>
+      </div>
+      <div class="deck-foot"><div class="legend"><span><i class="legend-dot pending"></i>未定席</span><span><i class="legend-dot elected"></i>已定席</span><span><i class="legend-dot quota"></i>婦女保障</span><button id="all-parties" type="button">完整政黨席次</button></div><p>資料來源：中央選舉委員會選舉資料庫（2022 年結果重播）<span> · 嘉義市長選舉於 2022-12-18 投票</span></p></div>
+    </section>
+
+    <section id="text-view" class="text-view" aria-label="文字結果" hidden>
+      <div class="text-head"><h2>文字結果</h2><p id="text-progress">依目前模擬計票進度顯示。選區完成計票後才標示當選。</p><button id="visual-toggle" type="button">返回星系</button></div>
+      <div id="text-tallies" class="text-tallies"></div>
+      <div class="text-tabs" role="group" aria-label="文字結果類型"><button id="text-mayor" class="active" type="button" aria-pressed="true">縣市長</button><button id="text-council" type="button" aria-pressed="false">議員</button></div>
+      <div id="text-list" class="text-list"></div>
+    </section>
+  </main>
+  <script type="module" src="./app.js"></script>
+</body>
+</html>

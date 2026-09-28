@@ -1,0 +1,9 @@
+node_modules/
+dist/
+*.log
+.DS_Store
+apps/poller/out/
+apps/poller/.cache/
+apps/web/public/data/
+# draft preview recordings (regenerable, not used by the gallery)
+drafts/**/preview.webm

@@ -1,0 +1,95 @@
+<!doctype html>
+<html lang="zh-Hant-TW">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#061018">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' fill='%23061018'/%3E%3Cpath d='M12 19h40v5H12zm0 12h40v5H12zm0 12h27v5H12z' fill='%238adfe5'/%3E%3C/svg%3E">
+  <title>開票夜特別報導｜2026 臺灣地方選舉</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700;800&family=Noto+Sans+TC:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="./style.css">
+  <script type="importmap">
+    {"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.186.1/build/three.module.js","three/addons/":"https://cdn.jsdelivr.net/npm/three@0.186.1/examples/jsm/","topojson-client":"https://cdn.jsdelivr.net/npm/topojson-client@3/+esm"}}
+  </script>
+</head>
+<body>
+  <main id="app" aria-label="2026 地方選舉開票模擬重播">
+    <div id="scene" aria-hidden="true"></div>
+    <div id="map-tag" class="map-tag" aria-hidden="true"><span id="map-tag-county"></span><strong id="map-tag-leader"></strong></div>
+    <div class="sea-caption" aria-hidden="true">臺灣 · 2026</div>
+
+    <header class="masthead reveal">
+      <div class="program-bug">
+        <div class="bug-mark"><span class="live-dot"></span><span>模擬重播</span></div>
+        <h1>開票夜<span>特別報導</span></h1>
+        <div class="bug-sub">2026 臺灣地方選舉 <span class="divider">/</span> 11 月 28 日</div>
+      </div>
+      <div class="clock-block"><span>模擬時間</span><strong id="clock">16:00</strong><small>2022 年結果重播</small></div>
+    </header>
+
+    <section class="scoreboard reveal" aria-label="全國當選席次">
+      <div class="score-heading"><span id="score-label">縣市長當選席次</span><strong id="decided">00 <small>/ 22</small></strong></div>
+      <div id="seat-counts" class="seat-counts"></div>
+      <div class="counting"><span>全國開票進度</span><strong id="overall">0.0%</strong><div class="track"><span id="overall-bar"></span></div></div>
+    </section>
+
+    <div class="mode-switch reveal" role="group" aria-label="選舉類別">
+      <button id="mayor-mode" class="mode active" type="button" aria-pressed="true">縣市長</button>
+      <button id="council-mode" class="mode" type="button" aria-pressed="false">議員</button>
+    </div>
+
+    <div class="insets reveal" aria-label="離島地圖視窗">
+      <button class="inset" data-code="09020" type="button" aria-label="查看金門縣"><span>金門縣</span><i>01</i></button>
+      <button class="inset" data-code="09007" type="button" aria-label="查看連江縣"><span>連江縣</span><i>02</i></button>
+      <button class="inset" data-code="10016" type="button" aria-label="查看澎湖縣"><span>澎湖縣</span><i>03</i></button>
+    </div>
+
+    <aside class="race-board reveal" aria-label="縣市開票快訊">
+      <div class="board-head"><span>各縣市即時戰況</span><span id="board-page">01 / 02</span></div>
+      <div id="board-list" class="board-list"></div>
+      <div class="board-foot">點選縣市查看詳細票數 <span aria-hidden="true">↗</span></div>
+    </aside>
+
+    <section id="call-banner" class="call-banner" aria-live="polite" aria-atomic="true" hidden>
+      <div class="call-rule"></div><span>當選確定</span><strong id="call-name"></strong><small id="call-context"></small><div class="call-rule"></div>
+    </section>
+
+    <section id="lower-third" class="lower-third reveal" aria-label="焦點選戰">
+      <div id="sheet-handle" class="sheet-handle"><span></span><button id="sheet-toggle" type="button" aria-label="展開或收合焦點選戰" aria-expanded="false"></button></div>
+      <div class="lower-head">
+        <div><div class="eyebrow"><span id="race-type">縣市長選舉</span><span class="thin-slash">/</span><span id="race-progress">0% 已開票</span></div><h2 id="race-name">臺灣</h2></div>
+        <div class="head-actions"><span id="race-status" class="race-status">開票中</span><button id="all-candidates" type="button">完整名單 <span aria-hidden="true">↗</span></button></div>
+      </div>
+      <div id="district-row" class="district-row" hidden><label for="district-select">選舉區</label><select id="district-select"></select></div>
+      <div id="candidate-strip" class="candidate-strip"></div>
+      <div class="mobile-sheet-tabs" role="group" aria-label="手機資訊切換"><button id="focus-tab" class="active" type="button" aria-pressed="true">焦點選戰</button><button id="counties-tab" type="button" aria-pressed="false">各縣市</button></div>
+      <div id="mobile-counties" class="mobile-counties" hidden></div>
+    </section>
+
+    <div class="bottom-bar reveal">
+      <div class="playback">
+        <button id="play" class="icon-button" type="button" aria-label="暫停重播"><svg id="play-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5v14M16 5v14"/></svg></button>
+        <span id="start-time" class="time-mark">16:00</span><input id="timeline" type="range" min="0" max="1000" value="0" aria-label="重播進度"><span class="time-mark">23:30</span>
+        <button id="speed" class="text-button" type="button" aria-label="播放速度 1 倍">1×</button>
+      </div>
+      <div class="view-actions"><button id="director" class="text-button active" type="button" aria-pressed="true">導播模式 <span class="director-light"></span></button><button id="text-view" class="text-button" type="button">文字戰況</button></div>
+    </div>
+
+    <div class="legend reveal" aria-label="政黨顏色圖例"><span><i style="--c:#6798e9"></i>國民黨</span><span><i style="--c:#58c99a"></i>民進黨</span><span><i style="--c:#6dd7dc"></i>民眾黨</span><span><i style="--c:#f2ca55"></i>時代力量</span><span><i style="--c:#b7c1cb"></i>無黨籍</span></div>
+    <div class="mobile-source">資料來源：中央選舉委員會選舉資料庫（2022 年結果重播）</div>
+    <footer class="source">資料來源：中央選舉委員會選舉資料庫（2022 年結果重播）<span>嘉義市 2022 年選舉於 12 月 18 日舉行</span></footer>
+
+    <section id="text-panel" class="text-panel" aria-label="文字戰況" hidden>
+      <div class="text-top"><div><span>文字戰況</span><h2>全國選舉結果</h2></div><button id="close-text" class="close-button" type="button" aria-label="關閉文字戰況"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 5l14 14M19 5L5 19"/></svg></button></div>
+      <div class="text-summary" id="text-summary"></div>
+      <div class="text-content"><nav id="text-counties" aria-label="選擇縣市"></nav><div class="text-detail"><div id="text-detail-head"></div><div id="text-district" class="text-district" hidden></div><div id="text-candidates"></div></div></div>
+      <div class="text-source">資料來源：中央選舉委員會選舉資料庫（2022 年結果重播）</div>
+    </section>
+
+    <div id="loading" class="loading" role="status" aria-live="polite"><div class="loading-brand"><span class="loading-orbit"></span><strong>開票夜</strong><small>2026 臺灣地方選舉 · 模擬重播</small></div><div class="loading-line"><span></span></div><span class="loading-caption">正在載入開票資料與地圖</span></div>
+  </main>
+  <script type="module" src="./app.js"></script>
+</body>
+</html>

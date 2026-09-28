@@ -1,0 +1,17 @@
+{
+  "year": 2022,
+  "election": "2022-local",
+  "countBaseUrl": "http://127.0.0.1:8787/",
+  "outDir": "./out",
+  "cacheDir": "./.cache/mock",
+  "contact": "local-rehearsal@example.org",
+  "districts": "2022",
+  "towns": "2022",
+  "intervalMs": 2000,
+  "townEvery": 5,
+  "concurrency": 4,
+  "timeoutMs": 5000,
+  "retries": 1,
+  "circuitBreakMs": 5000,
+  "prefixes": { "TC": "TC", "T1": "T1", "T2": "T2", "T3": "T3", "SC": "SC", "ST": "ST" }
+}
