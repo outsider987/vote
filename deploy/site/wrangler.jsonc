@@ -1,0 +1,8 @@
+{
+  // The site: an assets-only Worker (no script), so every request is a static-asset request, which
+  // Cloudflare serves free and without a request limit. Deployed by .github/workflows/deploy.yml.
+  "$schema": "../../node_modules/wrangler/config-schema.json",
+  "name": "vote",
+  "compatibility_date": "2026-09-01",
+  "assets": { "directory": "../../apps/web/dist" }
+}

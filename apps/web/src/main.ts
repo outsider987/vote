@@ -21,11 +21,10 @@ import { updateTip } from "./ui/tips";
 
 // ?source=live|replay overrides the build default (VITE_SOURCE); results.json lives at VITE_LIVE_URL.
 const SOURCE = (params.get("source") ?? import.meta.env.VITE_SOURCE ?? "replay") === "live" ? "live" : "replay";
-const LIVE_URL: string = import.meta.env.VITE_LIVE_URL ?? "live/results.json";
+const LIVE_URL: string = import.meta.env.VITE_LIVE_URL || "live/results.json";
 const LIVE_RETRY_MS = 15_000;
-// Results reach GitHub Pages about once a minute, so the default refresh is 60 s;
-// ?poll=seconds changes it (5–120 s), e.g. ?poll=5 for local rehearsals.
-const POLL_MS = Math.min(120, Math.max(5, Number(params.get("poll")) || 60)) * 1000;
+// Refresh every 30 s by default; ?poll=seconds changes it (5–120 s), e.g. ?poll=5 for local rehearsals.
+const POLL_MS = Math.min(120, Math.max(5, Number(params.get("poll")) || 30)) * 1000;
 
 const loadingText = $("loading").querySelector("p")!;
 const wait = (ms: number) => new Promise((r) => setTimeout(r, ms));

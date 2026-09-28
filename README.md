@@ -37,7 +37,7 @@ npm run build          # 輸出 apps/web/dist/，可放任何靜態主機或 CDN
 - `?t=0.6`：重播跳到 60% 並暫停
 - `?intro=0`：略過開場
 - `?source=live`：改讀即時資料
-- `?poll=5`：即時模式每 5 秒更新，彩排用（預設 60 秒，範圍 5–120）
+- `?poll=5`：即時模式每 5 秒更新，彩排用（預設 30 秒，範圍 5–120）
 
 ## 資料流程
 
@@ -46,12 +46,12 @@ npm run build          # 輸出 apps/web/dist/，可放任何靜態主機或 CDN
         │  apps/poller：條件式請求、限速、斷路器；解析失敗時保留上一筆正確資料
         ▼
 results.json（packages/shared 的 LiveResults）
-        │  scripts/publish-live.mjs：推到 live-data 分支並觸發 GitHub Pages 部署（約 1 分鐘）
+        │  scripts/publish-live.mjs：部署成 Cloudflare 的 vote-live Worker（約 10–20 秒）
         ▼
-瀏覽器每 60 秒讀一次（ETag 重新驗證），不直接連中選會
+瀏覽器每 30 秒讀一次（ETag 重新驗證），不直接連中選會
 ```
 
-觀眾的流量都由 GitHub Pages 的 CDN 承擔。poller 只有一個，對中選會的請求量固定，不會隨觀看人數增加。
+觀眾的流量都由 Cloudflare 的 CDN 承擔。poller 只有一個，對中選會的請求量固定，不會隨觀看人數增加。
 
 前端的資料來源層（`apps/web/src/model/`）有兩種實作，畫面程式只讀共同的 `RaceState`：
 
@@ -81,32 +81,45 @@ npm run dev                                                             # 開 ht
 - **11/28 開票當天**：
   - 把 repo 變數 `VITE_SOURCE` 改成 `live`（見下方「部署」），讓網站預設顯示即時資料。
   - 16:00 前在台灣的機器上啟動 `npm run poll -w @vote/poller -- --config poller.config.json`。
-  - 同一台機器另開 `node scripts/publish-live.mjs`，把結果持續發布到 GitHub Pages。
+  - 同一台機器另開 `node scripts/publish-live.mjs`，把結果持續發布到 Cloudflare。
 
-## 部署（GitHub Pages）
+## 部署（Cloudflare Workers）
 
-網站網址是 https://outsider987.github.io/vote/ 。
+網站網址列在 GitHub repo 首頁右側的 About 欄（Website）。
 
-- **自動部署：** push 到 `main` 就會觸發 `.github/workflows/pages.yml`：先跑型別檢查與測試，再建置並部署。Pull request 另有 `ci.yml` 檢查。
-- **預設資料來源：** 由 repo 變數 `VITE_SOURCE` 決定，可設 `replay`（預設）或 `live`。改完到 Actions 手動重跑一次 Deploy to GitHub Pages：
+整個網站放在 Cloudflare Workers 的靜態檔案服務，分成兩個只有靜態檔、沒有程式的 Worker：
+
+| Worker | 內容 | 誰來部署 |
+|---|---|---|
+| `vote` | 網站本身（`deploy/site/wrangler.jsonc`） | push 到 `main` 時由 `.github/workflows/deploy.yml` 部署，先跑型別檢查與測試 |
+| `vote-live` | 只有 `results.json` 與 `candidates.json`（`deploy/live/wrangler.jsonc`） | 選舉夜由 `scripts/publish-live.mjs` 直接部署 |
+
+兩者分開，程式與資料的部署就不會互相覆蓋。網站透過 repo 變數 `VITE_LIVE_URL` 讀取 `vote-live` 的資料，這個變數已設好。Pull request 另有 `ci.yml` 檢查。
+
+- **第一次設定：** GitHub Actions 需要一組 Cloudflare API Token 才能部署。
+  1. 在 Cloudflare 後台的 My Profile → API Tokens → Create Token，選 **Edit Cloudflare Workers** 範本。
+  2. 執行 `gh secret set CLOUDFLARE_API_TOKEN -R outsider987/vote`，把 token 貼上。
+  3. `CLOUDFLARE_ACCOUNT_ID` 已設好。
+
+  沒設 token 時，workflow 只會建置並提醒，不會部署。
+- **預設資料來源：** 由 repo 變數 `VITE_SOURCE` 決定，可設 `replay`（預設）或 `live`。改完重跑一次部署：
 
   ```sh
   gh variable set VITE_SOURCE --body live
-  gh workflow run pages.yml
+  gh workflow run deploy.yml
   ```
 
   不論預設是哪一種，都可以用 `?source=live` 或 `?source=replay` 切換。
-- **選舉夜的即時資料：** `scripts/publish-live.mjs` 每 60 秒檢查一次 poller 的輸出。檔案有變時：
-  1. 把 `results.json`（以及有的話 `candidates.json`）force-push 到只保留一個 commit 的 `live-data` 分支。
-  2. 觸發 Pages 部署，約一分鐘後上線。
+- **選舉夜的即時資料：** `scripts/publish-live.mjs` 每 3 秒檢查一次 poller 的輸出。檔案一變，就把它部署成 `vote-live` 的靜態檔。實測從寫出檔案到上線約 10–20 秒。
 
-  執行的機器需要能 push 這個 repo，並設好 `GITHUB_TOKEN` 或登入 GitHub CLI（`gh auth login`），才能觸發 workflow。
-- **其他主機：** `results.json` 放在別的主機時，建置時設 `VITE_LIVE_URL=https://…/results.json`。
+  執行的機器要先 `npx wrangler login`，或設好 `CLOUDFLARE_API_TOKEN` 與 `CLOUDFLARE_ACCOUNT_ID`。
 
-GitHub Pages 的限制：
+免費額度：
 
-- **快取時間無法自訂：** 固定 10 分鐘。前端每次都用 ETag 重新驗證，所以不會讀到舊資料，但更新會比中選會晚約 1–2 分鐘。
-- **頻寬有每月 100 GB 軟上限：** `results.json` 壓縮後約 59 KB，一位觀眾看一整晚約用 10–20 MB。觀看人數很多時，可以改把 `results.json` 放到 Cloudflare R2 這類 CDN，網站本身留在 GitHub Pages。
+- **流量：** 只有靜態檔的 Worker，請求與頻寬都不計費也不設上限（Cloudflare 官方：「Requests to static assets are free and unlimited」）。觀看人數再多都不會超額。
+- **部署：** 沒有公布次數上限。選舉夜約每分鐘部署一次 `vote-live`。
+- **檔案：** 每個 Worker 最多 20,000 個檔案、單檔 25 MiB。這個網站約 20 個檔案，最大不到 1 MB。
+- **其他：** 不需要自己的網域。之後若想用自己的網域可以另外綁定，不影響額度。
 
 即時模式下，頁尾會顯示中選會資料時間與投開票所回報進度，資料停止更新時會標示出來。
 

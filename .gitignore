@@ -7,5 +7,5 @@ apps/poller/.cache/
 apps/web/public/data/
 # draft preview recordings (regenerable, not used by the gallery)
 drafts/**/preview.webm
-# election-night publish checkout (scripts/publish-live.mjs)
-.live-publish/
+# vote-live assets staged by scripts/publish-live.mjs
+deploy/live/public/

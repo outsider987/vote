@@ -1,0 +1,8 @@
+{
+  // Election-night results: a second assets-only Worker that scripts/publish-live.mjs redeploys with each
+  // new results.json. Kept apart from the site, so data deploys and code deploys never overwrite each other.
+  "$schema": "../../node_modules/wrangler/config-schema.json",
+  "name": "vote-live",
+  "compatibility_date": "2026-09-01",
+  "assets": { "directory": "./public" }
+}

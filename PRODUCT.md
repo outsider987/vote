@@ -12,7 +12,7 @@ Decided 2026-09-28 (the user asked for the drafts to become a formal project):
 - An npm-workspaces monorepo. `apps/web` is a Vite + TypeScript + three.js static site on a CDN.
 - `apps/poller` is a single Node/TypeScript poller that scrapes the CEC count site and publishes a normalized `results.json`. It also runs the candidate import and a local mock count site for rehearsals.
 - `packages/shared` holds the data contract.
-- The site is hosted on GitHub Pages; on election night each poller publish triggers a Pages deploy, about once a minute. Browsers read `results.json` about every 60 s with ETag revalidation. They never call the poller or the CEC. Visitor load stays on the CDN, and the poller's load on the CEC is constant.
+- Hosted on Cloudflare Workers static assets (free, no request limit). The site is the `vote` Worker. On election night `scripts/publish-live.mjs` redeploys the `vote-live` Worker with each new `results.json`, about 10–20 s after the poller writes it. Browsers read it about every 30 s with ETag revalidation. They never call the poller or the CEC. Visitor load stays on the CDN, and the poller's load on the CEC is constant.
 
 ## Users
 
