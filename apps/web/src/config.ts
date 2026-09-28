@@ -50,6 +50,8 @@ export const INSET_SCALE = 1.8;   // their footprint is enlarged too (labelled é
 
 /** The election this site covers; live results from any other election are shown as a rehearsal. */
 export const ELECTION = "2026-local";
+/** Polls close and counting starts: Saturday 2026-11-28, 16:00 Taiwan time. */
+export const COUNT_STARTS_AT = Date.parse("2026-11-28T16:00:00+08:00");
 
 export type Mode = "mayor" | "council" | "close";
 

@@ -62,7 +62,7 @@ function renderRows(race: Race, seed: number) {
   board.lastRows = null;
   $("unit").innerHTML = `每一劃＝<b class="num">${fmt(race.unit)}</b> 票`;
   if (!race.candidates.length) {
-    $("rows").innerHTML = '<li class="rows-empty">尚未取得這場選舉的候選人資料</li>';
+    $("rows").innerHTML = `<li class="rows-empty">${app.source.started ? "尚未取得這場選舉的候選人資料" : "候選人名單公布後會顯示在這裡（號次 10 月 23 日抽籤）"}</li>`;
     board.rows = [];
     board.order = [];
     return;
@@ -189,7 +189,7 @@ export function renderBoard() {
     if (!cn.districts.length) {
       $("council-seats").innerHTML = "";
       $("district-tabs").innerHTML = "";
-      $("district-head").textContent = "尚未取得議員選區資料";
+      $("district-head").textContent = app.source.started ? "尚未取得議員選區資料" : "議員選區與候選人名單公布後會顯示在這裡";
       board.groups = [];
       board.tabs = [];
       $("unit").textContent = "";
@@ -234,6 +234,9 @@ export function renderBoard() {
   updateBoard(true);
 }
 
+/** Before 16:00 nothing is being counted yet. */
+export const pendingLabel = () => (app.source.started ? "開票中" : "尚未開票");
+
 export function updateBoard(initial = false) {
   const c = county(app.selected);
   if (app.mode === "close") { renderCloseList(false); return; }
@@ -242,22 +245,22 @@ export function updateBoard(initial = false) {
   if (r && (r.unit !== board.unit || (r.candidates.length > 0 && !board.rows.length))) { renderRows(r, board.seed); initial = true; }
   if (app.mode === "mayor") {
     const r = c.mayor, s = r.state;
-    const key = `${s.p}|${s.counted}|${s.decided}`;
+    const key = `${s.p}|${s.counted}|${s.decided}|${app.source.started}`;
     if (key !== board.lastStats) {
       board.lastStats = key;
       $("st-progress").textContent = `${(s.p * 100).toFixed(1)}%`;
       $("st-counted").textContent = fmt(s.counted);
-      $("st-turnout").textContent = !s.decided ? "開票中" : r.turnout !== null ? `${r.turnout.toFixed(2)}%` : "待公布";
+      $("st-turnout").textContent = !s.decided ? pendingLabel() : r.turnout !== null ? `${r.turnout.toFixed(2)}%` : "待公布";
     }
   } else {
     const cn = c.council, s = cn.state;
-    const key = `${s.p}|${s.decidedSeats}`;
+    const key = `${s.p}|${s.decidedSeats}|${app.source.started}`;
     if (key !== board.lastStats) {
       board.lastStats = key;
       $("st-progress").textContent = `${(s.p * 100).toFixed(1)}%`;
       $("st-counted").textContent = `${s.decidedSeats}／${cn.seats}`;
       const ft = s.complete ? councilTurnout(cn) : null;
-      $("st-turnout").textContent = !s.complete ? "開票中" : ft !== null ? `${ft.toFixed(2)}%` : "待公布";
+      $("st-turnout").textContent = !s.complete ? pendingLabel() : ft !== null ? `${ft.toFixed(2)}%` : "待公布";
     }
     cn.districts.forEach((d, k) => {
       const g = board.groups[k];

@@ -285,7 +285,11 @@ Dashed lines mean "not yet": an unfilled seat stamp, the pending chip, the edges
 - **當選確定 band:** a full-width paper band wipes in from the left (clip-path) carrying a 卜 stamp, the winner's handwritten name with a party-ink underline, and county・party. For a winner, the party emblem (KMT, DPP-flag and TPP marks, all public domain) or a text seal for other parties swells in behind a large 當選.
 - **Tug-of-war gauge:** a track with a center zero line. A knot moves toward whoever leads, the fill runs from center to knot in the leader's ink, and it transitions over 0.45s.
 - **Masking-tape labels:** handwritten county or town names on tape, with a mini 卜 stamp once the race is decided.
-- **Live footer:** in live mode the transport gives way to the count site's timestamp, an ink 即時 label (dashed when the feed stalls), and a progress bar of polling stations reported.
+- **Live footer:** in live mode the transport gives way to the count site's timestamp, an ink 即時 label (dashed when the feed stalls), and a progress bar of polling stations reported. Before the count it reads 預備 with a dashed border, mirrors the countdown, and links to the 2022 replay.
+- **Countdown notice (2026 開票前):** a paper notice taped to the desk, with a strip of masking tape at its top edge and a slight tilt. It takes the 拉鋸戰 column's place, since nothing is close before the count and the camera already keeps that area clear.
+  - Content: a label (距離開票), stacked Barlow Condensed numerals (days, then HH:MM:SS) and the start time.
+  - At 16:00 it turns into 開票開始 / 16:00 and waits for the first results.
+  - Phones show the countdown in the fixed footer instead.
 
 ## Do's and Don'ts
 

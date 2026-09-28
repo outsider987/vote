@@ -116,7 +116,6 @@ export async function enterCounty(code: string) {
   $("back").hidden = false;
   select(code, { byUser: true, noCamera: true });
   const target = box.getCenter(new THREE.Vector3()).setY(0);
-  if (host.clientWidth > 900) target.x += (box.max.x - box.min.x) * 0.16;
   const framing = points.flatMap((pt) => [pt, pt.clone().setY(heightScale * 0.75)]);
   const dist = fitFor(framing, target, host.clientWidth < 700 ? 0.9 : 0.8);
   controls.minDistance = dist * 0.4;     // the island limits would stop the camera short of small counties

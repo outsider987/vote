@@ -1,6 +1,7 @@
 import * as THREE from "three";
+import type { CandidateList } from "@vote/shared";
 import { app, initModeSwitch, select, setMode } from "./app";
-import { partyLabel, partyOf, partySummary } from "./config";
+import { COUNT_STARTS_AT, partyLabel, partyOf, partySummary } from "./config";
 import { $, params, reducedMotion } from "./dom";
 import { councilAggregate } from "./model/analysis";
 import { loadCouncils, loadCountyTopo, loadMayors } from "./model/data";
@@ -13,14 +14,24 @@ import { cam, camera, controls, initStage, labelRenderer, renderer, scene, scene
 import { updateBoard } from "./ui/board";
 import { enqueueCallout, preloadEmblems, pumpCallouts } from "./ui/callouts";
 import { initClosest } from "./ui/closest";
-import { initLiveClock, initReplayClock, updateLiveClock, updateReplayClock } from "./ui/clock";
+import { initLiveClock, initReplayClock, initStandbyClock, setStandbyStatus, updateLiveClock, updateReplayClock } from "./ui/clock";
+import { hideNotice, showWaiting, startCountdown } from "./ui/countdown";
 import { refreshDuels, updateDuels } from "./ui/duels";
 import { initNational, renderNational } from "./ui/national";
 import { initTextView, isTextOpen, renderText } from "./ui/textview";
 import { updateTip } from "./ui/tips";
+import { fmt } from "./util";
 
-// ?source=live|replay overrides the build default (VITE_SOURCE); results.json lives at VITE_LIVE_URL.
-const SOURCE = (params.get("source") ?? import.meta.env.VITE_SOURCE ?? "replay") === "live" ? "live" : "replay";
+// Which edition to show. The default ("auto") is the 2026 site: a countdown until the count starts, then
+// live results. ?source=replay is the 2022 replay (tests and demos); ?source=live forces live mode now
+// (rehearsals). VITE_SOURCE sets a build's default. results.json lives at VITE_LIVE_URL.
+const REQUESTED = (() => {
+  const v = params.get("source") || import.meta.env.VITE_SOURCE || "auto";
+  return v === "replay" || v === "live" ? v : "auto";
+})();
+// ?countdown=seconds swaps the real start time for a short test countdown.
+const COUNTDOWN_TEST = params.has("countdown");
+const COUNT_AT = COUNTDOWN_TEST ? Date.now() + Math.max(0, Number(params.get("countdown")) || 0) * 1000 : COUNT_STARTS_AT;
 const LIVE_URL: string = import.meta.env.VITE_LIVE_URL || "live/results.json";
 const LIVE_RETRY_MS = 15_000;
 // Refresh every 30 s by default; ?poll=seconds changes it (5–120 s), e.g. ?poll=5 for local rehearsals.
@@ -122,9 +133,47 @@ function frame() {
 
 /* ---------- boot ---------- */
 
+const EMBLEM_CREDIT = "黨徽：維基共享資源，公有領域（中國國民黨、民主進步黨黨旗中央、台灣民眾黨）；無黨籍及其他政黨以文字圓印表示。";
+
+function applyReplayCopy() {
+  document.title = "開票所｜2022 開票重播";
+  $("brand-sub").innerHTML = '<span class="sub-long">以 2022 年真實結果重播・<a href="./">看 2026 開票</a></span><span class="sub-short">2022 重播・<a href="./">看 2026</a></span>';
+  $("text-credit").textContent = `資料來源：中央選舉委員會選舉資料庫（2022 年結果重播）。${EMBLEM_CREDIT}`;
+}
+
+function applyStandbyCopy() {
+  document.title = "開票所｜2026 地方選舉開票";
+  $("brand-sub").innerHTML = '<span class="sub-long">2026 地方選舉・11 月 28 日 16:00 開票</span><span class="sub-short">2026・11/28 開票</span>';
+  $("text-credit").textContent = `資料來源：中央選舉委員會。11 月 28 日 16:00 起本頁自動顯示即時開票結果，以中選會公告為準。${EMBLEM_CREDIT}`;
+}
+
+function standbyStatus(list: CandidateList | null) {
+  // an empty list is the placeholder published before the real one exists
+  if (!list || !Object.keys(list.mayors).length) return "候選人名單公布後會顯示在計票板（號次 10 月 23 日抽籤）・16:00 起自動切換為即時開票";
+  const mayors = Object.values(list.mayors).reduce((a, l) => a + l.length, 0);
+  const councils = Object.values(list.councils).reduce((a, d) => a + d.candidates.length, 0);
+  return `已公布 ${fmt(mayors)} 位縣市長、${fmt(councils)} 位議員候選人・16:00 起自動切換為即時開票`;
+}
+
+/** After the countdown: look for the first real 2026 results, then reload straight into live mode. */
+async function waitForResults() {
+  showWaiting();
+  setStandbyStatus(`開票開始，等待中選會第一筆資料・每 ${Math.round(POLL_MS / 1000)} 秒自動檢查`);
+  const probe = new LiveSource(LIVE_URL);
+  for (;;) {
+    if ((await probe.fetch()) && !probe.rehearsal) {
+      const url = new URL(location.href);
+      url.searchParams.delete("countdown");
+      location.replace(url.toString());
+      return;
+    }
+    await wait(POLL_MS);
+  }
+}
+
 function applyLiveCopy(live: LiveSource) {
   const snap = live.snapshot!;
-  const emblems = "黨徽：維基共享資源，公有領域（中國國民黨、民主進步黨黨旗中央、台灣民眾黨）；無黨籍及其他政黨以文字圓印表示。";
+  const emblems = EMBLEM_CREDIT;
   const now = new Intl.DateTimeFormat("zh-TW", { timeZone: "Asia/Taipei", hour: "2-digit", minute: "2-digit", hourCycle: "h23" }).format(new Date());
   $("intro-time").textContent = now;
   if (live.rehearsal) {
@@ -151,18 +200,26 @@ async function boot() {
   }
 
   let replay: ReplaySource | null = null, live: LiveSource | null = null;
-  if (SOURCE === "live") {
-    live = new LiveSource(LIVE_URL, POLL_MS);
-    while (!(await live.fetch())) {
-      loadingText.innerHTML = '即時開票資料尚未開始，稍後自動重試<br><a href="?source=replay">先看 2022 年結果重播</a>';
-      await wait(LIVE_RETRY_MS);
-    }
-    app.source = live;
-    app.counties = buildLive(live.snapshot!, mayorFile, councilFile, await live.fetchCandidates());
-  } else {
+  let standby = false, list: CandidateList | null = null;
+  if (REQUESTED === "replay") {
     replay = new ReplaySource();
     app.source = replay;
     app.counties = buildReplay(mayorFile, councilFile);
+  } else {
+    live = new LiveSource(LIVE_URL, POLL_MS);
+    if (REQUESTED === "live") {
+      while (!(await live.fetch())) {
+        loadingText.innerHTML = '即時開票資料尚未開始，稍後自動重試<br><a href="?source=replay">先看 2022 年結果重播</a>';
+        await wait(LIVE_RETRY_MS);
+      }
+    } else {
+      // the 2026 site: live once real results exist after the count starts; until then it stands ready
+      standby = !(Date.now() >= COUNT_AT && (await live.fetch()) && !live.rehearsal);
+      if (standby) live.useEmpty();
+    }
+    list = await live.fetchCandidates();
+    app.source = live;
+    app.counties = buildLive(live.snapshot!, mayorFile, councilFile, list);
   }
   app.byCode = new Map(app.counties.map((c) => [c.code, c]));
   app.councilSeats = app.counties.reduce((a, c) => a + c.council.seats, 0);
@@ -189,8 +246,14 @@ async function boot() {
 
   const startT = replay && params.has("t") ? Number(params.get("t")) : null;
   if (replay) {
+    applyReplayCopy();
     initReplayClock(replay);
     if (startT !== null && Number.isFinite(startT)) { replay.seek(startT); replay.commit(); replay.playing = false; }
+    if (COUNTDOWN_TEST) { replay.seek(0); replay.commit(); replay.playing = false; }
+  } else if (live && standby) {
+    document.body.classList.add("is-standby");
+    applyStandbyCopy();
+    initStandbyClock(standbyStatus(list));
   } else if (live) {
     applyLiveCopy(live);
     initLiveClock();
@@ -210,12 +273,31 @@ async function boot() {
   }
 
   const introOn = sceneOk && startT === null && params.get("intro") !== "0" && !reducedMotion;
+  const countdownReplay = !!replay && COUNTDOWN_TEST;
   requestAnimationFrame(() => {
     $("loading").classList.add("is-done");
     if (introOn) {
       controls.enabled = false;
       cam.introStart = performance.now();
-      $("intro").classList.add("is-on");
+      // 「16:00 投票結束，開始開票」 belongs to the moment counting starts, not to a page still counting down
+      if (!standby && !countdownReplay) $("intro").classList.add("is-on");
+    }
+    if (standby) {
+      if (Date.now() < COUNT_AT) startCountdown(COUNT_AT, { test: COUNTDOWN_TEST, footer: true, onDone: () => void waitForResults() });
+      else void waitForResults();
+    } else if (countdownReplay) {
+      startCountdown(COUNT_AT, {
+        test: true,
+        footer: false,
+        onDone: () => {
+          hideNotice();
+          replay!.playing = true;
+          const intro = $("intro");
+          intro.classList.remove("is-on");
+          void intro.offsetWidth;
+          intro.classList.add("is-on");
+        },
+      });
     }
   });
 }

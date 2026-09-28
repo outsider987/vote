@@ -95,3 +95,21 @@ export function updateLiveClock(src: LiveSource) {
     : snap.stage === "final" ? "開票結束"
     : `每 ${Math.round(src.intervalMs / 1000)} 秒自動更新`;
 }
+
+/* ---------- 2026 standby (before the count) ---------- */
+
+/** The footer while the site waits for the count: a 預備 badge, what's published so far, a way to the replay. */
+export function initStandbyClock(status: string) {
+  const clock = $("clock");
+  clock.classList.add("is-live", "is-standby");
+  clock.setAttribute("aria-label", "開票倒數");
+  $("live-status").hidden = false;
+  $("live-badge").textContent = "預備";
+  $("live-progress-text").textContent = status;
+  $("live-note").textContent = "";
+  $("live-link").hidden = false;
+}
+
+export function setStandbyStatus(status: string) {
+  $("live-progress-text").textContent = status;
+}

@@ -28,3 +28,14 @@ export const decodeName = (name: string) =>
 
 /** Candidate indices by votes, highest first; ties keep ballot order. */
 export const rankOrder = (votes: readonly number[]) => votes.map((_, j) => j).sort((x, y) => votes[y] - votes[x]);
+
+const pad2 = (n: number) => String(n).padStart(2, "0");
+
+/** Whole days plus HH:MM:SS left, rounding up so zero shows only once the time has come. */
+export function countdownParts(ms: number) {
+  const s = Math.max(0, Math.ceil(ms / 1000));
+  return {
+    days: Math.floor(s / 86_400),
+    hms: `${pad2(Math.floor((s % 86_400) / 3600))}:${pad2(Math.floor((s % 3600) / 60))}:${pad2(s % 60)}`,
+  };
+}

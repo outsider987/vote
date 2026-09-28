@@ -51,7 +51,7 @@ export function renderNational() {
         el.setAttribute("aria-label", `${c.name}：${w.name}（${partyLabel(w.party)}）當選`);
       } else {
         el.classList.remove("is-decided");
-        el.setAttribute("aria-label", `${c.name}：開票中 ${(s.p * 100).toFixed(0)}%`);
+        el.setAttribute("aria-label", app.source.started ? `${c.name}：開票中 ${(s.p * 100).toFixed(0)}%` : `${c.name}：尚未開票`);
       }
     });
   } else {
@@ -66,7 +66,7 @@ export function renderNational() {
   const always = new Set<PartyKey>(["kmt", "dpp", "tpp"]);
   const items = LEGEND.filter((l) => always.has(l.key) || tally[l.key] > 0)
     .map((l) => `<li><i class="chip" style="--c:${l.color}"></i>${l.name}<b>${tally[l.key]}</b></li>`);
-  if (decided < total) items.push(`<li><i class="chip pending"></i>開票中<b>${total - decided}</b></li>`);
+  if (decided < total) items.push(`<li><i class="chip pending"></i>${app.source.started ? "開票中" : "尚未開票"}<b>${total - decided}</b></li>`);
   const html = items.join("");
   if (html === last) return;
   last = html;

@@ -94,20 +94,31 @@ export function startFraming() {
   resize();
 }
 
-export function islandTarget() {
-  const t = cam.baseTarget.clone();
-  if (host.clientWidth > 900) t.x += 0.9;   // leave room for the close-race column
-  return t;
-}
-
 /** Tape labels hang above their stacks; on phones the top edge needs this much room (px) or they clip. */
 const topPad = () => (host.clientWidth < 700 ? 30 : 0);
 
 /**
- * Smallest camera distance along viewDir from `target` that keeps every point inside the frame,
- * with `padTop` pixels kept clear at the top.
+ * Width (px) of the 拉鋸戰 column floating over the scene's right edge. It floats whenever the viewport is
+ * wider than 900px (the CSS breakpoint), however narrow the scene itself is.
+ */
+const asideReserve = () => (window.innerWidth > 900 ? 250 + 18 + 14 : 0);
+
+/** Centre the view in the part of the scene the column leaves free, so the island never sits under it. */
+function applyViewOffset(w: number, h: number) {
+  const r = asideReserve();
+  if (r && w > r) camera.setViewOffset(w, h, r / 2, 0, w, h);
+  else camera.clearViewOffset();
+}
+
+/**
+ * Smallest camera distance along viewDir from `target` that keeps every point inside the free part of the
+ * frame (left of the 拉鋸戰 column), with `padTop` pixels kept clear at the top.
  */
 export function fitFor(points: THREE.Vector3[], target: THREE.Vector3, margin: number, padTop = topPad()) {
+  const w = host.clientWidth || 1;
+  const r = camera.view?.enabled ? camera.view.offsetX * 2 : 0;
+  const centre = -r / w, half = 1 - r / w;   // the free region in NDC, with the target at its centre
+  const left = centre - margin * half, right = centre + margin * half;
   const top = margin - (padTop * 2) / (host.clientHeight || 1);
   const saved = camera.position.clone();
   const savedQ = camera.quaternion.clone();
@@ -120,7 +131,7 @@ export function fitFor(points: THREE.Vector3[], target: THREE.Vector3, margin: n
     camera.updateMatrixWorld();
     const fits = points.every((p) => {
       v.copy(p).project(camera);
-      return Math.abs(v.x) <= margin && v.y <= top && v.y >= -margin;
+      return v.x >= left && v.x <= right && v.y <= top && v.y >= -margin;
     });
     if (fits) hi = d; else lo = d;
   }
@@ -130,6 +141,7 @@ export function fitFor(points: THREE.Vector3[], target: THREE.Vector3, margin: n
   return hi;
 }
 
+export const islandTarget = () => cam.baseTarget.clone();
 export const islandDistance = () => fitFor(cam.framePts, islandTarget(), host.clientWidth < 700 ? 0.94 : 0.88);
 
 function resize() {
@@ -138,6 +150,7 @@ function resize() {
   labelRenderer.setSize(w, h);
   camera.aspect = (w || 1) / (h || 1);
   camera.updateProjectionMatrix();
+  applyViewOffset(w, h);
   if (!cam.userMoved) controls.target.copy(islandTarget());
   const d = islandDistance();
   if (!cam.userMoved) camera.position.copy(controls.target).addScaledVector(viewDir, d);

@@ -29,14 +29,26 @@ npm run build          # 輸出 apps/web/dist/，可放任何靜態主機或 CDN
 
 `npm run dev` 與 `npm run build` 會先把 `data/` 裡網站需要的檔案同步到 `apps/web/public/data/`（此資料夾不進版控）。
 
-網址參數：
+網站有三種版本：
+
+| 網址 | 內容 |
+|---|---|
+| `/` | **2026 正式版**。開票前倒數到 11 月 28 日 16:00，時間一到自動切換成即時開票，不用手動改任何設定。 |
+| `/?source=replay` | **2022 開票重播**，用真實結果模擬整晚開票，測試與展示用。 |
+| `/?source=live` | 強制進入即時模式，彩排用。非 2026 的資料會標示「彩排」。 |
+
+加上 `countdown=秒數` 可以測試倒數：
+
+- `/?countdown=10`：10 秒後倒數結束，進入「等待中選會第一筆資料」的狀態。
+- `/?source=replay&countdown=10`：倒數 10 秒後開始 2022 開票重播，整段模擬選舉夜。
+
+其他網址參數：
 
 - `?mode=council`：開啟議員模式
 - `?c=64000`：鎖定某縣市
 - `?d=2`：選該縣市的第幾個選區
 - `?t=0.6`：重播跳到 60% 並暫停
 - `?intro=0`：略過開場
-- `?source=live`：改讀即時資料
 - `?poll=5`：即時模式每 5 秒更新，彩排用（預設 30 秒，範圍 5–120）
 
 ## 資料流程
@@ -74,14 +86,16 @@ npm run dev                                                             # 開 ht
 
 時程：
 
-- **10/23 抽號次後、11/17 公告後**：各跑一次 `npm run import-candidates -w @vote/poller -- --config poller.config.json`，取得候選人與議員選區清單。
+- **10/23 抽號次後、11/17 公告後**：
+  - 各跑一次 `npm run import-candidates -w @vote/poller -- --config poller.config.json`，取得候選人與議員選區清單。
+  - 接著跑 `node scripts/publish-live.mjs --once` 發布 `candidates.json`，2026 倒數頁的計票板就會列出候選人。
 - **約開票前一週**：中選會公布 2026 開票網站。
   - 把主機與代碼填進 `apps/poller/poller.config.json`。
   - 從台灣的機器跑 `npm run probe -w @vote/poller -- --config poller.config.json`，每一項都要通過。
 - **11/28 開票當天**：
-  - 把 repo 變數 `VITE_SOURCE` 改成 `live`（見下方「部署」），讓網站預設顯示即時資料。
   - 16:00 前在台灣的機器上啟動 `npm run poll -w @vote/poller -- --config poller.config.json`。
   - 同一台機器另開 `node scripts/publish-live.mjs`，把結果持續發布到 Cloudflare。
+  - 網站 16:00 倒數結束後會自動讀取，一收到 2026 的開票資料就切換成即時畫面。
 
 ## 部署（Cloudflare Workers）
 
@@ -102,14 +116,14 @@ npm run dev                                                             # 開 ht
   3. `CLOUDFLARE_ACCOUNT_ID` 已設好。
 
   沒設 token 時，workflow 只會建置並提醒，不會部署。
-- **預設資料來源：** 由 repo 變數 `VITE_SOURCE` 決定，可設 `replay`（預設）或 `live`。改完重跑一次部署：
+- **預設版本：** 平常不用設 repo 變數 `VITE_SOURCE`，網站就是 2026 正式版（倒數後自動即時）。選舉夜萬一即時資料出問題，可以先把首頁切回 2022 重播：
 
   ```sh
-  gh variable set VITE_SOURCE --body live
+  gh variable set VITE_SOURCE --body replay
   gh workflow run deploy.yml
   ```
 
-  不論預設是哪一種，都可以用 `?source=live` 或 `?source=replay` 切換。
+  問題排除後，執行 `gh variable delete VITE_SOURCE` 再重跑部署即可恢復。
 - **選舉夜的即時資料：** `scripts/publish-live.mjs` 每 3 秒檢查一次 poller 的輸出。檔案一變，就把它部署成 `vote-live` 的靜態檔。實測從寫出檔案到上線約 10–20 秒。
 
   執行的機器要先 `npx wrangler login`，或設好 `CLOUDFLARE_API_TOKEN` 與 `CLOUDFLARE_ACCOUNT_ID`。

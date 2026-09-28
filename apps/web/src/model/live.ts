@@ -205,6 +205,12 @@ export class LiveSource implements Source {
     });
   }
 
+  /** Before the count: every race at zero, so the site can stand ready with the rosters it has. */
+  useEmpty() {
+    this.snapshot = { schema: 1, election: ELECTION, generatedAt: new Date().toISOString(), stage: "prior", source: "", mayors: {}, councils: {} };
+    this.version++;
+  }
+
   /** The poller's candidates.json beside results.json, if published; used only to fill rosters. */
   async fetchCandidates(): Promise<CandidateList | null> {
     try {

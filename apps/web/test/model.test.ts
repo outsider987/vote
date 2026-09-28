@@ -1,6 +1,7 @@
 import { describe, expect, it } from "vitest";
 import type { LiveResults, RaceTally } from "@vote/shared";
-import { partyLabel, partyOf } from "../src/config";
+import { COUNT_STARTS_AT, partyLabel, partyOf } from "../src/config";
+import { countdownParts } from "../src/util";
 import { councilAggregate, duelOf } from "../src/model/analysis";
 import type { CouncilFile, MayorFile } from "../src/model/data";
 import { LiveSource, buildLive, liveUnit, stateFromTally } from "../src/model/live";
@@ -192,5 +193,18 @@ describe("council and duel helpers", () => {
     expect(partyLabel("無")).toBe("無黨籍");
     expect(partyOf("台灣動物保護黨").key).toBe("other");
     expect(partyLabel("台灣動物保護黨")).toBe("台灣動物保護黨");
+  });
+});
+
+describe("countdown", () => {
+  it("starts the count at 16:00 Taiwan time on 2026-11-28", () => {
+    expect(new Date(COUNT_STARTS_AT).toISOString()).toBe("2026-11-28T08:00:00.000Z");
+  });
+
+  it("splits the time left into days and HH:MM:SS, rounding up to whole seconds", () => {
+    expect(countdownParts(((58 * 24 + 3) * 3600 + 12 * 60 + 45) * 1000)).toEqual({ days: 58, hms: "03:12:45" });
+    expect(countdownParts(1)).toEqual({ days: 0, hms: "00:00:01" });
+    expect(countdownParts(0)).toEqual({ days: 0, hms: "00:00:00" });
+    expect(countdownParts(-5000)).toEqual({ days: 0, hms: "00:00:00" });
   });
 });

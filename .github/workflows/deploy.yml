@@ -37,8 +37,9 @@ jobs:
         run: npm run typecheck && npm test
       - run: npm run build
         env:
-          # repository variables: VITE_SOURCE is "replay" (default) or "live"; VITE_LIVE_URL points at vote-live
-          VITE_SOURCE: ${{ vars.VITE_SOURCE || 'replay' }}
+          # repository variables. VITE_SOURCE is normally unset: the site is the 2026 edition (countdown, then
+          # live at 16:00). Set it to "replay" to fall back to the 2022 replay. VITE_LIVE_URL points at vote-live.
+          VITE_SOURCE: ${{ vars.VITE_SOURCE }}
           VITE_LIVE_URL: ${{ vars.VITE_LIVE_URL }}
       - name: Deploy the site Worker
         run: |

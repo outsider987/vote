@@ -1,9 +1,10 @@
 #!/usr/bin/env node
 // Election night: publish the poller's output to Cloudflare.
 //
-// Watches apps/poller/out/results.json. Whenever it changes, this deploys it (plus candidates.json, if
-// present) as the static assets of the vote-live Worker (deploy/live/wrangler.jsonc). A deploy takes a
-// few seconds, and the site fetches results.json from that Worker (VITE_LIVE_URL).
+// Watches apps/poller/out/. Whenever results.json or candidates.json changes, this deploys them as the
+// static assets of the vote-live Worker (deploy/live/wrangler.jsonc). A deploy takes a few seconds, and
+// the site fetches both files from that Worker (VITE_LIVE_URL). Before election night, publishing
+// candidates.json alone lets the 2026 countdown page show the rosters.
 //
 //   node scripts/publish-live.mjs [--out apps/poller/out] [--once]
 //
@@ -33,16 +34,22 @@ const log = (msg) => console.log(`${new Date().toISOString()} ${msg}`);
 let published = "";
 let lastStat = "";
 
+// Never publish a half-written or foreign file: both files share schema 1 with mayors and councils.
+function check(name, body) {
+  const doc = JSON.parse(body.toString());
+  if (doc.schema !== 1 || !doc.mayors || !doc.councils) throw new Error(`${name} does not match the shared contract`);
+  return doc;
+}
+
 async function publishIfChanged() {
-  const results = join(outDir, "results.json");
-  if (!existsSync(results)) return false;
-  const st = statSync(results);
-  const stamp = `${st.mtimeMs}:${st.size}`;
-  if (stamp === lastStat) return false;
+  // before election night there is only candidates.json, so the 2026 countdown page can show the rosters
   const files = ["results.json", "candidates.json"].filter((f) => existsSync(join(outDir, f)));
+  if (!files.length) return false;
+  const stamp = files.map((f) => { const st = statSync(join(outDir, f)); return `${f}:${st.mtimeMs}:${st.size}`; }).join("|");
+  if (stamp === lastStat) return false;
   const bodies = files.map((f) => readFileSync(join(outDir, f)));
-  const snap = JSON.parse(bodies[0].toString());   // never publish a half-written or foreign file
-  if (snap.schema !== 1 || !snap.mayors || !snap.councils) throw new Error("results.json does not match the LiveResults contract");
+  const docs = files.map((f, i) => check(f, bodies[i]));
+  const snap = files[0] === "results.json" ? docs[0] : null;
   const hash = createHash("sha256").update(Buffer.concat(bodies)).digest("hex");
   if (hash === published) { lastStat = stamp; return false; }
 
@@ -54,7 +61,8 @@ async function publishIfChanged() {
   await run(wrangler, ["deploy", "--config", join(liveDir, "wrangler.jsonc")], { cwd: root, timeout: 120_000 });
   published = hash;
   lastStat = stamp;
-  log(`published ${files.join(" + ")} (${snap.election}, ${snap.stage}, generated ${snap.generatedAt}) in ${((Date.now() - started) / 1000).toFixed(1)}s`);
+  const what = snap ? `${snap.election}, ${snap.stage}, generated ${snap.generatedAt}` : "candidates only";
+  log(`published ${files.join(" + ")} (${what}) in ${((Date.now() - started) / 1000).toFixed(1)}s`);
   return true;
 }
 
@@ -71,5 +79,5 @@ async function loop() {
   setTimeout(loop, wait);
 }
 
-log(`watching ${join(outDir, "results.json")}; publishing to the vote-live Worker`);
+log(`watching ${outDir} (results.json, candidates.json); publishing to the vote-live Worker`);
 loop();
