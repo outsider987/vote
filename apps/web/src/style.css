@@ -453,6 +453,8 @@ body.in-county #legend-inset { display: none; }
 .photo img { width: 100%; height: 100%; object-fit: cover; display: block; }
 .who { grid-area: who; min-width: 0; display: flex; flex-wrap: wrap; align-items: baseline; gap: 2px 10px; }
 .bio { flex-basis: 100%; color: var(--ink-2); font-size: 12px; line-height: 1.35; }
+.platform-link { display: inline-flex; align-items: center; min-height: 36px; padding: 0 7px; border: 1px solid var(--frame); border-radius: 3px; color: var(--ink); font-size: 12px; font-weight: 700; text-decoration: none; white-space: nowrap; }
+.platform-link:hover, .platform-link:focus-visible { border-color: var(--ink); background: var(--tape); }
 .no {
   font-family: var(--num);
   font-weight: 700;

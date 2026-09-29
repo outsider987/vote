@@ -13,7 +13,7 @@ export interface MayorFile {
     votesCast: number;
     valid: number;
     turnout: number;
-    candidates: { no: number; name: string; party: string; votes: number; elected: boolean; photo?: string; birth?: string; birthplace?: string; gender?: "M" | "F" | null; incumbent?: boolean }[];
+    candidates: { no: number; name: string; party: string; votes: number; elected: boolean; photo?: string; platformUrl?: string; birth?: string; birthplace?: string; gender?: "M" | "F" | null; incumbent?: boolean }[];
   }[];
 }
 
@@ -35,7 +35,7 @@ export interface CouncilFile {
       votesCast: number;
       valid: number;
       towns: { code: string; name: string }[];
-      candidates: { no: number; name: string; party: string; votes: number; elected: boolean; womenQuota?: boolean; photo?: string; birth?: string; birthplace?: string; gender?: "M" | "F" | null; incumbent?: boolean }[];
+      candidates: { no: number; name: string; party: string; votes: number; elected: boolean; womenQuota?: boolean; photo?: string; platformUrl?: string; birth?: string; birthplace?: string; gender?: "M" | "F" | null; incumbent?: boolean }[];
     }[];
   }[];
 }

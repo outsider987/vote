@@ -152,7 +152,7 @@ function setSourceNote(label: string, short: string, detail: string) {
 function applyReplayCopy() {
   document.title = "開票所｜2022 開票重播";
   $("brand-sub").innerHTML = '<span class="sub-long">2022 真實結果・過程模擬・<a href="./">看 2026</a></span><span class="sub-short">2022 過程模擬・<a href="./">看 2026</a></span>';
-  setSourceNote("2022 結果重播", "中途模擬・最終結果真實", "最終票數、當選結果、候選人資料與照片來自中選會；嘉義市長與金門議員照片取自選舉公報。中途票數與開票進度為模擬。");
+  setSourceNote("2022 結果重播", "中途模擬・最終結果真實", "最終票數、當選結果、候選人資料與照片來自中選會；點候選人卡片的「政見」可開啟官方選舉公報。中途票數與開票進度為模擬。");
   $("text-credit").textContent = `資料來源：中央選舉委員會選舉資料庫、2022 候選人資料及選舉公報。最終票數與當選結果為真實資料；中途票數與開票進度為模擬。${EMBLEM_CREDIT}`;
 }
 

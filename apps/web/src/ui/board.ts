@@ -74,10 +74,11 @@ function renderRows(race: Race, seed: number) {
     const cells = finalCells(j);
     const photo = x.photo ? `<div class="photo"><img src="${x.photo}" alt="" loading="lazy" decoding="async"></div>` : "";
     const bio = x.birth ? `<span class="bio">${[x.gender === "M" ? "男" : x.gender === "F" ? "女" : "", `${x.birth.replaceAll("-", ".")} 生`, x.birthplace ? `出生地 ${x.birthplace}` : "", x.incumbent ? `時任${race.kind === "district" ? "議員" : "縣市長"}` : ""].filter(Boolean).join("・")}</span>` : "";
+    const platform = x.platformUrl ? `<a class="platform-link" href="${x.platformUrl}" target="_blank" rel="noopener noreferrer" aria-label="查看${x.name}的政見，開啟中選會選舉公報">政見 ↗</a>` : "";
     return `<li class="row${x.photo ? " has-photo" : ""}" data-j="${j}" style="--c:${p.color}">
       ${photo}
       <div class="who"><span class="no" aria-label="${x.no} 號">${x.no}</span><span class="name">${x.name}</span>
-        <span class="party"><i class="chip" style="--c:${p.color}"></i>${partyLabel(x.party)}</span><span class="won">當選</span><span class="quota">婦女保障</span><svg class="row-stamp" aria-hidden="true"><use href="#stamp"/></svg>${bio}</div>
+        <span class="party"><i class="chip" style="--c:${p.color}"></i>${partyLabel(x.party)}</span><span class="won">當選</span><span class="quota">婦女保障</span><svg class="row-stamp" aria-hidden="true"><use href="#stamp"/></svg>${platform}${bio}</div>
       <div class="nums"><span class="votes num">0</span><span class="pct num">0.00%</span></div>
       <svg class="tally" viewBox="0 0 ${cells * 26} 24" width="${cells * 26}" height="24" aria-hidden="true"></svg>
     </li>`;
