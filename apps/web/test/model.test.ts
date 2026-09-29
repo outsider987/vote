@@ -1,4 +1,4 @@
-import { describe, expect, it } from "vitest";
+import { describe, expect, it, vi } from "vitest";
 import type { LiveResults, RaceTally } from "@vote/shared";
 import { COUNT_STARTS_AT, partyLabel, partyOf, partySeatTotals } from "../src/config";
 import { countdownParts } from "../src/util";
@@ -168,10 +168,22 @@ describe("buildLive", () => {
     expect(src.rehearsal).toBe(false);
   });
 
-  it("drops 2022 town lists for districts redrawn in 2026", () => {
+  it("does not show a stale election's candidate list on the 2026 page", async () => {
+    const src = new LiveSource("https://example.test/results.json");
+    src.useEmpty();
+    vi.stubGlobal("location", { href: "https://example.test/" });
+    vi.stubGlobal("fetch", vi.fn(async () => new Response(JSON.stringify({
+      schema: 1, election: "2022-local", mayors: { "63000": [{ no: 1, name: "舊名單", party: "無" }] }, councils: {},
+    }), { status: 200 })));
+    try { expect(await src.fetchCandidates()).toBeNull(); }
+    finally { vi.unstubAllGlobals(); }
+  });
+
+  it("drops 2022 electorate and towns for districts redrawn in 2026", () => {
     const hc = counties.find((c) => c.code === "10004")!;
     expect(hc.council.districts[0].towns).toEqual([]);
-    expect(hc.council.districts[0].electors).toBe(180_000);
+    expect(hc.council.districts[0].electors).toBe(100_000);
+    expect(hc.council.districts[0].castPerValid).toBe(1.015);
   });
 });
 

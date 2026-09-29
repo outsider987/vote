@@ -1,7 +1,7 @@
 import * as THREE from "three";
 import type { CandidateList } from "@vote/shared";
 import { app, initModeSwitch, select, setMode } from "./app";
-import { COUNT_STARTS_AT, districtLabel, partyLabel, partyOf, partySummary } from "./config";
+import { COUNCIL_SEATS_2026, COUNT_STARTS_AT, districtLabel, partyLabel, partyOf, partySummary } from "./config";
 import { $, params, reducedMotion } from "./dom";
 import { councilAggregate } from "./model/analysis";
 import { loadCouncils, loadCountyTopo, loadMayors } from "./model/data";
@@ -18,6 +18,7 @@ import { initLiveClock, initReplayClock, initStandbyClock, setStandbyStatus, upd
 import { hideNotice, showWaiting, startCountdown } from "./ui/countdown";
 import { refreshDuels, updateDuelFlashPosition, updateDuels } from "./ui/duels";
 import { initNational, renderNational } from "./ui/national";
+import { initRegistered } from "./ui/registered";
 import { initTextView, isTextOpen, renderText } from "./ui/textview";
 import { updateTip } from "./ui/tips";
 import { fmt } from "./util";
@@ -151,7 +152,7 @@ function setSourceNote(label: string, short: string, detail: string) {
 
 function applyReplayCopy() {
   document.title = "開票所｜2022 開票重播";
-  $("brand-sub").innerHTML = '<span class="sub-long">2022 真實結果・過程模擬・<a href="./">看 2026</a></span><span class="sub-short">2022 過程模擬・<a href="./">看 2026</a></span>';
+  $("brand-sub").innerHTML = '<span class="sub-long">2022 真實結果・過程模擬・<a href="./">看 2026</a></span><span class="sub-short">2022 模擬・<a href="./">看 2026</a></span>';
   setSourceNote("2022 結果重播", "中途模擬・最終結果真實", "最終票數、當選結果、候選人資料與照片來自中選會；點候選人卡片的「政見」可在本站閱讀官方選舉公報。中途票數與開票進度為模擬。");
   $("text-credit").textContent = `資料來源：中央選舉委員會選舉資料庫、2022 候選人資料及選舉公報。最終票數與當選結果為真實資料；中途票數與開票進度為模擬。${EMBLEM_CREDIT}`;
 }
@@ -159,13 +160,13 @@ function applyReplayCopy() {
 function applyStandbyCopy() {
   document.title = "開票所｜2026 地方選舉開票";
   $("brand-sub").innerHTML = '<span class="sub-long">2026 地方選舉・11 月 28 日 16:00 開票</span><span class="sub-short">2026・11/28 開票</span>';
-  setSourceNote("2026 開票預備", "中選會資料・開票後更新", `11 月 28 日開票後依中選會資料約每分鐘查詢；本頁每 ${Math.round(POLL_MS / 1000)} 秒檢查，有新票數才更新。`);
+  setSourceNote("2026 開票預備", "登記名冊可查・開票後更新", `登記名冊可先查閱，正式候選名單待中選會公告；11 月 28 日開票後依中選會資料約每分鐘查詢，本頁每 ${Math.round(POLL_MS / 1000)} 秒檢查。`);
   $("text-credit").textContent = `資料來源：中央選舉委員會。11 月 28 日 16:00 後約每分鐘檢查開票資料，本頁每 ${Math.round(POLL_MS / 1000)} 秒確認新資料；有新票數才更新，以中選會公告為準。${EMBLEM_CREDIT}`;
 }
 
 function standbyStatus(list: CandidateList | null) {
   // an empty list is the placeholder published before the real one exists
-  if (!list || !Object.keys(list.mayors).length) return "候選人名單尚未公布；有資料後會自動更新。";
+  if (!list || !Object.keys(list.mayors).length) return "已可查閱登記名冊；正式候選名單與號次仍待公告。";
   const mayors = Object.values(list.mayors).reduce((a, l) => a + l.length, 0);
   const councils = Object.values(list.councils).reduce((a, d) => a + d.candidates.length, 0);
   return `已公布 ${fmt(mayors)} 位縣市長、${fmt(councils)} 位議員候選人；開票後有新票數才更新。`;
@@ -241,7 +242,8 @@ async function boot() {
     app.counties = buildLive(live.snapshot!, mayorFile, councilFile, list);
   }
   app.byCode = new Map(app.counties.map((c) => [c.code, c]));
-  app.councilSeats = app.counties.reduce((a, c) => a + c.council.seats, 0);
+  app.councilSeats = live && !live.rehearsal ? COUNCIL_SEATS_2026
+    : app.counties.reduce((a, c) => a + c.council.seats, 0);
   await Promise.race([document.fonts.ready, wait(2500)]);
 
   // URL state: ?mode=mayor|council, ?c=county code, ?d=district index, ?t=0–1 (replay), ?intro=0
@@ -273,6 +275,7 @@ async function boot() {
   } else if (live && standby) {
     document.body.classList.add("is-standby");
     applyStandbyCopy();
+    await initRegistered();
     initStandbyClock(standbyStatus(list));
   } else if (live) {
     applyLiveCopy(live);

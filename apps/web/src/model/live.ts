@@ -108,7 +108,9 @@ export function buildLive(snap: LiveResults, mayorFile: MayorFile, councilFile: 
     const districts = ids.map((id): District => {
       const t = snap.councils[id] as RaceTally | undefined;
       const [, legis, no] = id.split("-");
-      const prev = d22.get(id);
+      // District numbers shifted in these counties; reusing a 2022 district's
+      // electorate would make the 2026 paper height and tally scale misleading.
+      const prev = redrawn.has(info.code) ? undefined : d22.get(id);
       const seats = seatsOf(id);
       // an unknown district gets the county electorate in proportion to its seats
       const dElectors = prev?.electors ?? Math.round((electors * seats) / Math.max(1, seatsTotal));
@@ -121,7 +123,7 @@ export function buildLive(snap: LiveResults, mayorFile: MayorFile, councilFile: 
         type: TYPE[legis] ?? "區域",
         no,
         name: `第${no}選舉區`,
-        towns: prev && !redrawn.has(info.code) ? prev.towns : [],
+        towns: prev?.towns ?? [],
         candidates: dc,
         seats,
         electors: dElectors,
@@ -216,7 +218,7 @@ export class LiveSource implements Source {
       const r = await fetch(new URL("candidates.json", new URL(this.url, location.href)), { cache: "no-cache", signal: AbortSignal.timeout(10_000) });
       if (!r.ok) return null;
       const list = (await r.json()) as CandidateList;
-      return list.schema === 1 && list.mayors && list.councils ? list : null;
+      return list.schema === 1 && list.election === this.snapshot?.election && list.mayors && list.councils ? list : null;
     } catch {
       return null;
     }

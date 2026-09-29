@@ -29,7 +29,7 @@ npm run import-candidates -w @vote/poller -- --config poller.config.json
 npm run import-candidates -w @vote/poller -- --config poller.config.json --photos
 ```
 
-`--year 2022` and `--base-url https://.../` override the candidate import settings. A 404 from an unpublished candidate list prints a message and exits without replacing `candidates.json`. The optional portraits go under `out/photos/` and are referenced relative to `candidates.json`. Council districts come from this imported file unless `districts` is explicitly set to an array or `"2022"`. Mayor town codes default to the 368 codes in `data/mayor-2022-towns.json`; set `towns` to an array if the 2026 portal reports changes.
+`--year 2022` and `--base-url https://.../` override the candidate import settings. A 404 from an unpublished candidate list prints a message and exits without replacing `candidates.json`. The optional portraits go under `out/photos/` and are referenced relative to `candidates.json`. Council districts come from this election's imported file unless `districts` is explicitly set to an array; `"2022"` is valid only with year 2022. Mayor town codes default to the 368 codes in `data/mayor-2022-towns.json`; set `towns` to an array if the 2026 portal reports changes.
 
 About a week before 28 November, verify from a Taiwan-located machine:
 

@@ -43,6 +43,21 @@ export interface CouncilFile {
 /** data/mayor-2022-towns.json */
 export type TownsFile = Record<string, TownRecord[]>;
 
+export interface RegisteredFile {
+  asOf: string;
+  status: "registered-pending-review";
+  mayor: RegisteredCandidate[];
+  council: RegisteredCandidate[];
+}
+
+export interface RegisteredCandidate {
+  county: string;
+  district: string;
+  name: string;
+  party: string;
+  registeredAt: string;
+}
+
 async function getJSON<T>(url: string): Promise<T> {
   const r = await fetch(url);
   if (!r.ok) throw new Error(`${url}: HTTP ${r.status}`);
@@ -54,3 +69,4 @@ export const loadCouncils = () => getJSON<CouncilFile>("data/council-2022.json")
 export const loadTowns = () => getJSON<TownsFile>("data/mayor-2022-towns.json");
 export const loadCountyTopo = () => getJSON<Topology>("data/taiwan-atlas-counties-10t.json");
 export const loadTownTopo = () => getJSON<Topology>("data/taiwan-atlas-towns-10t.json");
+export const loadRegistered = () => getJSON<RegisteredFile>("data/registered-2026.json");

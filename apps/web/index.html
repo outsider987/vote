@@ -63,10 +63,29 @@
         </div>
         <div class="standby-next">
           <h3>開票前可以看什麼？</h3>
-          <p id="standby-status">候選人名單公布後會顯示在計票板。</p>
+          <p id="standby-status">已可查閱候選人登記名冊；正式名單與號次將依中選會公告更新。</p>
+          <a class="standby-roster-link" href="#registered">查看已登記人選 →</a>
           <p>想先熟悉操作，可以用 2022 年真實結果觀看模擬的開票過程。</p>
         </div>
         <p class="standby-credit">資料來源：中央選舉委員會。11 月 28 日 16:00 後有新票數才更新。</p>
+      </section>
+      <section class="registered" id="registered" aria-labelledby="registered-title">
+        <header class="registered-head">
+          <p class="registered-eyebrow">2026 地方選舉・中選會 9 月 7 日登記名冊</p>
+          <h2 id="registered-title">已登記參選人</h2>
+          <p>登記資料尚非審定後的正式候選名單；號次預定 10 月 23 日抽籤。</p>
+        </header>
+        <div class="registered-controls">
+          <div class="registered-modes" role="group" aria-label="登記選舉類別">
+            <button type="button" data-registered-mode="mayor" aria-pressed="true">縣市長</button>
+            <button type="button" data-registered-mode="council" aria-pressed="false">議員</button>
+          </div>
+          <label>縣市 <select id="registered-county" aria-label="選擇登記名冊縣市"></select></label>
+          <label id="registered-district-wrap" hidden>選區 <select id="registered-district" aria-label="選擇登記名冊議員選區"></select></label>
+        </div>
+        <p class="registered-summary" id="registered-summary" role="status">正在載入登記名冊…</p>
+        <ol class="registered-list" id="registered-list"></ol>
+        <p class="registered-source">資料：<a href="https://web.cec.gov.tw/central/article/64733" target="_blank" rel="noopener noreferrer">中選會候選人登記名冊</a>。名單審定與公告時間依<a href="https://www.cec.gov.tw/central/article/61722" target="_blank" rel="noopener noreferrer">選務日程</a>。</p>
       </section>
       <button class="mobile-duel" id="mobile-duel" type="button" hidden>
         <span class="mobile-duel-title" id="mobile-duel-title">拉鋸戰</span><span class="mobile-duel-text" id="mobile-duel-text">開票後顯示</span>
@@ -77,7 +96,7 @@
       <aside class="board" id="board" aria-labelledby="board-county">
         <div class="board-frame">
           <div class="board-head">
-            <h2><span id="board-county">臺北市</span><span class="county-choice"><select id="county-select" aria-label="選擇縣市"></select></span><span class="board-race" id="board-race">市長選舉</span><button class="text-board-toggle" id="text-board-toggle" type="button" aria-label="文字版結果" aria-expanded="false" aria-controls="text-view">文字版</button></h2>
+            <h2><span id="board-county">臺北市</span><span class="county-choice"><select id="county-select" aria-label="選擇縣市"></select></span><span class="district-choice"><select id="district-select" aria-label="選擇議員選區"></select></span><span class="board-race" id="board-race">市長選舉</span><button class="text-board-toggle" id="text-board-toggle" type="button" aria-label="文字版結果" aria-expanded="false" aria-controls="text-view">文字版</button></h2>
             <div class="board-tools">
               <label class="follow"><input type="checkbox" id="follow" checked><span>當選自動切換</span></label>
               <button class="map-toggle" id="map-toggle" type="button" aria-controls="scene" aria-expanded="false">看 3D 地圖</button>
@@ -195,6 +214,7 @@
         <button type="button" data-speed="1" aria-pressed="true">1×</button>
         <button type="button" data-speed="4" aria-pressed="false">4×</button>
       </div>
+      <button class="clock-expand" id="clock-expand" type="button" aria-expanded="false" aria-controls="scrub" aria-label="展開時間軸與播放速度">時間軸</button>
       <button class="replay" id="replay" type="button">重播</button>
       <div class="live-status" id="live-status" hidden>
         <span class="live-badge" id="live-badge">即時</span>

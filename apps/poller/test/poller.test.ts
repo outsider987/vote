@@ -7,7 +7,7 @@ import { gunzipSync } from "node:zlib";
 import { COUNTIES, type LiveResults } from "@vote/shared";
 import { describe, expect, it, vi } from "vitest";
 import { loadConfig, stageOf, type PollerConfig } from "../src/config.js";
-import { replayFile, readJson } from "../src/data.js";
+import { replayFile, readJson, writeJsonAtomic } from "../src/data.js";
 import { PoliteFetcher } from "../src/fetcher.js";
 import { decodeName, importCandidates, parseCouncilPayload, parseMayorPayload, rocDate } from "../src/import-candidates.js";
 import { startMock } from "../src/mock-cec.js";
@@ -171,6 +171,18 @@ describe("CEC parsing and identifiers", () => {
     const c = await loadConfig(new URL("../poller.mock.json", import.meta.url).pathname);
     expect(c.intervalMs).toBe(2000);
     expect(c.minRequestIntervalMs).toBe(1000);
+  });
+
+  it("uses only the current election's council districts", async () => {
+    const root = await mkdtemp(join(process.cwd(), "test", "run-"));
+    try {
+      const c = { ...config(root), year: 2026, election: "2026-local", districts: undefined };
+      await writeJsonAtomic(join(c.outDir, "candidates.json"), { schema: 1, election: "2022-local", councils: { "63000-T1-01": {} } });
+      await expect(districtIds(c)).rejects.toThrow("Candidate list election mismatch");
+      await expect(districtIds({ ...c, districts: "2022" })).rejects.toThrow("2022 district list");
+      await writeJsonAtomic(join(c.outDir, "candidates.json"), { schema: 1, election: "2026-local", councils: { "10004-T1-10": {} } });
+      expect(await districtIds(c)).toEqual(["10004-T1-10"]);
+    } finally { await rm(root, { recursive: true, force: true }); }
   });
 });
 

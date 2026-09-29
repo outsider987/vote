@@ -12,10 +12,15 @@ type ReplayTowns = Record<string, { code: string; name: string }[]>;
 export async function districtIds(config: PollerConfig): Promise<string[]> {
   let ids: string[];
   if (config.districts === "2022") {
+    if (config.year !== 2022) throw new Error("2022 district list cannot be used for another election");
     const data = await readJson<ReplayCouncil>(replayFile("council-2022.json"));
     ids = data.counties.flatMap(county => county.districts.map(district => district.id));
   } else if (Array.isArray(config.districts)) ids = config.districts;
-  else ids = Object.keys((await readJson<CandidateList>(join(config.outDir, "candidates.json"))).councils);
+  else {
+    const list = await readJson<CandidateList>(join(config.outDir, "candidates.json"));
+    if (list.schema !== 1 || list.election !== config.election || !list.councils) throw new Error("Candidate list election mismatch");
+    ids = Object.keys(list.councils);
+  }
   if (!ids.length || ids.some(id => !/^\d{5}-T[123]-\d{2}$/.test(id)) || new Set(ids).size !== ids.length) throw new Error("Invalid or empty council district list");
   return ids;
 }

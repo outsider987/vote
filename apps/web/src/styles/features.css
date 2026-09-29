@@ -14,7 +14,7 @@
 .mode button[aria-pressed="true"] { background: var(--ink); color: #fff; }
 .mode button:hover:not([aria-pressed="true"]) { color: var(--ink); }
 
-/* ---------- 910-seat bar ---------- */
+/* ---------- council seat bar ---------- */
 .seatbar { grid-column: 1 / -1; display: flex; gap: 2px; height: 16px; }
 .seatbar span { flex: var(--n) 1 0; min-width: 3px; background: var(--c); border-radius: 3px; transition: flex-grow .6s var(--ease-out); }
 .seatbar span.pending { background: #e3e8e5; box-shadow: inset 0 0 0 1px #b6c0bb; }
@@ -501,9 +501,11 @@ body.mode-close .board .unit, body.mode-close .board .rows { display: none; }
 .loading a { color: var(--ink); font-family: var(--sans); font-size: 15px; font-weight: 700; }
 
 @media (max-width: 900px) {
+  body:has(.clock.is-live.is-stale) { --clock-h: 84px; }
   .clock.is-live { grid-template-rows: 1fr; }
   .live-status { grid-template-columns: auto minmax(0, 1fr); gap: 12px; }
   .live-note { display: none; }
+  .clock.is-stale .live-note { display: block; grid-column: 1 / -1; text-align: left; font-size: 12px; }
   .live-progress { font-size: 12px; }
 }
 
@@ -549,14 +551,46 @@ body.is-standby .close-races, body.is-counting .close-races { display: none; }
 .live-link { font-size: 13px; font-weight: 700; color: var(--ink); white-space: nowrap; text-underline-offset: 3px; }
 .brand p a { color: var(--ink); font-weight: 700; text-underline-offset: 3px; }
 
+/* The September CEC registration roster; election-night candidates use a separate approved feed. */
+.registered { display: none; }
+body.is-standby .board, body.is-standby .mode, body.is-standby .tally-national, body.is-standby .text-toggle { display: none; }
+body.is-standby .registered {
+  display: flex; flex-direction: column; grid-column: 2; grid-row: 1; min-height: 0;
+  margin: 16px 18px 16px 0; padding: 18px 20px; border: 6px solid #c7cfcb;
+  background: var(--board); box-shadow: 0 10px 24px rgba(27, 34, 38, .12);
+}
+.registered-head { border-bottom: 1.5px solid var(--ink); padding-bottom: 12px; }
+.registered-eyebrow { margin: 0 0 2px; font-size: 12px; font-weight: 700; color: var(--ink-2); }
+.registered-head h2 { margin: 0; font-family: var(--hand); font-size: 30px; font-weight: 400; }
+.registered-head p:last-child { margin: 4px 0 0; font-size: 12px; line-height: 1.5; color: var(--ink-2); }
+.registered-controls { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; margin-top: 12px; }
+.registered-modes { display: flex; grid-column: 1 / -1; padding: 3px; border-radius: 999px; background: #e3e8e5; }
+.registered-modes button { flex: 1; min-height: 38px; border: 0; border-radius: 999px; background: transparent; font-size: 14px; font-weight: 700; cursor: pointer; }
+.registered-modes button[aria-pressed="true"] { background: var(--ink); color: #fff; }
+.registered-controls label { display: grid; gap: 2px; min-width: 0; font-size: 12px; font-weight: 700; color: var(--ink-2); }
+.registered-controls select { width: 100%; min-width: 0; min-height: 42px; padding: 0 8px; border: 1px solid var(--frame); border-radius: 4px; background: var(--board); color: var(--ink); font: 700 14px var(--sans); }
+.registered-summary { margin: 12px 0 7px; font-size: 13px; font-weight: 700; }
+.registered-list { flex: 1; min-height: 0; overflow-y: auto; list-style: none; margin: 0; padding: 0; scrollbar-width: thin; }
+.registered-list li { display: grid; grid-template-columns: 10px minmax(0, 1fr) auto; grid-template-areas: "chip name date" ". party date"; align-items: start; gap: 0 8px; padding: 10px 2px; border-top: 1px dashed var(--frame); }
+.registered-list .chip { grid-area: chip; margin-top: 7px; }
+.registered-list strong { grid-area: name; min-width: 0; font-size: 16px; overflow-wrap: anywhere; }
+.registered-list span { grid-area: party; font-size: 12px; color: var(--ink-2); }
+.registered-list small { grid-area: date; align-self: center; color: var(--ink-3); white-space: nowrap; }
+.registered-source { margin: 10px 0 0; padding-top: 8px; border-top: 1px solid var(--frame); font-size: 11px; line-height: 1.5; color: var(--ink-2); }
+.registered-source a { color: var(--ink); text-underline-offset: 2px; }
+.standby-roster-link { display: inline-flex; align-items: center; min-height: 44px; margin: 2px 0 10px; padding: 0 14px; border: 1px solid var(--frame); border-radius: 4px; background: var(--board); color: var(--ink); font-size: 14px; font-weight: 700; text-decoration: none; }
+
 @media (max-width: 900px) {
   .notice { display: none; }
   body.is-standby { --topbar-h: calc(60px + env(safe-area-inset-top)); --clock-h: 82px; }
   body.is-standby .topbar { grid-template-rows: 44px; }
   body.is-standby .mode, body.is-standby .tally-national, body.is-standby .source-note { display: none; }
   body.is-standby .room { display: block; }
-  body.is-standby .room > :not(.standby-home) { display: none; }
+  body.is-standby .room > :not(.standby-home):not(.registered) { display: none; }
   body.is-standby .standby-home { display: block; max-width: 480px; margin: 0 auto; padding: 24px 16px 36px; }
+  body.is-standby .registered { display: flex; width: calc(100% - 32px); max-width: 448px; margin: 0 auto 26px; padding: 16px; border: 1px solid var(--frame); box-shadow: 0 2px 7px rgba(27, 34, 38, .08); scroll-margin-top: calc(var(--topbar-h) + 8px); }
+  .registered-list { flex: auto; overflow: visible; }
+  .registered-controls { position: sticky; top: var(--topbar-h); z-index: 2; padding: 8px 0; background: var(--board); }
   .standby-hero { padding: 26px 24px 24px; background: var(--board); border: 1px solid var(--frame); box-shadow: 0 2px 7px rgba(27, 34, 38, .08); }
   .standby-eyebrow { margin: 0 0 8px; color: var(--ink-2); font-size: 13px; font-weight: 700; letter-spacing: .08em; }
   .standby-hero h2 { margin: 0; font-family: var(--hand); font-size: 35px; line-height: 1.3; }

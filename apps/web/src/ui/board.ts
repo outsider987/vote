@@ -1,4 +1,4 @@
-import { app, county, select } from "../app";
+import { app, county, pauseFollow, select } from "../app";
 import { districtLabel, districtShort, partyLabel, partyOf, partySeatTotals } from "../config";
 import { $, reducedMotion, SVGNS } from "../dom";
 import { councilTurnout } from "../model/analysis";
@@ -81,6 +81,7 @@ function renderRows(race: Race, seed: number) {
       <div class="who"><span class="no" aria-label="${x.no} 號">${x.no}</span><span class="name">${x.name}</span>
         <span class="party"><i class="chip" style="--c:${p.color}"></i>${partyLabel(x.party)}</span><span class="won">當選</span><span class="quota">婦女保障</span><svg class="row-stamp" aria-hidden="true"><use href="#stamp"/></svg>${platform}${bio}</div>
       <div class="nums"><span class="votes num">0</span><span class="pct num">0.00%</span></div>
+      <button class="row-expand" type="button" aria-expanded="false" aria-label="展開${x.name}詳細資料">詳情</button>
       <svg class="tally" viewBox="0 0 ${cells * 26} 24" width="${cells * 26}" height="24" aria-hidden="true"></svg>
     </li>`;
   }).join("");
@@ -103,7 +104,19 @@ function renderRows(race: Race, seed: number) {
   placeRows(board.order, false);
 }
 
-export function initBoard() { initPlatformViewer(() => board.race); }
+export function initBoard() {
+  initPlatformViewer(() => board.race);
+  $("rows").addEventListener("pointerdown", () => { if (window.innerWidth <= 900) pauseFollow(); }, { passive: true });
+  $("rows").addEventListener("click", (event) => {
+    const button = (event.target as Element).closest<HTMLButtonElement>(".row-expand");
+    const row = button?.closest(".row");
+    if (!button || !row) return;
+    const expanded = row.classList.toggle("is-expanded");
+    button.setAttribute("aria-expanded", String(expanded));
+    button.setAttribute("aria-label", `${expanded ? "收起" : "展開"}${row.querySelector(".name")?.textContent}詳細資料`);
+    button.textContent = expanded ? "收起" : "詳情";
+  });
+}
 
 /** Rows follow the current vote ranking (ties keep ballot order). */
 function orderOf(race: Race, votes: readonly number[]) {
@@ -198,6 +211,7 @@ export function renderBoard() {
     if (!cn.districts.length) {
       $("council-seats").innerHTML = "";
       $("district-tabs").innerHTML = "";
+      $<HTMLSelectElement>("district-select").replaceChildren();
       $("district-head").textContent = app.source.started ? "尚未取得議員選區資料" : "議員選區與候選人名單公布後會顯示在這裡";
       board.groups = [];
       board.tabs = [];
@@ -211,6 +225,12 @@ export function renderBoard() {
     app.selectedDistrict = Math.min(app.selectedDistrict, cn.districts.length - 1);
     const sel = app.selectedDistrict;
     const d = cn.districts[sel];
+    const picker = $<HTMLSelectElement>("district-select");
+    picker.replaceChildren(...cn.districts.map((dd, k) => {
+      const area = dd.towns.slice(0, 2).map((town) => town.name).join("、");
+      return new Option(`${districtShort(dd)} ${area || districtLabel(dd)}・${dd.seats}席`, String(k));
+    }));
+    picker.value = String(sel);
     $("council-seats").innerHTML = cn.districts.map((dd, k) => `
       <button type="button" class="seat-group${k === sel ? " is-active" : ""}" data-k="${k}" aria-label="${districtLabel(dd)}，應選 ${dd.seats} 席">
         <span class="gl">${districtShort(dd)}</span>

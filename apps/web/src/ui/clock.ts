@@ -25,6 +25,13 @@ const clockText = (t: number) => {
 
 export function initReplayClock(src: ReplaySource) {
   $("clock-date").textContent = "2022 年 11 月 26 日";
+  const expand = $<HTMLButtonElement>("clock-expand");
+  expand.addEventListener("click", () => {
+    const open = $("clock").classList.toggle("is-expanded");
+    expand.setAttribute("aria-expanded", String(open));
+    expand.setAttribute("aria-label", open ? "收起時間軸與播放速度" : "展開時間軸與播放速度");
+    expand.textContent = open ? "收起" : "時間軸";
+  });
   playBtn.addEventListener("click", () => {
     if (!src.playing && src.T >= 1) { src.seek(0); clearCallouts(); }
     src.playing = !src.playing;
@@ -51,6 +58,7 @@ export function updateReplayClock(src: ReplaySource) {
   const v = Math.round(src.T * 1000);
   if (Number(scrub.value) !== v) scrub.value = String(v);
   scrub.style.setProperty("--fill", `${src.T * 100}%`);
+  $("clock-expand").style.setProperty("--fill", `${src.T * 100}%`);
   scrub.setAttribute("aria-valuetext", clockText(src.T));
   $("clock-time").textContent = clockText(src.T);
 }
@@ -77,15 +85,16 @@ export function updateLiveClock(src: LiveSource) {
   for (const t of Object.values(snap.mayors)) {
     reported += t.stations.reported;
     total += t.stations.total;
-    if (t.updatedAt && t.updatedAt > latest) latest = t.updatedAt;
   }
+  for (const t of [...Object.values(snap.mayors), ...Object.values(snap.councils)])
+    if (t.updatedAt && t.updatedAt > latest) latest = t.updatedAt;
   $("clock-time").textContent = latest ? hms(latest) : "—";
   $("live-progress-text").textContent = total
     ? `縣市長投開票所 ${fmt(reported)}／${fmt(total)} 已回報（${((reported / total) * 100).toFixed(1)}%）`
     : "等待中選會公布投開票所數";
   $("live-bar").style.setProperty("--fill", `${total ? (reported / total) * 100 : 0}%`);
 
-  const age = Date.now() - Date.parse(snap.generatedAt);
+  const age = Date.now() - Date.parse(latest || snap.generatedAt);
   const offline = src.status === "error" && Date.now() - src.lastOk > 90_000;
   const stalled = !offline && snap.stage !== "final" && age > 180_000;
   $("clock").classList.toggle("is-stale", offline || stalled);

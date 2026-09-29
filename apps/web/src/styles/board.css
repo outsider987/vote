@@ -34,7 +34,7 @@
   align-items: baseline;
   gap: 0 10px;
 }
-.county-choice, .map-close, .text-board-toggle { display: none; }
+.county-choice, .district-choice, .map-close, .text-board-toggle { display: none; }
 .board-race { font-size: 20px; color: var(--ink-2); }
 .follow {
   display: inline-flex;
@@ -162,6 +162,7 @@
 .bio { flex-basis: 100%; color: var(--ink-2); font-size: 12px; line-height: 1.35; }
 .platform-link { display: inline-flex; align-items: center; min-height: 36px; padding: 0 9px; border: 1px solid var(--frame); border-radius: 3px; background: var(--board); color: var(--ink); font-size: 12px; font-weight: 700; white-space: nowrap; cursor: pointer; }
 .platform-link:hover, .platform-link:focus-visible { border-color: var(--ink); background: var(--tape); }
+.row-expand { display: none; }
 
 /* The official bulletin stays in a native dialog so reading can fill the phone screen. */
 .platform-view {

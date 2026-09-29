@@ -54,6 +54,12 @@ export function setMobileMapOpen(open: boolean) {
   $<HTMLButtonElement>(open ? "map-close" : "map-toggle").focus({ preventScroll: true });
 }
 
+export function pauseFollow() {
+  app.follow = false;
+  app.pendingFollow = null;
+  $<HTMLInputElement>("follow").checked = false;
+}
+
 export function select(code: string, { byUser = false, district = null as number | null, noCamera = false } = {}) {
   if (byUser && app.view === "county" && app.detail && code !== app.detail.code) {
     if (window.innerWidth <= 900 && !document.querySelector(".room")!.classList.contains("map-open")) exitCounty();
@@ -63,13 +69,19 @@ export function select(code: string, { byUser = false, district = null as number
     }
   }
   if (byUser) {
-    app.follow = false;
+    pauseFollow();
     app.closeScope = code;
-    $<HTMLInputElement>("follow").checked = false;
     if (!noCamera && app.view === "island" && sceneOk) focusCamera(countyView(code).anchor);
   }
   const changed = app.selected !== code;
   app.selected = code;
+  if (document.body.classList.contains("is-standby")) {
+    const rosterCounty = document.getElementById("registered-county") as HTMLSelectElement | null;
+    if (rosterCounty && rosterCounty.value !== county(code).name) {
+      rosterCounty.value = county(code).name;
+      rosterCounty.dispatchEvent(new Event("change"));
+    }
+  }
   if (district !== null) app.selectedDistrict = district;
   else if (changed) app.selectedDistrict = 0;
   markSelectedTape(code);
@@ -123,6 +135,10 @@ export function initModeSwitch() {
       app.closeScope = null;
       renderBoard();
     }
+    scrollMobileTo("board");
+  });
+  $<HTMLSelectElement>("district-select").addEventListener("change", (event) => {
+    select(app.selected, { byUser: true, district: Number((event.target as HTMLSelectElement).value) });
     scrollMobileTo("board");
   });
   $("map-close").addEventListener("click", () => setMobileMapOpen(false));

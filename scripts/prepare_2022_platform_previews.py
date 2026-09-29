@@ -208,22 +208,29 @@ def main():
 
     made = 0
     uncertain = []
+    name_misses = []
     for index, (url, group) in enumerate(grouped.items(), 1):
         document = fitz.open(pdf_path(url))
         raw_faces = {page.number + 1: [info["bbox"] for info in portrait_infos(page)] for page in document}
-        positions = [matches[(kind, county, district, candidate["no"])]["bbox"][0] / document[matches[(kind, county, district, candidate["no"])]["page"] - 1].rect.width
-                     for kind, county, district, candidate in group
-                     if matches[(kind, county, district, candidate["no"])]["bbox"]
-                     and matches[(kind, county, district, candidate["no"])]["score"] >= 15]
-        if not positions:
-            positions = [bbox[0] / document[page - 1].rect.width
-                         for page, faces in raw_faces.items() for bbox in faces]
-        two_columns = any(.42 < x < .65 for x in positions)
+        # A bulletin can contain several districts. The current district's
+        # portraits may all be on the left even when the page has two columns.
+        matched_right_pages = {
+            match["page"] for kind, county, district, candidate in group
+            for match in [matches[(kind, county, district, candidate["no"])]]
+            if match["bbox"] and match["score"] >= 15 and match["score"] - match["second"] >= 8
+            and .42 < match["bbox"][0] / document[match["page"] - 1].rect.width < .65
+        }
+        two_columns_by_page = {
+            page_no: sum(.42 < bbox[0] / document[page_no - 1].rect.width < .65 for bbox in faces) >= 2
+            or page_no in matched_right_pages
+            for page_no, faces in raw_faces.items()
+        }
         faces_by_page = {page_no: [bbox for bbox in faces if bbox[0] / document[page_no - 1].rect.width < .3
-                                         or two_columns and .42 < bbox[0] / document[page_no - 1].rect.width < .65]
+                                         or two_columns_by_page[page_no] and .42 < bbox[0] / document[page_no - 1].rect.width < .65]
                          for page_no, faces in raw_faces.items()}
         page_cache = {}
         row_cache = {}
+        page_text = {}
         for kind, county, district, candidate in group:
             if only_missing and candidate.get("platformImage"):
                 made += 1
@@ -246,6 +253,7 @@ def main():
                 continue
             else:
                 page = document[page_no - 1]
+                two_columns = two_columns_by_page[page_no]
                 if page_no not in page_cache:
                     image, scale = page_image(page)
                     page_cache[page_no] = (image, scale, {column: horizontal_lines(image, two_columns, column)
@@ -259,6 +267,17 @@ def main():
             if rect is None or rect.height < 20 or rect.width < 100:
                 candidate.pop("platformImage", None)
                 uncertain.append((county, district, candidate["no"], candidate["name"], match["score"], match["second"]))
+                continue
+            # Verify the selected row when the PDF contains searchable names.
+            # One-column previews show the policy half, so inspect their whole row.
+            if page_no not in page_text:
+                page_text[page_no] = "".join(page.get_text().split())
+            name = "".join(candidate["name"].split())
+            check = rect if two_columns_by_page[page_no] else fitz.Rect(0, rect.y0, page.rect.width, rect.y1)
+            if name in page_text[page_no] and name not in "".join(page.get_text(clip=check).split()):
+                candidate.pop("platformImage", None)
+                uncertain.append((county, district, candidate["no"], candidate["name"], match["score"], match["second"]))
+                name_misses.append((county, district, candidate["no"], candidate["name"]))
                 continue
             width = 1500 / rect.width
             pix = page.get_pixmap(matrix=fitz.Matrix(width, width), clip=rect, alpha=False)
@@ -283,6 +302,7 @@ def main():
         if path not in used:
             path.unlink()
     print(f"published {made}/1771 candidate previews; {len(uncertain)} kept the original bulletin viewer")
+    print(f"rejected {len(name_misses)} previews whose row did not contain the candidate name")
     for item in uncertain:
         print("review", *item)
 
