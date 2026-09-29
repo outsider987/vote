@@ -1,16 +1,16 @@
-import { app, county, select } from "../app";
-import { CLOSE, districtLabel, partyLabel, partyOf } from "../config";
+import { app, county, scrollMobileTo, select, setMode } from "../app";
+import { districtLabel, partyLabel, partyOf } from "../config";
 import { $ } from "../dom";
-import type { District, Race } from "../model/types";
-import { fmt, rankOrder } from "../util";
+import { closeDuels } from "../model/analysis";
+import type { District } from "../model/types";
+import { countyView } from "../scene/island";
+import { camera, host, sceneOk } from "../scene/stage";
+import { fmt } from "../util";
 
 /* 拉鋸戰: up to three live close races beside the map, each with a tug-of-war gauge. */
 
-type Cfg = (typeof CLOSE)[keyof typeof CLOSE];
-
-interface Pick { key: string; code: string; district: number | null; race: Race; a: number; b: number; m: number }
+type Pick = ReturnType<typeof closeDuels>[number];
 interface Duel extends Pick {
-  cfg: Cfg;
   el: HTMLLIElement;
   colors: [string, string];
   stage: string;
@@ -22,25 +22,65 @@ interface Duel extends Pick {
 const crList = $("cr-list");
 let duels: Duel[] = [];
 let lastPick = -Infinity;
+let mobilePick: Pick | null = null;
+const announced = new Set<string>();
+let flashCode: string | null = null;
+let flashTop = "";
+let flashUntil = 0;
+let flashTimer = 0;
 
-/** The 拉鋸戰 mode uses the mayor settings. */
-export const duelCfg = (): Cfg => CLOSE[app.mode === "council" ? "council" : "mayor"];
+export function openDuelAlert() {
+  if (mobilePick) {
+    setMode(mobilePick.kind);
+    select(mobilePick.code, { byUser: true, noCamera: true, district: mobilePick.district });
+  } else setMode("close");
+  scrollMobileTo("board");
+}
 
-function pickDuels() {
-  const cfg = duelCfg(), out: Pick[] = [];
-  const consider = (race: Race, code: string, district: number | null, key: string) => {
-    const s = race.state;
-    if (s.p < 0.12 || s.decided || race.candidates.length <= race.seats) return;
-    const order = rankOrder(s.votes);
-    const a = order[race.seats - 1], b = order[race.seats];
-    const m = (s.votes[a] - s.votes[b]) / Math.max(1, s.counted);
-    if (m < cfg.threshold) out.push({ key, code, district, race, a, b, m });
-  };
-  for (const c of app.counties) {
-    if (app.mode !== "council") consider(c.mayor, c.code, null, `m:${c.code}`);
-    else c.council.districts.forEach((d, k) => consider(d, c.code, k, `c:${d.id}`));
-  }
-  return out.sort((x, y) => x.m - y.m).slice(0, 3);
+function showDuelFlash(pick: Pick, now: number) {
+  if (!app.source.started) return;
+  const a = pick.race.candidates[pick.a], b = pick.race.candidates[pick.b];
+  const place = pick.district === null ? `${county(pick.code).name}・${county(pick.code).raceLabel.replace("選舉", "")}` : `${county(pick.code).name}・議員 ${districtLabel(pick.race as District)}`;
+  $("duel-flash-place").textContent = place;
+  $("duel-flash-a-name").textContent = a.name;
+  $("duel-flash-b-name").textContent = b.name;
+  $("duel-flash-a").style.setProperty("--c", partyOf(a.party).color);
+  $("duel-flash-b").style.setProperty("--c", partyOf(b.party).color);
+  $("duel-flash-gap").textContent = `差 ${fmt(Math.abs(pick.race.state.votes[pick.a] - pick.race.state.votes[pick.b]))} 票・${(pick.m * 100).toFixed(2)}%`;
+  const flash = $("duel-flash");
+  $("duel-flash-pointer").setAttribute("hidden", "");
+  $("duel-flash-panel").style.top = "";
+  flashTop = "";
+  flash.hidden = false;
+  flash.classList.remove("is-on");
+  void flash.offsetWidth;
+  flash.classList.add("is-on");
+  flashCode = pick.code;
+  flashUntil = now + 4500;
+  clearTimeout(flashTimer);
+  flashTimer = window.setTimeout(() => { flash.hidden = true; flashCode = null; }, 4500);
+}
+
+/** Keep the temporary pointer on the county while the camera moves. */
+export function updateDuelFlashPosition() {
+  const flash = $("duel-flash"), pointer = $("duel-flash-pointer");
+  if (flash.hidden || !flashCode || !sceneOk || window.innerWidth <= 900 || (app.view === "county" && app.detail?.code !== flashCode)) { pointer.setAttribute("hidden", ""); return; }
+  const view = countyView(flashCode);
+  const p = view.anchor.clone().setY(view.height + view.lift + 0.1).project(camera);
+  const x = (p.x + 1) * host.clientWidth / 2, y = (1 - p.y) * host.clientHeight / 2;
+  if (x < 0 || x > flash.clientWidth || y < 0 || y > flash.clientHeight) { pointer.setAttribute("hidden", ""); return; }
+  pointer.removeAttribute("hidden");
+  const panelEl = $("duel-flash-panel");
+  if (!flashTop) flashTop = y < flash.clientHeight / 2 ? "58%" : "12%";
+  if (panelEl.style.top !== flashTop) panelEl.style.top = flashTop;
+  const panel = panelEl.getBoundingClientRect(), bounds = flash.getBoundingClientRect();
+  const fromX = x < panel.left - bounds.left ? panel.left - bounds.left : panel.right - bounds.left;
+  const fromY = panel.top - bounds.top + panel.height / 2;
+  const bend = x < fromX ? Math.min(fromX, x) - 70 : Math.max(fromX, x) + 70;
+  const line = document.querySelector<SVGPathElement>("#duel-flash-line")!;
+  const target = document.querySelector<SVGGElement>("#duel-flash-target")!;
+  line.setAttribute("d", `M ${fromX} ${fromY} C ${bend} ${fromY}, ${bend} ${y}, ${x} ${y}`);
+  target.setAttribute("transform", `translate(${x} ${y})`);
 }
 
 function createDuel(pick: Pick, now: number): Duel {
@@ -48,7 +88,7 @@ function createDuel(pick: Pick, now: number): Duel {
   const A = race.candidates[a], B = race.candidates[b];
   const pa = partyOf(A.party), pb = partyOf(B.party);
   const c = county(pick.code);
-  const place = pick.district === null ? `${c.name}・${c.raceLabel.replace("選舉", "")}` : `${c.name} ${districtLabel(race as District)}`;
+  const place = pick.district === null ? `${c.name}・${c.raceLabel.replace("選舉", "")}` : `${c.name}・議員 ${districtLabel(race as District)}`;
   const side = (cand: typeof A, color: string, cls: string) => `<span class="cr-side ${cls}"><span class="cr-name">${cand.name}</span>`
     + `<span class="cr-party"><i class="chip" style="--c:${color}"></i>${partyLabel(cand.party)}</span><span class="cr-v num">0</span></span>`;
   const li = document.createElement("li");
@@ -61,11 +101,11 @@ function createDuel(pick: Pick, now: number): Duel {
       <span class="cr-gauge" aria-hidden="true"><i class="cr-track"></i><i class="cr-fill"></i><i class="cr-zero"></i><i class="cr-knot"></i></span>
       <span class="cr-foot"><span class="cr-gap num"></span><span class="cr-prog"></span></span>
     </button>`;
-  li.querySelector("button")!.addEventListener("click", () => select(pick.code, { byUser: true, district: pick.district }));
+  li.querySelector("button")!.addEventListener("click", () => { setMode(pick.kind); select(pick.code, { byUser: true, district: pick.district }); });
   crList.appendChild(li);
   const q = (sel: string) => li.querySelector<HTMLElement>(sel)!;
   return {
-    ...pick, cfg: duelCfg(), el: li, colors: [pa.color, pb.color], stage: pick.district === null ? "" : "最後一席・",
+    ...pick, el: li, colors: [pa.color, pb.color], stage: pick.district === null ? "" : "最後一席・",
     vA: q(".cr-side.a .cr-v"), vB: q(".cr-side.b .cr-v"), nA: q(".cr-side.a .cr-name"), nB: q(".cr-side.b .cr-name"),
     gap: q(".cr-gap"), prog: q(".cr-prog"), tag: q(".cr-tag"),
     bornAt: now, lastSign: 0, flipUntil: 0, finalAt: 0, leaving: false,
@@ -79,21 +119,26 @@ function retireDuel(d: Duel) {
   setTimeout(() => { d.el.remove(); duels = duels.filter((x) => x !== d); }, 420);
 }
 
-export function clearDuels() {
-  duels.forEach((d) => d.el.remove());
-  duels = [];
-  lastPick = -Infinity;
-}
-
 export function refreshDuels(now: number) {
   if (now - lastPick < 1500) return;
   lastPick = now;
-  const picks = pickDuels();
+  const picks = closeDuels(app.counties);
   const nearest = picks[0];
-  $("mobile-duel").hidden = !nearest;
+  if ($("loading").classList.contains("is-done") && now >= flashUntil) {
+    const fresh = picks.find((pick) => !announced.has(pick.key));
+    if (fresh) {
+      picks.forEach((pick) => announced.add(pick.key));
+      showDuelFlash(fresh, now);
+    }
+  }
+  mobilePick = nearest ?? null;
+  const alert = $("mobile-duel");
+  alert.hidden = false;
+  $("mobile-duel-title").textContent = nearest ? "拉鋸戰" : "選情監看";
   $("mobile-duel-text").textContent = nearest
-    ? `${county(nearest.code).name}${nearest.district === null ? "" : ` ${districtLabel(nearest.race as District)}`}・差 ${fmt(Math.abs(nearest.race.state.votes[nearest.a] - nearest.race.state.votes[nearest.b]))} 票・開票 ${(nearest.race.state.p * 100).toFixed(0)}%`
-    : app.source.started ? "目前沒有接近戰局・查看排行" : "開票後顯示";
+    ? `${county(nearest.code).name}${nearest.district === null ? "・縣市長" : `・議員 ${districtLabel(nearest.race as District)}`}：${nearest.race.candidates[nearest.a].name}／${nearest.race.candidates[nearest.b].name}，差 ${fmt(Math.abs(nearest.race.state.votes[nearest.a] - nearest.race.state.votes[nearest.b]))} 票`
+    : app.source.started ? "目前沒有達警報門檻的戰局" : "開票後開始監看";
+  $("mobile-duel-action").textContent = nearest ? "查看這場選舉" : "查看拉鋸戰排行";
   if (window.innerWidth <= 900) {
     duels.forEach((d) => d.el.remove());
     duels = [];
@@ -109,7 +154,7 @@ export function refreshDuels(now: number) {
     if (!active.some((d) => d.key === pk.key)) duels.push(createDuel(pk, now));
   }
   const any = duels.some((d) => !d.leaving);
-  $("cr-empty").textContent = any ? "" : (!app.source.started ? "開票開始後，差距最小的戰局會出現在這裡。" : duelCfg().empty);
+  $("cr-empty").textContent = any ? "" : (!app.source.started ? "開票開始後，差距最小的戰局會出現在這裡。" : "目前沒有達到警報門檻的拉鋸戰局。");
 }
 
 export function updateDuels(now: number) {

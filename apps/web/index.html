@@ -69,7 +69,9 @@
         <p class="standby-credit">資料來源：中央選舉委員會。11 月 28 日 16:00 後有新票數才更新。</p>
       </section>
       <button class="mobile-duel" id="mobile-duel" type="button" hidden>
-        <span class="mobile-duel-title">拉鋸戰</span><span class="mobile-duel-text" id="mobile-duel-text">開票後顯示</span><span class="mobile-duel-arrow" aria-hidden="true">›</span>
+        <span class="mobile-duel-title" id="mobile-duel-title">拉鋸戰</span><span class="mobile-duel-text" id="mobile-duel-text">開票後顯示</span>
+        <span class="mobile-duel-arrow" aria-hidden="true">›</span>
+        <span class="sr-only" id="mobile-duel-action">查看拉鋸戰排行</span>
       </button>
 
       <aside class="board" id="board" aria-labelledby="board-county">
@@ -143,6 +145,27 @@
           <p class="intro-line" id="intro-line">投票結束，開始開票</p>
         </div>
       </section>
+
+      <div class="duel-flash" id="duel-flash" role="status" aria-live="polite" hidden>
+        <svg class="duel-flash-pointer" id="duel-flash-pointer" aria-hidden="true" hidden>
+          <defs><marker id="duel-arrowhead" markerWidth="9" markerHeight="9" refX="8" refY="4.5" orient="auto"><path d="M0 0 9 4.5 0 9" fill="none" stroke="currentColor" stroke-width="2"/></marker></defs>
+          <path id="duel-flash-line" marker-end="url(#duel-arrowhead)"/>
+          <g class="duel-flash-target" id="duel-flash-target">
+            <circle r="25"/><circle r="5"/>
+            <path d="M-41 0h10 M31 0h10 M0-41v10 M0 31v10"/>
+          </g>
+        </svg>
+        <div class="duel-flash-panel" id="duel-flash-panel">
+          <div class="duel-flash-head"><span>選情警報</span><span>緊急接戰</span></div>
+          <p class="duel-flash-place" id="duel-flash-place"></p>
+          <div class="duel-flash-pair">
+            <span class="duel-flash-candidate" id="duel-flash-a"><i class="chip"></i><b id="duel-flash-a-name"></b></span>
+            <span class="duel-flash-versus">對</span>
+            <span class="duel-flash-candidate" id="duel-flash-b"><i class="chip"></i><b id="duel-flash-b-name"></b></span>
+          </div>
+          <p class="duel-flash-gap num" id="duel-flash-gap"></p>
+        </div>
+      </div>
 
       <aside class="close-races" id="close-races" aria-labelledby="cr-title">
         <div class="cr-head">

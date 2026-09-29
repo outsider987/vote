@@ -1,4 +1,4 @@
-import { INSET_SCALE, modeCopy, type Mode } from "./config";
+import { CLOSE, INSET_SCALE, modeCopy, type Mode } from "./config";
 import { $, reducedMotion } from "./dom";
 import type { Source } from "./model/source";
 import type { County } from "./model/types";
@@ -9,7 +9,7 @@ import { focusCamera, sceneOk } from "./scene/stage";
 import { renderBoard } from "./ui/board";
 import { clearCallouts } from "./ui/callouts";
 import { ensureTownBoard } from "./ui/closest";
-import { clearDuels, duelCfg } from "./ui/duels";
+import { openDuelAlert } from "./ui/duels";
 import { markSelectedSeat, resetNational } from "./ui/national";
 import { isTextOpen, renderText } from "./ui/textview";
 
@@ -94,8 +94,7 @@ export function setMode(next: Mode) {
   $("seatbar").hidden = next !== "council";
   $("council-panel").hidden = next !== "council";
   clearCallouts();
-  clearDuels();
-  $("cr-note").textContent = duelCfg().note;
+  $("cr-note").textContent = `縣市長 <${CLOSE.mayor.threshold * 100}%・議員末席 <${CLOSE.council.threshold * 100}%`;
   resetTapes();
   resetNational();
   renderBoard();
@@ -148,7 +147,7 @@ export function initModeSwitch() {
     closeTally();
     scrollMobileTo("board");
   }));
-  $("mobile-duel").addEventListener("click", () => { setMode("close"); scrollMobileTo("board"); });
+  $("mobile-duel").addEventListener("click", openDuelAlert);
   $("map-toggle").addEventListener("click", () => {
     const open = !document.querySelector(".room")!.classList.contains("map-open");
     setMobileMapOpen(open);

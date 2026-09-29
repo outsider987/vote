@@ -16,7 +16,7 @@ import { enqueueCallout, preloadEmblems, pumpCallouts } from "./ui/callouts";
 import { initClosest } from "./ui/closest";
 import { initLiveClock, initReplayClock, initStandbyClock, setStandbyStatus, updateLiveClock, updateReplayClock } from "./ui/clock";
 import { hideNotice, showWaiting, startCountdown } from "./ui/countdown";
-import { refreshDuels, updateDuels } from "./ui/duels";
+import { refreshDuels, updateDuelFlashPosition, updateDuels } from "./ui/duels";
 import { initNational, renderNational } from "./ui/national";
 import { initTextView, isTextOpen, renderText } from "./ui/textview";
 import { updateTip } from "./ui/tips";
@@ -112,6 +112,7 @@ function frame() {
     updateIsland(dt);
     updateDetail(reducedMotion ? 1 : 1 - Math.exp(-dt * 9));
     updateCamera(now, dt, src.playing);
+    updateDuelFlashPosition();
   }
   pumpCallouts(now);
   refreshDuels(now);

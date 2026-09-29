@@ -88,8 +88,8 @@ export const RAMP: readonly [number, string][] = [[0.02, "#975221"], [0.05, "#B5
 
 // 拉鋸戰. Mayor: leader vs runner-up. Councilor: the last seat (rank N) vs the first loser (rank N+1).
 export const CLOSE = {
-  mayor: { threshold: 0.04, scale: 0.05, flip: "領先易主", note: "指針刻度 ±5 個百分點", empty: "目前沒有差距在 4% 以內的縣市長戰局。" },
-  council: { threshold: 0.015, scale: 0.02, flip: "排名互換", note: "指針刻度 ±2 個百分點", empty: "目前沒有最後一席差距在 1.5% 以內的選區。" },
+  mayor: { threshold: 0.04, scale: 0.05, flip: "領先易主" },
+  council: { threshold: 0.015, scale: 0.02, flip: "排名互換" },
 } as const;
 
 const indigenousShort = (d: { type: DistrictType }) => (d.type === "平地原住民" ? "平原" : "山原");

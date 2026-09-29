@@ -225,6 +225,7 @@ At ≤ 1180px the top bar tightens. At ≤ 900px the room becomes a scrolling si
 - a fixed, two-row top bar keeps the wordmark, mode switch and decided-seat count visible
 - 查看席次 opens the party totals and a horizontally scrollable row of 44px county seat buttons below the bar; it starts closed and closes after a county is selected
 - the county board comes first, with a native county picker; the 3D scene opens over the content on demand
+- a compact close-race card stays above the board; a separate, temporary transparent broadcast alert names both candidates, points to the county on the 3D map, then disappears
 - the replay clock uses two rows at the bottom; the live status bar stays compact
 - before the 2026 count, a countdown and replay link replace the empty board on phones
 - side gutters are 16px

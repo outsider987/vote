@@ -2,11 +2,11 @@ import { describe, expect, it } from "vitest";
 import type { LiveResults, RaceTally } from "@vote/shared";
 import { COUNT_STARTS_AT, partyLabel, partyOf } from "../src/config";
 import { countdownParts } from "../src/util";
-import { councilAggregate, duelOf } from "../src/model/analysis";
+import { closeDuels, councilAggregate, duelOf } from "../src/model/analysis";
 import type { CouncilFile, MayorFile } from "../src/model/data";
 import { LiveSource, buildLive, liveUnit, stateFromTally } from "../src/model/live";
 import { buildReplay, simState } from "../src/model/replay";
-import { emptyState, type Race } from "../src/model/types";
+import { emptyCouncilState, emptyState, type County, type Race } from "../src/model/types";
 
 const race = (seats: number, nos: number[], extra: Partial<Race> = {}): Race => ({
   kind: seats > 1 ? "district" : "mayor",
@@ -176,6 +176,18 @@ describe("buildLive", () => {
 });
 
 describe("council and duel helpers", () => {
+  it("alerts on the closest active race across mayor and council ballots", () => {
+    const mayor = race(1, [1, 2], { key: "m", state: { ...emptyState(2), p: 0.5, votes: [515, 485], counted: 1000 } });
+    const district = race(2, [1, 2, 3], { key: "d", state: { ...emptyState(3), p: 0.5, votes: [500, 480, 479], counted: 1459 } });
+    const county: County = {
+      code: "10013", name: "屏東縣", short: "屏東", kind: "county", raceLabel: "縣長選舉", mayor,
+      council: { kind: "縣市議員", seats: 2, districts: [{ ...district, id: "d", county: "10013", type: "區域", no: "01", towns: [] }], finalTurnout: null, state: emptyCouncilState(), completePrev: false },
+    };
+    expect(closeDuels([county]).map(({ kind, district }) => [kind, district])).toEqual([["council", 0], ["mayor", null]]);
+    county.council.districts[0].state.decided = true;
+    expect(closeDuels([county]).map(({ kind }) => kind)).toEqual(["mayor"]);
+  });
+
   it("counts decided seats by party and reports the last-seat margin", () => {
     const d = race(2, [1, 2, 3]);
     d.state = stateFromTally(d, tally(10, 10, [[1, 50, "elected"], [2, 40, "elected"], [3, 30]], 2));

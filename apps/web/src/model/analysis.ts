@@ -1,5 +1,6 @@
 import { rankOrder } from "../util";
-import type { Council, CouncilState, Race, RaceState } from "./types";
+import { CLOSE } from "../config";
+import type { Council, CouncilState, County, Race, RaceState } from "./types";
 
 /** A county council's combined count: progress, decided seats per party and the current seat leader. */
 export function councilAggregate(cn: Council): CouncilState {
@@ -34,6 +35,21 @@ export function duelOf(race: Race, s: RaceState = race.state) {
   const order = rankOrder(s.votes);
   const a = order[race.seats - 1], b = order[race.seats];
   return { a, b, gap: s.votes[a] - s.votes[b], margin: (s.votes[a] - s.votes[b]) / s.counted };
+}
+
+/** Active close races across both ballots, most urgent relative to each ballot's threshold first. */
+export function closeDuels(counties: readonly County[]) {
+  const out: { key: string; code: string; district: number | null; kind: "mayor" | "council"; cfg: typeof CLOSE["mayor"] | typeof CLOSE["council"]; race: Race; a: number; b: number; m: number }[] = [];
+  const add = (race: Race, code: string, district: number | null, kind: "mayor" | "council") => {
+    if (race.state.p < 0.12 || race.state.decided) return;
+    const duel = duelOf(race), cfg = CLOSE[kind];
+    if (duel && duel.margin < cfg.threshold) out.push({ key: `${kind}:${race.key}`, code, district, kind, cfg, race, a: duel.a, b: duel.b, m: duel.margin });
+  };
+  for (const c of counties) {
+    add(c.mayor, c.code, null, "mayor");
+    c.council.districts.forEach((d, k) => add(d, c.code, k, "council"));
+  }
+  return out.sort((x, y) => x.m / x.cfg.threshold - y.m / y.cfg.threshold).slice(0, 3);
 }
 
 /** Stack height: ballots counted ÷ electors (the turnout once the count is complete). */
