@@ -82,7 +82,7 @@ export function buildReplay(mayorFile: MayorFile, councilFile: CouncilFile): Cou
       kind: c.type,
       raceLabel: c.type === "county" ? "縣長選舉" : "市長選舉",
       mayor,
-      council: { kind: councilKind(c.type), seats: 0, districts: [], finalTurnout: null, state: emptyCouncilState(), completePrev: false },
+      council: { kind: councilKind(c.type), seats: 0, districts: [], finalTurnout: null, state: emptyCouncilState() },
     };
   });
   const byCode = new Map(counties.map((c) => [c.code, c]));

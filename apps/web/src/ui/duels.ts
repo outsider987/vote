@@ -124,7 +124,7 @@ export function refreshDuels(now: number) {
   lastPick = now;
   const picks = closeDuels(app.counties);
   const nearest = picks[0];
-  if ($("loading").classList.contains("is-done") && now >= flashUntil) {
+  if ($("loading").classList.contains("is-done") && !$("callout").classList.contains("is-on") && now >= flashUntil) {
     const fresh = picks.find((pick) => !announced.has(pick.key));
     if (fresh) {
       picks.forEach((pick) => announced.add(pick.key));

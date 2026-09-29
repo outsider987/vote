@@ -149,7 +149,6 @@ export function buildLive(snap: LiveResults, mayorFile: MayorFile, councilFile: 
         districts,
         finalTurnout: null,
         state: emptyCouncilState(),
-        completePrev: false,
       },
     };
   });

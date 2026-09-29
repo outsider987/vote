@@ -1109,6 +1109,21 @@ body.in-county #legend-inset { display: none; }
 }
 .callout.is-on.is-winner .callout-emblem { animation: emblem var(--dur, 2.4s) var(--ease-out) forwards; }
 .callout-emblem img { width: 100%; height: 100%; display: block; }
+.council-wheel { position: relative; display: flex; flex-direction: column; align-items: center; justify-content: center; width: 100%; height: 100%; border-radius: 50%; background: var(--wheel); }
+.council-wheel::before { content: ""; position: absolute; inset: 17%; border-radius: 50%; background: #fff; }
+.council-wheel .num, .council-wheel small { position: relative; line-height: 1; }
+.council-wheel .num { font-size: 76px; font-weight: 700; }
+.council-wheel small { margin-top: 4px; font-size: 18px; font-weight: 900; }
+.callout-party { display: inline-flex; align-items: center; gap: 4px; white-space: nowrap; }
+.callout.is-council .callout-name { font-size: 42px; }
+.callout.is-council .callout-meta { flex-wrap: wrap; min-width: 0; white-space: normal; }
+.callout.is-on.is-council .callout-emblem { animation: council-wheel-in var(--dur, 2.4s) var(--ease-out) forwards; }
+@keyframes council-wheel-in {
+  0% { opacity: 0; transform: translateY(-50%) rotate(-28deg) scale(.78); }
+  16% { opacity: 1; transform: translateY(-50%) rotate(5deg) scale(1.03); }
+  27%, 86% { opacity: 1; transform: translateY(-50%) rotate(0) scale(1); }
+  100% { opacity: 0; transform: translateY(-50%) rotate(0) scale(.96); }
+}
 @keyframes emblem {
   0% { opacity: 0; transform: translateY(-50%) scale(.55); }
   12% { opacity: 1; transform: translateY(-50%) scale(1.06); }
@@ -1147,6 +1162,12 @@ body.in-county #legend-inset { display: none; }
   transform-origin: 30% 70%;
 }
 .callout.is-on.is-winner .callout-big { animation: big-stamp var(--dur, 2.4s) var(--ease-out) forwards; }
+.callout.is-on.is-council .callout-big { animation: council-stamp var(--dur, 2.4s) var(--ease-out) forwards; }
+@keyframes council-stamp {
+  0%, 14% { opacity: 0; transform: translateX(-22px) rotate(5deg); }
+  28%, 86% { opacity: 1; transform: translateX(0) rotate(0); }
+  100% { opacity: 0; transform: translateX(0) rotate(0); }
+}
 @keyframes big-stamp {
   0%, 12% { opacity: 0; transform: rotate(-14deg) scale(1.9); }
   22% { opacity: 1; transform: rotate(-4deg) scale(.94); }
@@ -1161,7 +1182,16 @@ body.in-county #legend-inset { display: none; }
   .callout.is-winner .callout-emblem { left: 12px; width: 104px; height: 104px; box-shadow: 0 0 0 4px #fff, 0 0 0 5px var(--ink), 0 10px 22px rgba(27, 34, 38, .28); }
   .callout.is-winner .callout-big { left: 132px; font-size: 58px; }
   .callout.is-winner .callout-band { padding-left: 132px; }
+  .council-wheel .num { font-size: 36px; }
+  .council-wheel small { font-size: 12px; margin-top: 2px; }
+  .callout.is-council .callout-name { font-size: 30px; }
   .seal { font-size: calc(var(--seal-size, 42px) * .48); padding: 0 16px; box-shadow: inset 0 0 0 5px #fff, inset 0 0 0 8px var(--c), inset 0 0 0 11px #fff, inset 0 0 0 12.5px var(--c); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .callout.is-on .callout-band { animation: none; clip-path: none; }
+  .callout.is-on.is-winner .callout-emblem { animation: none; opacity: 1; transform: translateY(-50%); }
+  .callout.is-on.is-winner .callout-big { animation: none; opacity: 1; transform: none; }
 }
 
 /* ---------- county drill-down ---------- */

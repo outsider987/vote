@@ -92,7 +92,6 @@ export interface Council {
   districts: District[];
   finalTurnout: number | null;
   state: CouncilState;
-  completePrev: boolean;
 }
 
 export interface County {

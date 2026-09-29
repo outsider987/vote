@@ -98,13 +98,17 @@ export const districtLabel = (d: { type: DistrictType; no: string }) =>
 export const districtShort = (d: { type: DistrictType; no: string }) =>
   (d.type === "區域" ? d.no : `${d.no}${indigenousShort(d)}`);
 
-/** "國民黨 12・民進黨 9" — seat counts grouped by legend party, largest first. */
-export function partySummary(counts: Record<string, number>, limit = 4) {
+/** Seat counts grouped by legend party, largest first. */
+export function partySeatTotals(counts: Record<string, number>) {
   const grouped: Partial<Record<PartyKey, number>> = {};
   for (const [party, n] of Object.entries(counts)) {
     const key = partyOf(party).key;
     grouped[key] = (grouped[key] || 0) + n;
   }
   return LEGEND.filter((l) => grouped[l.key]).sort((a, b) => grouped[b.key]! - grouped[a.key]!)
-    .slice(0, limit).map((l) => `${l.name} ${grouped[l.key]}`).join("・");
+    .map((l) => ({ ...l, seats: grouped[l.key]! }));
 }
+
+/** "國民黨 12・民進黨 9" */
+export const partySummary = (counts: Record<string, number>, limit = 4) =>
+  partySeatTotals(counts).slice(0, limit).map((p) => `${p.name} ${p.seats}`).join("・");

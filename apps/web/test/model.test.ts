@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import type { LiveResults, RaceTally } from "@vote/shared";
-import { COUNT_STARTS_AT, partyLabel, partyOf } from "../src/config";
+import { COUNT_STARTS_AT, partyLabel, partyOf, partySeatTotals } from "../src/config";
 import { countdownParts } from "../src/util";
 import { closeDuels, councilAggregate, duelOf } from "../src/model/analysis";
 import type { CouncilFile, MayorFile } from "../src/model/data";
@@ -181,7 +181,7 @@ describe("council and duel helpers", () => {
     const district = race(2, [1, 2, 3], { key: "d", state: { ...emptyState(3), p: 0.5, votes: [500, 480, 479], counted: 1459 } });
     const county: County = {
       code: "10013", name: "屏東縣", short: "屏東", kind: "county", raceLabel: "縣長選舉", mayor,
-      council: { kind: "縣市議員", seats: 2, districts: [{ ...district, id: "d", county: "10013", type: "區域", no: "01", towns: [] }], finalTurnout: null, state: emptyCouncilState(), completePrev: false },
+      council: { kind: "縣市議員", seats: 2, districts: [{ ...district, id: "d", county: "10013", type: "區域", no: "01", towns: [] }], finalTurnout: null, state: emptyCouncilState() },
     };
     expect(closeDuels([county]).map(({ kind, district }) => [kind, district])).toEqual([["council", 0], ["mayor", null]]);
     county.council.districts[0].state.decided = true;
@@ -191,7 +191,7 @@ describe("council and duel helpers", () => {
   it("counts decided seats by party and reports the last-seat margin", () => {
     const d = race(2, [1, 2, 3]);
     d.state = stateFromTally(d, tally(10, 10, [[1, 50, "elected"], [2, 40, "elected"], [3, 30]], 2));
-    const agg = councilAggregate({ kind: "縣市議員", seats: 2, districts: [{ ...d, id: "a", county: "x", type: "區域", no: "01", towns: [] }], finalTurnout: null, state: undefined!, completePrev: false });
+    const agg = councilAggregate({ kind: "縣市議員", seats: 2, districts: [{ ...d, id: "a", county: "x", type: "區域", no: "01", towns: [] }], finalTurnout: null, state: undefined! });
     expect(agg.complete).toBe(true);
     expect(agg.decided).toEqual({ 無: 2 });
     const du = duelOf(d)!;
@@ -205,6 +205,12 @@ describe("council and duel helpers", () => {
     expect(partyLabel("無")).toBe("無黨籍");
     expect(partyOf("台灣動物保護黨").key).toBe("other");
     expect(partyLabel("台灣動物保護黨")).toBe("台灣動物保護黨");
+  });
+
+  it("keeps each party's color in a mixed council seat result", () => {
+    expect(partySeatTotals({ 中國國民黨: 2, 民主進步黨: 1, 無: 1, 無黨籍及未經政黨推薦: 1 })
+      .map(({ key, color, seats }) => [key, color, seats]))
+      .toEqual([["kmt", "#2A52BE", 2], ["ind", "#7A8288", 2], ["dpp", "#3B8A2A", 1]]);
   });
 });
 

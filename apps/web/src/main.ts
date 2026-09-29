@@ -1,7 +1,7 @@
 import * as THREE from "three";
 import type { CandidateList } from "@vote/shared";
 import { app, initModeSwitch, select, setMode } from "./app";
-import { COUNT_STARTS_AT, partyLabel, partyOf, partySummary } from "./config";
+import { COUNT_STARTS_AT, districtLabel, partyLabel, partyOf, partySummary } from "./config";
 import { $, params, reducedMotion } from "./dom";
 import { councilAggregate } from "./model/analysis";
 import { loadCouncils, loadCountyTopo, loadMayors } from "./model/data";
@@ -70,22 +70,28 @@ function updateModel(initial = false) {
     const cn = c.council;
     cn.districts.forEach((d, k) => {
       src.refresh(d);
-      if (d.state.decided && !d.decidedPrev && mode === "council" && follow && !initial) app.pendingFollow = { code: c.code, district: k };
+      if (d.state.decided && !d.decidedPrev && mode === "council") {
+        if (follow && !initial) app.pendingFollow = { code: c.code, district: k };
+        if (forward && d.state.winners.length) {
+          const parties: Record<string, number> = {};
+          for (const j of d.state.winners) {
+            const party = d.candidates[j].party;
+            parties[party] = (parties[party] || 0) + 1;
+          }
+          const seats = d.state.winners.length;
+          enqueueCallout({
+            label: "議員席次確定",
+            name: c.name,
+            color: "var(--stamp)",
+            council: { seats, parties },
+            meta: `${districtLabel(d)}・${seats} 席`,
+            plain: `${districtLabel(d)}，${seats} 席，${partySummary(parties, 4)}`,
+          });
+        }
+      }
       d.decidedPrev = d.state.decided;
     });
     cn.state = councilAggregate(cn);
-    if (cn.state.complete && !cn.completePrev && mode === "council" && forward) {
-      const lead = partyOf(cn.state.leaderParty ?? "");
-      const summary = partySummary(cn.state.decided, 4);
-      enqueueCallout({
-        label: "議員席次確定",
-        name: c.name,
-        color: lead.color,
-        meta: `${cn.seats} 席・${summary}`,
-        plain: `${cn.seats} 席，${summary}`,
-      });
-    }
-    cn.completePrev = cn.state.complete;
   }
   src.commit();
   if (app.follow && app.pendingFollow && performance.now() - app.lastFollowSwitch > 3200) {

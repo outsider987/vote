@@ -153,7 +153,7 @@ Density is operational. On desktop, the first viewport holds the whole island, t
 - A light, cool, paper-and-desk palette. Color comes only from party marker inks, the closeness highlighter and the stamp.
 - Three typographic voices: handwriting for what people write in the room, a sans for the interface, condensed numerals for counts.
 - Soft ink-tinted shadows on the physical objects (board, cards, tape), and real-time three.js shadows under the stacks.
-- A decision is always marked the same way: solid ink, a red 卜 stamp and a 當選 badge.
+- A confirmed mayor uses the red 當選 stamp and one party emblem; a confirmed council district uses a rotating seat wheel split by the elected parties' colors and a red 確定 stamp.
 
 ## Colors
 
@@ -285,7 +285,7 @@ Dashed lines mean "not yet": an unfilled seat stamp, the pending chip, the edges
 ### Signature Components
 - **Paper stacks (3D):** the county extrusions. Height is the ballots counted ÷ electors, so a finished stack stands at turnout. The top sheet is ballot paper, then a pale party ink while leading, then solid ink when decided. Kinmen and Matsu sit in dashed inset frames, which the scene legend explains (示意位置, enlarged 1.8×). Clicking a county drills down to its towns with the same grammar.
 - **正 tally rows:** ballot number in a circle, the handwritten name, the party chip, and condensed votes and percentage. Below them is a strip of hand-jittered 正 strokes, one stroke per unit, and each new stroke draws itself in 0.32s. Rows re-rank by live votes with a 520ms FLIP.
-- **當選確定 band:** a full-width paper band wipes in from the left (clip-path) carrying a 卜 stamp, the winner's handwritten name with a party-ink underline, and county・party. For a winner, the party emblem (KMT, DPP-flag and TPP marks, all public domain) or a text seal for other parties swells in behind a large 當選.
+- **當選確定 band:** a full-width paper band wipes in from the left (clip-path) carrying a 卜 stamp, the winner's handwritten name with a party-ink underline, and county・party. For a mayor, the party emblem (KMT, DPP-flag and TPP marks, all public domain) or a text seal for other parties swells in behind a large 當選. For a council district, a multicolor wheel shows each party's confirmed seats and rotates into a separate 確定 stamp.
 - **Tug-of-war gauge:** a track with a center zero line. A knot moves toward whoever leads, the fill runs from center to knot in the leader's ink, and it transitions over 0.45s.
 - **Masking-tape labels:** handwritten county or town names on tape, with a mini 卜 stamp once the race is decided.
 - **Live footer:** in live mode the transport gives way to the count site's timestamp, an ink 即時 label (dashed when the feed stalls), and a progress bar of polling stations reported. Before the count it reads 預備 with a dashed border, mirrors the countdown, and links to the 2022 replay.
