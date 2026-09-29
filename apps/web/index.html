@@ -228,13 +228,18 @@
           <p class="platform-person" id="platform-person"></p>
         </div>
         <div class="platform-actions">
+          <div class="platform-zoom" id="platform-zoom" role="group" aria-label="政見圖片縮放" hidden>
+            <button type="button" id="platform-zoom-out" aria-label="縮小政見圖片">縮小</button>
+            <button type="button" id="platform-zoom-in" aria-label="放大政見圖片">放大</button>
+          </div>
           <a id="platform-original" target="_blank" rel="noopener noreferrer">開啟原檔</a>
           <button type="button" id="platform-close">關閉</button>
         </div>
       </div>
-      <div class="platform-document">
+      <div class="platform-document" id="platform-document">
         <p id="platform-loading" role="status">正在載入中選會選舉公報…</p>
-        <iframe id="platform-frame" title="中選會選舉公報" referrerpolicy="no-referrer"></iframe>
+        <img id="platform-image" alt="" hidden>
+        <iframe id="platform-frame" title="中選會選舉公報" referrerpolicy="no-referrer" hidden></iframe>
       </div>
       <p class="platform-note" id="platform-note"></p>
     </dialog>

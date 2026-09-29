@@ -2,10 +2,10 @@ import { app, county, select } from "../app";
 import { districtLabel, districtShort, partyLabel, partyOf, partySeatTotals } from "../config";
 import { $, reducedMotion, SVGNS } from "../dom";
 import { councilTurnout } from "../model/analysis";
-import { ReplaySource } from "../model/replay";
 import type { Race } from "../model/types";
 import { fmt, mulberry32 } from "../util";
 import { renderCloseList } from "./closest";
+import { initPlatformViewer } from "./platform";
 import { hideFloat, showFloat } from "./tips";
 
 /* 計票板: the selected race as rows of hand-drawn 正 tallies, ranked by the live count. */
@@ -103,58 +103,7 @@ function renderRows(race: Race, seed: number) {
   placeRows(board.order, false);
 }
 
-export function initPlatformViewer() {
-  const dialog = $<HTMLDialogElement>("platform-view");
-  const frame = $<HTMLIFrameElement>("platform-frame");
-  const original = $<HTMLAnchorElement>("platform-original");
-  const loading = $("platform-loading");
-  let trigger: HTMLButtonElement | null = null;
-  let resume: ReplaySource | null = null;
-  let loadTimer = 0;
-
-  $("rows").addEventListener("click", (event) => {
-    const button = (event.target as Element).closest<HTMLButtonElement>("[data-platform]");
-    if (!button || !board.race) return;
-    const candidate = board.race.candidates[Number(button.dataset.platform)];
-    if (!candidate?.platformUrl) return;
-    trigger = button;
-    const race = board.race;
-    const page = candidate.platformUrl.match(/#page=(\d+)/)?.[1];
-    $("platform-title").textContent = `${candidate.name}的政見`;
-    const person = $("platform-person");
-    person.textContent = `${county(app.selected).name}${race.kind === "district" ? ` ${race.name}` : ""}・${candidate.no} 號・${partyLabel(candidate.party)}`;
-    person.style.setProperty("--c", partyOf(candidate.party).color);
-    $("platform-note").textContent = page
-      ? `已定位至公報第 ${page} 頁；同頁可能還有其他候選人。可放大閱讀，預覽不便時開啟官方原檔。`
-      : "這份公報尚無候選人頁碼，請依姓名與號次查找；可放大閱讀，預覽不便時開啟官方原檔。";
-    original.href = candidate.platformUrl;
-    clearTimeout(loadTimer);
-    loading.hidden = false;
-    dialog.showModal();
-    document.body.classList.add("platform-open");
-    app.pendingFollow = null;
-    frame.title = `${candidate.name}的中選會選舉公報`;
-    frame.src = candidate.platformUrl;
-    if (app.source instanceof ReplaySource && app.source.playing) {
-      resume = app.source;
-      resume.playing = false;
-    }
-    $("platform-close").focus();
-  });
-  frame.addEventListener("load", () => {
-    if (dialog.open && frame.hasAttribute("src")) loadTimer = window.setTimeout(() => { loading.hidden = true; }, 1800);
-  });
-  $("platform-close").addEventListener("click", () => dialog.close());
-  dialog.addEventListener("click", (event) => { if (event.target === dialog) dialog.close(); });
-  dialog.addEventListener("close", () => {
-    clearTimeout(loadTimer);
-    frame.removeAttribute("src");
-    document.body.classList.remove("platform-open");
-    if (resume) { resume.playing = true; resume = null; }
-    if (trigger?.isConnected) trigger.focus();
-    trigger = null;
-  });
-}
+export function initBoard() { initPlatformViewer(() => board.race); }
 
 /** Rows follow the current vote ranking (ties keep ballot order). */
 function orderOf(race: Race, votes: readonly number[]) {

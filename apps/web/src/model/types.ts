@@ -7,6 +7,7 @@ export interface Candidate {
   womenQuota?: boolean;
   photo?: string;
   platformUrl?: string;
+  platformImage?: string;
   birth?: string;
   birthplace?: string;
   gender?: "M" | "F" | null;

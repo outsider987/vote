@@ -11,7 +11,7 @@ import { updateDetail } from "./scene/detail";
 import { initPointer, pick, setHover } from "./scene/interaction";
 import { allCountyViews, avoidLabelCollisions, buildIsland, updateIsland } from "./scene/island";
 import { cam, camera, controls, initStage, labelRenderer, renderer, scene, sceneOk, startFraming, updateCamera } from "./scene/stage";
-import { initPlatformViewer, updateBoard } from "./ui/board";
+import { initBoard, updateBoard } from "./ui/board";
 import { enqueueCallout, preloadEmblems, pumpCallouts } from "./ui/callouts";
 import { initClosest } from "./ui/closest";
 import { initLiveClock, initReplayClock, initStandbyClock, setStandbyStatus, updateLiveClock, updateReplayClock } from "./ui/clock";
@@ -260,7 +260,7 @@ async function boot() {
   initNational();
   initClosest();
   initTextView();
-  initPlatformViewer();
+  initBoard();
   initModeSwitch();
   preloadEmblems();
 
