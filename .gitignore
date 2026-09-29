@@ -5,6 +5,8 @@ dist/
 apps/poller/out/
 apps/poller/.cache/
 apps/web/public/data/
+/.cache/
+__pycache__/
 # draft preview recordings (regenerable, not used by the gallery)
 drafts/**/preview.webm
 # vote-live assets staged by scripts/publish-live.mjs

@@ -6,6 +6,10 @@ export interface Candidate {
   party: string;
   womenQuota?: boolean;
   photo?: string;
+  birth?: string;
+  birthplace?: string;
+  gender?: "M" | "F" | null;
+  incumbent?: boolean;
 }
 
 /** A race at one moment. Replay and live sources both produce this; the UI reads nothing else. */

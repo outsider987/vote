@@ -36,7 +36,10 @@
      "elected": false,
      "gender": "M",
      "birthYear": 1989,
-     "incumbent": false
+     "incumbent": false,
+     "birth": "1989-03-04",
+     "birthplace": "新竹市",
+     "photo": "/portraits/2022/C1/09007/1.webp"
     },
     {
      "no": 2,
@@ -47,7 +50,10 @@
      "elected": false,
      "gender": "M",
      "birthYear": 1958,
-     "incumbent": false
+     "incumbent": false,
+     "birth": "1958-06-26",
+     "birthplace": "連江縣",
+     "photo": "/portraits/2022/C1/09007/2.webp"
     },
     {
      "no": 3,
@@ -58,7 +64,10 @@
      "elected": true,
      "gender": "M",
      "birthYear": 1958,
-     "incumbent": false
+     "incumbent": false,
+     "birth": "1958-02-27",
+     "birthplace": "連江縣",
+     "photo": "/portraits/2022/C1/09007/3.webp"
     }
    ]
   },
@@ -81,7 +90,10 @@
      "elected": false,
      "gender": "M",
      "birthYear": 1979,
-     "incumbent": false
+     "incumbent": false,
+     "birth": "1979-04-12",
+     "birthplace": "金門縣",
+     "photo": "/portraits/2022/C1/09020/1.webp"
     },
     {
      "no": 2,
@@ -92,7 +104,10 @@
      "elected": false,
      "gender": "M",
      "birthYear": 1961,
-     "incumbent": false
+     "incumbent": false,
+     "birth": "1961-02-18",
+     "birthplace": "金門縣",
+     "photo": "/portraits/2022/C1/09020/2.webp"
     },
     {
      "no": 3,
@@ -103,7 +118,10 @@
      "elected": false,
      "gender": "M",
      "birthYear": 1972,
-     "incumbent": false
+     "incumbent": false,
+     "birth": "1972-05-07",
+     "birthplace": "金門縣",
+     "photo": "/portraits/2022/C1/09020/3.webp"
     },
     {
      "no": 4,
@@ -114,7 +132,10 @@
      "elected": false,
      "gender": "M",
      "birthYear": 1972,
-     "incumbent": true
+     "incumbent": true,
+     "birth": "1972-06-26",
+     "birthplace": "金門縣",
+     "photo": "/portraits/2022/C1/09020/4.webp"
     },
     {
      "no": 5,
@@ -125,7 +146,10 @@
      "elected": true,
      "gender": "M",
      "birthYear": 1963,
-     "incumbent": false
+     "incumbent": false,
+     "birth": "1963-06-03",
+     "birthplace": "金門縣",
+     "photo": "/portraits/2022/C1/09020/5.webp"
     },
     {
      "no": 6,
@@ -136,7 +160,10 @@
      "elected": false,
      "gender": "M",
      "birthYear": 1968,
-     "incumbent": false
+     "incumbent": false,
+     "birth": "1968-10-07",
+     "birthplace": "金門縣",
+     "photo": "/portraits/2022/C1/09020/6.webp"
     }
    ]
   },
@@ -159,7 +186,10 @@
      "elected": true,
      "gender": "F",
      "birthYear": 1952,
-     "incumbent": true
+     "incumbent": true,
+     "birth": "1952-01-28",
+     "birthplace": "宜蘭縣",
+     "photo": "/portraits/2022/C1/10002/1.webp"
     },
     {
      "no": 2,
@@ -170,7 +200,10 @@
      "elected": false,
      "gender": "M",
      "birthYear": 1953,
-     "incumbent": false
+     "incumbent": false,
+     "birth": "1953-08-12",
+     "birthplace": "宜蘭縣",
+     "photo": "/portraits/2022/C1/10002/2.webp"
     },
     {
      "no": 3,
@@ -181,7 +214,10 @@
      "elected": false,
      "gender": "M",
      "birthYear": 1949,
-     "incumbent": false
+     "incumbent": false,
+     "birth": "1949-11-30",
+     "birthplace": "嘉義縣",
+     "photo": "/portraits/2022/C1/10002/3.webp"
     },
     {
      "no": 4,
@@ -192,7 +228,10 @@
      "elected": false,
      "gender": "M",
      "birthYear": 1963,
-     "incumbent": false
+     "incumbent": false,
+     "birth": "1963-01-08",
+     "birthplace": "宜蘭縣",
+     "photo": "/portraits/2022/C1/10002/4.webp"
     },
     {
      "no": 5,
@@ -203,7 +242,10 @@
      "elected": false,
      "gender": "M",
      "birthYear": 1969,
-     "incumbent": false
+     "incumbent": false,
+     "birth": "1969-10-23",
+     "birthplace": "宜蘭縣",
+     "photo": "/portraits/2022/C1/10002/5.webp"
     },
     {
      "no": 6,
@@ -214,7 +256,10 @@
      "elected": false,
      "gender": "F",
      "birthYear": 1974,
-     "incumbent": false
+     "incumbent": false,
+     "birth": "1974-09-11",
+     "birthplace": "臺南市",
+     "photo": "/portraits/2022/C1/10002/6.webp"
     }
    ]
   },
@@ -237,7 +282,10 @@
      "elected": false,
      "gender": "M",
      "birthYear": 1960,
-     "incumbent": false
+     "incumbent": false,
+     "birth": "1960-06-02",
+     "birthplace": "新竹縣",
+     "photo": "/portraits/2022/C1/10004/1.webp"
     },
     {
      "no": 2,
@@ -248,7 +296,10 @@
      "elected": false,
      "gender": "M",
      "birthYear": 1971,
-     "incumbent": false
+     "incumbent": false,
+     "birth": "1971-02-24",
+     "birthplace": "新竹縣",
+     "photo": "/portraits/2022/C1/10004/2.webp"
     },
     {
      "no": 3,
@@ -259,7 +310,10 @@
      "elected": false,
      "gender": "M",
      "birthYear": 1980,
-     "incumbent": false
+     "incumbent": false,
+     "birth": "1980-07-15",
+     "birthplace": "新竹縣",
+     "photo": "/portraits/2022/C1/10004/3.webp"
     },
     {
      "no": 4,
@@ -270,7 +324,10 @@
      "elected": true,
      "gender": "M",
      "birthYear": 1951,
-     "incumbent": true
+     "incumbent": true,
+     "birth": "1951-03-22",
+     "birthplace": "新竹縣",
+     "photo": "/portraits/2022/C1/10004/4.webp"
     },
     {
      "no": 5,
@@ -281,7 +338,10 @@
      "elected": false,
      "gender": "M",
      "birthYear": 1974,
-     "incumbent": false
+     "incumbent": false,
+     "birth": "1974-05-09",
+     "birthplace": "新竹縣",
+     "photo": "/portraits/2022/C1/10004/5.webp"
     }
    ]
   },
@@ -304,7 +364,10 @@
      "elected": true,
      "gender": "M",
      "birthYear": 1963,
-     "incumbent": false
+     "incumbent": false,
+     "birth": "1963-01-02",
+     "birthplace": "苗栗縣",
+     "photo": "/portraits/2022/C1/10005/1.webp"
     },
     {
      "no": 2,
@@ -315,7 +378,10 @@
      "elected": false,
      "gender": "M",
      "birthYear": 1956,
-     "incumbent": false
+     "incumbent": false,
+     "birth": "1956-09-10",
+     "birthplace": "苗栗縣",
+     "photo": "/portraits/2022/C1/10005/2.webp"
     },
     {
      "no": 3,
@@ -326,7 +392,10 @@
      "elected": false,
      "gender": "M",
      "birthYear": 1979,
-     "incumbent": false
+     "incumbent": false,
+     "birth": "1979-08-02",
+     "birthplace": "苗栗縣",
+     "photo": "/portraits/2022/C1/10005/3.webp"
     },
     {
      "no": 4,
@@ -337,7 +406,10 @@
      "elected": false,
      "gender": "M",
      "birthYear": 1961,
-     "incumbent": false
+     "incumbent": false,
+     "birth": "1961-01-03",
+     "birthplace": "苗栗縣",
+     "photo": "/portraits/2022/C1/10005/4.webp"
     },
     {
      "no": 5,
@@ -348,7 +420,10 @@
      "elected": false,
      "gender": "M",
      "birthYear": 1981,
-     "incumbent": false
+     "incumbent": false,
+     "birth": "1981-01-22",
+     "birthplace": "苗栗縣",
+     "photo": "/portraits/2022/C1/10005/5.webp"
     }
    ]
   },
@@ -371,7 +446,10 @@
      "elected": true,
      "gender": "F",
      "birthYear": 1968,
-     "incumbent": true
+     "incumbent": true,
+     "birth": "1968-11-22",
+     "birthplace": "彰化縣",
+     "photo": "/portraits/2022/C1/10007/1.webp"
     },
     {
      "no": 2,
@@ -382,7 +460,10 @@
      "elected": false,
      "gender": "F",
      "birthYear": 1971,
-     "incumbent": false
+     "incumbent": false,
+     "birth": "1971-11-10",
+     "birthplace": "彰化縣",
+     "photo": "/portraits/2022/C1/10007/2.webp"
     },
     {
      "no": 3,
@@ -393,7 +474,10 @@
      "elected": false,
      "gender": "M",
      "birthYear": 1953,
-     "incumbent": false
+     "incumbent": false,
+     "birth": "1953-06-03",
+     "birthplace": "彰化縣",
+     "photo": "/portraits/2022/C1/10007/3.webp"
     }
    ]
   },
@@ -416,7 +500,10 @@
      "elected": false,
      "gender": "F",
      "birthYear": 1971,
-     "incumbent": false
+     "incumbent": false,
+     "birth": "1971-09-02",
+     "birthplace": "南投縣",
+     "photo": "/portraits/2022/C1/10008/1.webp"
     },
     {
      "no": 2,
@@ -427,7 +514,10 @@
      "elected": true,
      "gender": "F",
      "birthYear": 1975,
-     "incumbent": false
+     "incumbent": false,
+     "birth": "1975-10-15",
+     "birthplace": "南投縣",
+     "photo": "/portraits/2022/C1/10008/2.webp"
     },
     {
      "no": 3,
@@ -438,7 +528,10 @@
      "elected": false,
      "gender": "M",
      "birthYear": 1962,
-     "incumbent": false
+     "incumbent": false,
+     "birth": "1962-10-24",
+     "birthplace": "南投縣",
+     "photo": "/portraits/2022/C1/10008/3.webp"
     }
    ]
   },
@@ -461,7 +554,10 @@
      "elected": true,
      "gender": "F",
      "birthYear": 1964,
-     "incumbent": true
+     "incumbent": true,
+     "birth": "1964-01-01",
+     "birthplace": "雲林縣",
+     "photo": "/portraits/2022/C1/10009/1.webp"
     },
     {
      "no": 2,
@@ -472,7 +568,10 @@
      "elected": false,
      "gender": "M",
      "birthYear": 1969,
-     "incumbent": false
+     "incumbent": false,
+     "birth": "1969-03-09",
+     "birthplace": "雲林縣",
+     "photo": "/portraits/2022/C1/10009/2.webp"
     },
     {
      "no": 3,
@@ -483,7 +582,10 @@
      "elected": false,
      "gender": "M",
      "birthYear": 1959,
-     "incumbent": false
+     "incumbent": false,
+     "birth": "1959-04-06",
+     "birthplace": "雲林縣",
+     "photo": "/portraits/2022/C1/10009/3.webp"
     }
    ]
   },
@@ -506,7 +608,10 @@
      "elected": false,
      "gender": "F",
      "birthYear": 1971,
-     "incumbent": false
+     "incumbent": false,
+     "birth": "1971-04-11",
+     "birthplace": "嘉義縣",
+     "photo": "/portraits/2022/C1/10010/1.webp"
     },
     {
      "no": 2,
@@ -517,7 +622,10 @@
      "elected": true,
      "gender": "M",
      "birthYear": 1965,
-     "incumbent": true
+     "incumbent": true,
+     "birth": "1965-05-28",
+     "birthplace": "嘉義縣",
+     "photo": "/portraits/2022/C1/10010/2.webp"
     }
    ]
   },
@@ -540,7 +648,10 @@
      "elected": false,
      "gender": "M",
      "birthYear": 1976,
-     "incumbent": false
+     "incumbent": false,
+     "birth": "1976-09-01",
+     "birthplace": "新北市",
+     "photo": "/portraits/2022/C1/10013/1.webp"
     },
     {
      "no": 2,
@@ -551,7 +662,10 @@
      "elected": false,
      "gender": "M",
      "birthYear": 1957,
-     "incumbent": false
+     "incumbent": false,
+     "birth": "1957-08-05",
+     "birthplace": "屏東縣",
+     "photo": "/portraits/2022/C1/10013/2.webp"
     },
     {
      "no": 3,
@@ -562,7 +676,10 @@
      "elected": true,
      "gender": "F",
      "birthYear": 1966,
-     "incumbent": false
+     "incumbent": false,
+     "birth": "1966-11-01",
+     "birthplace": "屏東縣",
+     "photo": "/portraits/2022/C1/10013/3.webp"
     }
    ]
   },
@@ -585,7 +702,10 @@
      "elected": false,
      "gender": "M",
      "birthYear": 1965,
-     "incumbent": false
+     "incumbent": false,
+     "birth": "1965-08-25",
+     "birthplace": "臺北市",
+     "photo": "/portraits/2022/C1/10014/1.webp"
     },
     {
      "no": 2,
@@ -596,7 +716,10 @@
      "elected": true,
      "gender": "F",
      "birthYear": 1969,
-     "incumbent": true
+     "incumbent": true,
+     "birth": "1969-11-23",
+     "birthplace": "臺東縣",
+     "photo": "/portraits/2022/C1/10014/2.webp"
     },
     {
      "no": 3,
@@ -607,7 +730,10 @@
      "elected": false,
      "gender": "M",
      "birthYear": 1967,
-     "incumbent": false
+     "incumbent": false,
+     "birth": "1967-02-02",
+     "birthplace": "臺東縣",
+     "photo": "/portraits/2022/C1/10014/3.webp"
     }
    ]
   },
@@ -630,7 +756,10 @@
      "elected": true,
      "gender": "F",
      "birthYear": 1968,
-     "incumbent": true
+     "incumbent": true,
+     "birth": "1968-10-12",
+     "birthplace": "桃園市",
+     "photo": "/portraits/2022/C1/10015/1.webp"
     },
     {
      "no": 2,
@@ -641,7 +770,10 @@
      "elected": false,
      "gender": "M",
      "birthYear": 1957,
-     "incumbent": false
+     "incumbent": false,
+     "birth": "1957-07-18",
+     "birthplace": "彰化縣",
+     "photo": "/portraits/2022/C1/10015/2.webp"
     },
     {
      "no": 3,
@@ -652,7 +784,10 @@
      "elected": false,
      "gender": "F",
      "birthYear": 1974,
-     "incumbent": false
+     "incumbent": false,
+     "birth": "1974-03-17",
+     "birthplace": "新竹市",
+     "photo": "/portraits/2022/C1/10015/3.webp"
     }
    ]
   },
@@ -675,7 +810,10 @@
      "elected": true,
      "gender": "M",
      "birthYear": 1955,
-     "incumbent": false
+     "incumbent": false,
+     "birth": "1955-10-25",
+     "birthplace": "澎湖縣",
+     "photo": "/portraits/2022/C1/10016/1.webp"
     },
     {
      "no": 2,
@@ -686,7 +824,10 @@
      "elected": false,
      "gender": "M",
      "birthYear": 1953,
-     "incumbent": true
+     "incumbent": true,
+     "birth": "1953-09-20",
+     "birthplace": "澎湖縣",
+     "photo": "/portraits/2022/C1/10016/2.webp"
     },
     {
      "no": 3,
@@ -697,7 +838,10 @@
      "elected": false,
      "gender": "M",
      "birthYear": 1962,
-     "incumbent": false
+     "incumbent": false,
+     "birth": "1962-01-06",
+     "birthplace": "澎湖縣",
+     "photo": "/portraits/2022/C1/10016/3.webp"
     }
    ]
   },
@@ -720,7 +864,10 @@
      "elected": true,
      "gender": "M",
      "birthYear": 1975,
-     "incumbent": false
+     "incumbent": false,
+     "birth": "1975-10-05",
+     "birthplace": "基隆市",
+     "photo": "/portraits/2022/C1/10017/1.webp"
     },
     {
      "no": 2,
@@ -731,7 +878,10 @@
      "elected": false,
      "gender": "F",
      "birthYear": 1990,
-     "incumbent": false
+     "incumbent": false,
+     "birth": "1990-10-07",
+     "birthplace": "基隆市",
+     "photo": "/portraits/2022/C1/10017/2.webp"
     },
     {
      "no": 3,
@@ -742,7 +892,10 @@
      "elected": false,
      "gender": "M",
      "birthYear": 1973,
-     "incumbent": false
+     "incumbent": false,
+     "birth": "1973-06-14",
+     "birthplace": "臺北市",
+     "photo": "/portraits/2022/C1/10017/3.webp"
     },
     {
      "no": 4,
@@ -753,7 +906,10 @@
      "elected": false,
      "gender": "M",
      "birthYear": 1962,
-     "incumbent": false
+     "incumbent": false,
+     "birth": "1962-01-27",
+     "birthplace": "屏東縣",
+     "photo": "/portraits/2022/C1/10017/4.webp"
     },
     {
      "no": 5,
@@ -764,7 +920,10 @@
      "elected": false,
      "gender": "M",
      "birthYear": 1965,
-     "incumbent": false
+     "incumbent": false,
+     "birth": "1965-10-07",
+     "birthplace": "基隆市",
+     "photo": "/portraits/2022/C1/10017/5.webp"
     }
    ]
   },
@@ -787,7 +946,10 @@
      "elected": false,
      "gender": "M",
      "birthYear": 1954,
-     "incumbent": false
+     "incumbent": false,
+     "birth": "1954-05-26",
+     "birthplace": "新竹市",
+     "photo": "/portraits/2022/C1/10018/1.webp"
     },
     {
      "no": 2,
@@ -798,7 +960,10 @@
      "elected": false,
      "gender": "M",
      "birthYear": 1982,
-     "incumbent": false
+     "incumbent": false,
+     "birth": "1982-05-26",
+     "birthplace": "臺北市",
+     "photo": "/portraits/2022/C1/10018/2.webp"
     },
     {
      "no": 3,
@@ -809,7 +974,10 @@
      "elected": false,
      "gender": "M",
      "birthYear": 1960,
-     "incumbent": false
+     "incumbent": false,
+     "birth": "1960-11-30",
+     "birthplace": "新竹市",
+     "photo": "/portraits/2022/C1/10018/3.webp"
     },
     {
      "no": 4,
@@ -820,7 +988,10 @@
      "elected": false,
      "gender": "M",
      "birthYear": 1956,
-     "incumbent": false
+     "incumbent": false,
+     "birth": "1956-02-15",
+     "birthplace": "新竹市",
+     "photo": "/portraits/2022/C1/10018/4.webp"
     },
     {
      "no": 5,
@@ -831,7 +1002,10 @@
      "elected": false,
      "gender": "F",
      "birthYear": 1967,
-     "incumbent": false
+     "incumbent": false,
+     "birth": "1967-03-03",
+     "birthplace": "雲林縣",
+     "photo": "/portraits/2022/C1/10018/5.webp"
     },
     {
      "no": 6,
@@ -842,7 +1016,10 @@
      "elected": true,
      "gender": "F",
      "birthYear": 1984,
-     "incumbent": false
+     "incumbent": false,
+     "birth": "1984-01-25",
+     "birthplace": "臺北市",
+     "photo": "/portraits/2022/C1/10018/6.webp"
     }
    ]
   },
@@ -865,7 +1042,10 @@
      "elected": true,
      "gender": "F",
      "birthYear": 1959,
-     "incumbent": true
+     "incumbent": true,
+     "birth": "1959-01-20",
+     "birthplace": "嘉義市",
+     "photo": "/portraits/2022/C1/10020/1.webp"
     },
     {
      "no": 2,
@@ -876,7 +1056,10 @@
      "elected": false,
      "gender": "M",
      "birthYear": 1965,
-     "incumbent": false
+     "incumbent": false,
+     "birth": "1965-07-06",
+     "birthplace": "嘉義市",
+     "photo": "/portraits/2022/C1/10020/2.webp"
     },
     {
      "no": 3,
@@ -887,7 +1070,10 @@
      "elected": false,
      "gender": "M",
      "birthYear": 1949,
-     "incumbent": false
+     "incumbent": false,
+     "birth": "1949-10-05",
+     "birthplace": "嘉義市",
+     "photo": "/portraits/2022/C1/10020/3.webp"
     },
     {
      "no": 4,
@@ -898,7 +1084,10 @@
      "elected": false,
      "gender": "M",
      "birthYear": 1968,
-     "incumbent": false
+     "incumbent": false,
+     "birth": "1968-03-20",
+     "birthplace": "桃園市",
+     "photo": "/portraits/2022/C1/10020/4.webp"
     },
     {
      "no": 5,
@@ -909,7 +1098,10 @@
      "elected": false,
      "gender": "M",
      "birthYear": 1978,
-     "incumbent": false
+     "incumbent": false,
+     "birth": "1978-02-25",
+     "birthplace": "嘉義市",
+     "photo": "/portraits/2022/C1/10020/5.webp"
     }
    ]
   },
@@ -932,7 +1124,10 @@
      "elected": false,
      "gender": "M",
      "birthYear": 1985,
-     "incumbent": false
+     "incumbent": false,
+     "birth": "1985-01-11",
+     "birthplace": "屏東縣",
+     "photo": "/portraits/2022/C1/63000/1.webp"
     },
     {
      "no": 2,
@@ -943,7 +1138,10 @@
      "elected": false,
      "gender": "F",
      "birthYear": 1963,
-     "incumbent": false
+     "incumbent": false,
+     "birth": "1963-10-28",
+     "birthplace": "彰化縣",
+     "photo": "/portraits/2022/C1/63000/2.webp"
     },
     {
      "no": 3,
@@ -954,7 +1152,10 @@
      "elected": false,
      "gender": "M",
      "birthYear": 1976,
-     "incumbent": false
+     "incumbent": false,
+     "birth": "1976-05-15",
+     "birthplace": "臺北市",
+     "photo": "/portraits/2022/C1/63000/3.webp"
     },
     {
      "no": 4,
@@ -965,7 +1166,10 @@
      "elected": false,
      "gender": "M",
      "birthYear": 1979,
-     "incumbent": false
+     "incumbent": false,
+     "birth": "1979-06-30",
+     "birthplace": "臺北市",
+     "photo": "/portraits/2022/C1/63000/4.webp"
     },
     {
      "no": 5,
@@ -976,7 +1180,10 @@
      "elected": false,
      "gender": "F",
      "birthYear": 1965,
-     "incumbent": false
+     "incumbent": false,
+     "birth": "1965-11-11",
+     "birthplace": "新北市",
+     "photo": "/portraits/2022/C1/63000/5.webp"
     },
     {
      "no": 6,
@@ -987,7 +1194,10 @@
      "elected": true,
      "gender": "M",
      "birthYear": 1978,
-     "incumbent": false
+     "incumbent": false,
+     "birth": "1978-12-26",
+     "birthplace": "臺北市",
+     "photo": "/portraits/2022/C1/63000/6.webp"
     },
     {
      "no": 7,
@@ -998,7 +1208,10 @@
      "elected": false,
      "gender": "M",
      "birthYear": 1956,
-     "incumbent": false
+     "incumbent": false,
+     "birth": "1956-07-20",
+     "birthplace": "臺南市",
+     "photo": "/portraits/2022/C1/63000/7.webp"
     },
     {
      "no": 8,
@@ -1009,7 +1222,10 @@
      "elected": false,
      "gender": "F",
      "birthYear": 1969,
-     "incumbent": false
+     "incumbent": false,
+     "birth": "1969-10-18",
+     "birthplace": "臺中市",
+     "photo": "/portraits/2022/C1/63000/8.webp"
     },
     {
      "no": 9,
@@ -1020,7 +1236,10 @@
      "elected": false,
      "gender": "M",
      "birthYear": 1958,
-     "incumbent": false
+     "incumbent": false,
+     "birth": "1958-12-09",
+     "birthplace": "臺北市",
+     "photo": "/portraits/2022/C1/63000/9.webp"
     },
     {
      "no": 10,
@@ -1031,7 +1250,10 @@
      "elected": false,
      "gender": "M",
      "birthYear": 1950,
-     "incumbent": false
+     "incumbent": false,
+     "birth": "1950-12-25",
+     "birthplace": "新竹縣",
+     "photo": "/portraits/2022/C1/63000/10.webp"
     },
     {
      "no": 11,
@@ -1042,7 +1264,10 @@
      "elected": false,
      "gender": "M",
      "birthYear": 1970,
-     "incumbent": false
+     "incumbent": false,
+     "birth": "1970-10-23",
+     "birthplace": "新北市",
+     "photo": "/portraits/2022/C1/63000/11.webp"
     },
     {
      "no": 12,
@@ -1053,7 +1278,10 @@
      "elected": false,
      "gender": "M",
      "birthYear": 1952,
-     "incumbent": false
+     "incumbent": false,
+     "birth": "1952-12-27",
+     "birthplace": "臺北市",
+     "photo": "/portraits/2022/C1/63000/12.webp"
     }
    ]
   },
@@ -1076,7 +1304,10 @@
      "elected": false,
      "gender": "M",
      "birthYear": 1981,
-     "incumbent": false
+     "incumbent": false,
+     "birth": "1981-10-30",
+     "birthplace": "臺南市",
+     "photo": "/portraits/2022/C1/64000/1.webp"
     },
     {
      "no": 2,
@@ -1087,7 +1318,10 @@
      "elected": false,
      "gender": "F",
      "birthYear": 1963,
-     "incumbent": false
+     "incumbent": false,
+     "birth": "1963-10-31",
+     "birthplace": "高雄市",
+     "photo": "/portraits/2022/C1/64000/2.webp"
     },
     {
      "no": 3,
@@ -1098,7 +1332,10 @@
      "elected": false,
      "gender": "F",
      "birthYear": 1962,
-     "incumbent": false
+     "incumbent": false,
+     "birth": "1962-04-29",
+     "birthplace": "屏東縣",
+     "photo": "/portraits/2022/C1/64000/3.webp"
     },
     {
      "no": 4,
@@ -1109,7 +1346,10 @@
      "elected": true,
      "gender": "M",
      "birthYear": 1964,
-     "incumbent": true
+     "incumbent": true,
+     "birth": "1964-12-23",
+     "birthplace": "基隆市",
+     "photo": "/portraits/2022/C1/64000/4.webp"
     }
    ]
   },
@@ -1132,7 +1372,10 @@
      "elected": false,
      "gender": "M",
      "birthYear": 1964,
-     "incumbent": false
+     "incumbent": false,
+     "birth": "1964-02-13",
+     "birthplace": "臺北市",
+     "photo": "/portraits/2022/C1/65000/1.webp"
     },
     {
      "no": 2,
@@ -1143,7 +1386,10 @@
      "elected": true,
      "gender": "M",
      "birthYear": 1957,
-     "incumbent": true
+     "incumbent": true,
+     "birth": "1957-06-07",
+     "birthplace": "嘉義縣",
+     "photo": "/portraits/2022/C1/65000/2.webp"
     }
    ]
   },
@@ -1166,7 +1412,10 @@
      "elected": false,
      "gender": "F",
      "birthYear": 1971,
-     "incumbent": false
+     "incumbent": false,
+     "birth": "1971-04-17",
+     "birthplace": "臺北市",
+     "photo": "/portraits/2022/C1/66000/1.webp"
     },
     {
      "no": 2,
@@ -1177,7 +1426,10 @@
      "elected": false,
      "gender": "M",
      "birthYear": 1969,
-     "incumbent": false
+     "incumbent": false,
+     "birth": "1969-04-16",
+     "birthplace": "臺中市",
+     "photo": "/portraits/2022/C1/66000/2.webp"
     },
     {
      "no": 3,
@@ -1188,7 +1440,10 @@
      "elected": true,
      "gender": "F",
      "birthYear": 1961,
-     "incumbent": true
+     "incumbent": true,
+     "birth": "1961-08-31",
+     "birthplace": "基隆市",
+     "photo": "/portraits/2022/C1/66000/3.webp"
     }
    ]
   },
@@ -1211,7 +1466,10 @@
      "elected": false,
      "gender": "M",
      "birthYear": 1965,
-     "incumbent": false
+     "incumbent": false,
+     "birth": "1965-06-01",
+     "birthplace": "臺南市",
+     "photo": "/portraits/2022/C1/67000/1.webp"
     },
     {
      "no": 2,
@@ -1222,7 +1480,10 @@
      "elected": false,
      "gender": "M",
      "birthYear": 1948,
-     "incumbent": false
+     "incumbent": false,
+     "birth": "1948-02-04",
+     "birthplace": "臺南市",
+     "photo": "/portraits/2022/C1/67000/2.webp"
     },
     {
      "no": 3,
@@ -1233,7 +1494,10 @@
      "elected": false,
      "gender": "M",
      "birthYear": 1961,
-     "incumbent": false
+     "incumbent": false,
+     "birth": "1961-10-03",
+     "birthplace": "臺南市",
+     "photo": "/portraits/2022/C1/67000/3.webp"
     },
     {
      "no": 4,
@@ -1244,7 +1508,10 @@
      "elected": false,
      "gender": "M",
      "birthYear": 1967,
-     "incumbent": false
+     "incumbent": false,
+     "birth": "1967-12-01",
+     "birthplace": "雲林縣",
+     "photo": "/portraits/2022/C1/67000/4.webp"
     },
     {
      "no": 5,
@@ -1255,7 +1522,10 @@
      "elected": true,
      "gender": "M",
      "birthYear": 1963,
-     "incumbent": true
+     "incumbent": true,
+     "birth": "1963-09-26",
+     "birthplace": "臺北市",
+     "photo": "/portraits/2022/C1/67000/5.webp"
     }
    ]
   },
@@ -1278,7 +1548,10 @@
      "elected": true,
      "gender": "M",
      "birthYear": 1954,
-     "incumbent": false
+     "incumbent": false,
+     "birth": "1954-06-24",
+     "birthplace": "臺北市",
+     "photo": "/portraits/2022/C1/68000/1.webp"
     },
     {
      "no": 2,
@@ -1289,7 +1562,10 @@
      "elected": false,
      "gender": "F",
      "birthYear": 1968,
-     "incumbent": false
+     "incumbent": false,
+     "birth": "1968-01-05",
+     "birthplace": "苗栗縣",
+     "photo": "/portraits/2022/C1/68000/2.webp"
     },
     {
      "no": 3,
@@ -1300,7 +1576,10 @@
      "elected": false,
      "gender": "M",
      "birthYear": 1973,
-     "incumbent": false
+     "incumbent": false,
+     "birth": "1973-06-02",
+     "birthplace": "臺北市",
+     "photo": "/portraits/2022/C1/68000/3.webp"
     },
     {
      "no": 4,
@@ -1311,7 +1590,10 @@
      "elected": false,
      "gender": "M",
      "birthYear": 1955,
-     "incumbent": false
+     "incumbent": false,
+     "birth": "1955-01-10",
+     "birthplace": "桃園市",
+     "photo": "/portraits/2022/C1/68000/4.webp"
     }
    ]
   }
