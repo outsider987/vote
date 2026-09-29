@@ -212,6 +212,12 @@ describe("council and duel helpers", () => {
       .map(({ key, color, seats }) => [key, color, seats]))
       .toEqual([["kmt", "#2A52BE", 2], ["ind", "#7A8288", 2], ["dpp", "#3B8A2A", 1]]);
   });
+
+  it("names every party in a county instead of merging minor parties", () => {
+    expect(partySeatTotals({ 中國國民黨: 3, 無: 1, 無黨籍及未經政黨推薦: 1, 新黨: 1, 社會民主黨: 1 }, true)
+      .map(({ name, color, seats }) => [name, color, seats]))
+      .toEqual([["國民黨", "#2A52BE", 3], ["無黨籍", "#7A8288", 2], ["新黨", "#8067B7", 1], ["社會民主黨", "#8067B7", 1]]);
+  });
 });
 
 describe("countdown", () => {

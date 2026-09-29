@@ -1,5 +1,5 @@
 import { app, county, select } from "../app";
-import { districtLabel, districtShort, partyLabel, partyOf } from "../config";
+import { districtLabel, districtShort, partyLabel, partyOf, partySeatTotals } from "../config";
 import { $, reducedMotion, SVGNS } from "../dom";
 import { councilTurnout } from "../model/analysis";
 import type { Race } from "../model/types";
@@ -34,6 +34,7 @@ const board = {
   lastReorder: 0,
   lastRows: null as string | null,
   lastStats: null as string | null,
+  lastParties: null as string | null,
 };
 
 // Five strokes of 正, in writing order, on a 22×24 cell.
@@ -188,6 +189,7 @@ export function renderBoard() {
     const cn = c.council;
     $("board-race").textContent = `${cn.kind}選舉`;
     $("st-mid-label").textContent = "已確定席次";
+    $("county-parties").hidden = !cn.districts.length;
     if (!cn.districts.length) {
       $("council-seats").innerHTML = "";
       $("district-tabs").innerHTML = "";
@@ -233,6 +235,7 @@ export function renderBoard() {
     renderRows(d, idx * 100 + sel);
   }
   board.lastStats = null;
+  board.lastParties = null;
   updateBoard(true);
 }
 
@@ -265,6 +268,23 @@ export function updateBoard(initial = false) {
       $("st-counted").textContent = `${s.decidedSeats}／${cn.seats}`;
       const ft = s.complete ? councilTurnout(cn) : null;
       $("st-turnout").textContent = !s.complete ? pendingLabel() : ft !== null ? `${ft.toFixed(2)}%` : "待公布";
+    }
+    const partyKey = `${c.code}|${s.decidedSeats}|${JSON.stringify(s.decided)}|${app.source.started}`;
+    if (partyKey !== board.lastParties) {
+      board.lastParties = partyKey;
+      $("county-parties-title").textContent = s.complete ? "各黨席次" : "各黨已確定席次";
+      const totals = partySeatTotals(s.decided, true).map(({ name, color, seats }) => ({ name, color, seats }));
+      if (s.decidedSeats < cn.seats) totals.push({ name: app.source.started ? "尚待確定" : "尚未開票", color: "", seats: cn.seats - s.decidedSeats });
+      $("county-party-totals").replaceChildren(...totals.map(({ name, color, seats }) => {
+        const li = document.createElement("li");
+        const chip = document.createElement("i");
+        chip.className = color ? "chip" : "chip pending";
+        if (color) chip.style.setProperty("--c", color);
+        const count = document.createElement("b");
+        count.textContent = String(seats);
+        li.append(chip, document.createTextNode(name), count);
+        return li;
+      }));
     }
     cn.districts.forEach((d, k) => {
       const g = board.groups[k];

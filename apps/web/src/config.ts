@@ -99,14 +99,19 @@ export const districtShort = (d: { type: DistrictType; no: string }) =>
   (d.type === "區域" ? d.no : `${d.no}${indigenousShort(d)}`);
 
 /** Seat counts grouped by legend party, largest first. */
-export function partySeatTotals(counts: Record<string, number>) {
+export function partySeatTotals(counts: Record<string, number>, splitOther = false) {
   const grouped: Partial<Record<PartyKey, number>> = {};
+  const others: { key: PartyKey; name: string; color: string; seats: number }[] = [];
   for (const [party, n] of Object.entries(counts)) {
     const key = partyOf(party).key;
+    if (splitOther && key === "other") {
+      others.push({ key, name: party, color: OTHER_PARTY.color, seats: n });
+      continue;
+    }
     grouped[key] = (grouped[key] || 0) + n;
   }
-  return LEGEND.filter((l) => grouped[l.key]).sort((a, b) => grouped[b.key]! - grouped[a.key]!)
-    .map((l) => ({ ...l, seats: grouped[l.key]! }));
+  return [...LEGEND.filter((l) => grouped[l.key]).map((l) => ({ ...l, seats: grouped[l.key]! })), ...others]
+    .sort((a, b) => b.seats - a.seats);
 }
 
 /** "國民黨 12・民進黨 9" */
