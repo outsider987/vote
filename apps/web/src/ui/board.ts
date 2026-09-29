@@ -2,6 +2,7 @@ import { app, county, select } from "../app";
 import { districtLabel, districtShort, partyLabel, partyOf, partySeatTotals } from "../config";
 import { $, reducedMotion, SVGNS } from "../dom";
 import { councilTurnout } from "../model/analysis";
+import { ReplaySource } from "../model/replay";
 import type { Race } from "../model/types";
 import { fmt, mulberry32 } from "../util";
 import { renderCloseList } from "./closest";
@@ -74,7 +75,7 @@ function renderRows(race: Race, seed: number) {
     const cells = finalCells(j);
     const photo = x.photo ? `<div class="photo"><img src="${x.photo}" alt="" loading="lazy" decoding="async"></div>` : "";
     const bio = x.birth ? `<span class="bio">${[x.gender === "M" ? "男" : x.gender === "F" ? "女" : "", `${x.birth.replaceAll("-", ".")} 生`, x.birthplace ? `出生地 ${x.birthplace}` : "", x.incumbent ? `時任${race.kind === "district" ? "議員" : "縣市長"}` : ""].filter(Boolean).join("・")}</span>` : "";
-    const platform = x.platformUrl ? `<a class="platform-link" href="${x.platformUrl}" target="_blank" rel="noopener noreferrer" aria-label="查看${x.name}的政見，開啟中選會選舉公報">政見 ↗</a>` : "";
+    const platform = x.platformUrl ? `<button class="platform-link" type="button" data-platform="${j}" aria-label="在本站查看${x.name}的政見">政見</button>` : "";
     return `<li class="row${x.photo ? " has-photo" : ""}" data-j="${j}" style="--c:${p.color}">
       ${photo}
       <div class="who"><span class="no" aria-label="${x.no} 號">${x.no}</span><span class="name">${x.name}</span>
@@ -100,6 +101,59 @@ function renderRows(race: Race, seed: number) {
   });
   board.order = orderOf(race, race.state.votes);
   placeRows(board.order, false);
+}
+
+export function initPlatformViewer() {
+  const dialog = $<HTMLDialogElement>("platform-view");
+  const frame = $<HTMLIFrameElement>("platform-frame");
+  const original = $<HTMLAnchorElement>("platform-original");
+  const loading = $("platform-loading");
+  let trigger: HTMLButtonElement | null = null;
+  let resume: ReplaySource | null = null;
+  let loadTimer = 0;
+
+  $("rows").addEventListener("click", (event) => {
+    const button = (event.target as Element).closest<HTMLButtonElement>("[data-platform]");
+    if (!button || !board.race) return;
+    const candidate = board.race.candidates[Number(button.dataset.platform)];
+    if (!candidate?.platformUrl) return;
+    trigger = button;
+    const race = board.race;
+    const page = candidate.platformUrl.match(/#page=(\d+)/)?.[1];
+    $("platform-title").textContent = `${candidate.name}的政見`;
+    const person = $("platform-person");
+    person.textContent = `${county(app.selected).name}${race.kind === "district" ? ` ${race.name}` : ""}・${candidate.no} 號・${partyLabel(candidate.party)}`;
+    person.style.setProperty("--c", partyOf(candidate.party).color);
+    $("platform-note").textContent = page
+      ? `已定位至公報第 ${page} 頁；同頁可能還有其他候選人。可放大閱讀，預覽不便時開啟官方原檔。`
+      : "這份公報尚無候選人頁碼，請依姓名與號次查找；可放大閱讀，預覽不便時開啟官方原檔。";
+    original.href = candidate.platformUrl;
+    clearTimeout(loadTimer);
+    loading.hidden = false;
+    dialog.showModal();
+    document.body.classList.add("platform-open");
+    app.pendingFollow = null;
+    frame.title = `${candidate.name}的中選會選舉公報`;
+    frame.src = candidate.platformUrl;
+    if (app.source instanceof ReplaySource && app.source.playing) {
+      resume = app.source;
+      resume.playing = false;
+    }
+    $("platform-close").focus();
+  });
+  frame.addEventListener("load", () => {
+    if (dialog.open && frame.hasAttribute("src")) loadTimer = window.setTimeout(() => { loading.hidden = true; }, 1800);
+  });
+  $("platform-close").addEventListener("click", () => dialog.close());
+  dialog.addEventListener("click", (event) => { if (event.target === dialog) dialog.close(); });
+  dialog.addEventListener("close", () => {
+    clearTimeout(loadTimer);
+    frame.removeAttribute("src");
+    document.body.classList.remove("platform-open");
+    if (resume) { resume.playing = true; resume = null; }
+    if (trigger?.isConnected) trigger.focus();
+    trigger = null;
+  });
 }
 
 /** Rows follow the current vote ranking (ties keep ballot order). */

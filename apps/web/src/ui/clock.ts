@@ -37,6 +37,7 @@ export function initReplayClock(src: ReplaySource) {
   }));
   scrub.addEventListener("input", () => { src.seek(Number(scrub.value) / 1000); clearCallouts(); });
   document.addEventListener("keydown", (e) => {
+    if ($<HTMLDialogElement>("platform-view").open) return;
     const tag = (document.activeElement as HTMLElement | null)?.tagName ?? "";
     if (e.code !== "Space" || ["INPUT", "BUTTON", "TEXTAREA", "SELECT"].includes(tag)) return;
     e.preventDefault();

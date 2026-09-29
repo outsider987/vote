@@ -25,6 +25,7 @@ export function initTextView() {
   $("text-close").addEventListener("click", () => openText(false));
   document.addEventListener("keydown", (e) => {
     if (e.key !== "Escape") return;
+    if ($<HTMLDialogElement>("platform-view").open) return;
     if (!textView.hidden) openText(false);
     else if (app.view === "county") exitCounty();
   });

@@ -220,6 +220,25 @@
       <p class="text-credit" id="text-credit">資料來源：中央選舉委員會選舉資料庫（2022 年結果重播）。黨徽：維基共享資源，公有領域（中國國民黨、民主進步黨黨旗中央、台灣民眾黨）；無黨籍及其他政黨以文字圓印表示。</p>
     </section>
 
+    <dialog class="platform-view" id="platform-view" aria-labelledby="platform-title" aria-describedby="platform-note">
+      <div class="platform-head">
+        <div class="platform-heading">
+          <p class="platform-source">2022 選舉公報・中央選舉委員會</p>
+          <h2 id="platform-title"></h2>
+          <p class="platform-person" id="platform-person"></p>
+        </div>
+        <div class="platform-actions">
+          <a id="platform-original" target="_blank" rel="noopener noreferrer">開啟原檔</a>
+          <button type="button" id="platform-close">關閉</button>
+        </div>
+      </div>
+      <div class="platform-document">
+        <p id="platform-loading" role="status">正在載入中選會選舉公報…</p>
+        <iframe id="platform-frame" title="中選會選舉公報" referrerpolicy="no-referrer"></iframe>
+      </div>
+      <p class="platform-note" id="platform-note"></p>
+    </dialog>
+
     <div class="float-tip" id="float-tip" hidden></div>
 
     <div class="loading" id="loading" role="status">
