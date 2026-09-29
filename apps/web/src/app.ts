@@ -1,9 +1,9 @@
 import { INSET_SCALE, modeCopy, type Mode } from "./config";
-import { $ } from "./dom";
+import { $, reducedMotion } from "./dom";
 import type { Source } from "./model/source";
 import type { County } from "./model/types";
 import type { Detail } from "./scene/detail";
-import { enterCounty } from "./scene/detail";
+import { enterCounty, exitCounty } from "./scene/detail";
 import { countyView, markSelectedTape, resetTapes } from "./scene/island";
 import { focusCamera, sceneOk } from "./scene/stage";
 import { renderBoard } from "./ui/board";
@@ -20,6 +20,7 @@ export const app = {
   byCode: new Map<string, County>(),
   councilSeats: 0,
   mode: "mayor" as Mode,
+  closeScope: null as string | null,
   view: "island" as "island" | "county",
   detail: null as Detail | null,
   selected: "63000",
@@ -33,13 +34,37 @@ export const app = {
 
 export const county = (code: string) => app.byCode.get(code)!;
 
+export function scrollMobileTo(id: "board" | "scene") {
+  if (window.innerWidth > 900) return;
+  if (id === "scene") return;
+  if (document.querySelector(".room")!.classList.contains("map-open")) setMobileMapOpen(false);
+  const top = $(id).getBoundingClientRect().top + window.scrollY
+    - document.querySelector(".topbar")!.getBoundingClientRect().height
+    - 8;
+  window.scrollTo({ top, behavior: reducedMotion ? "instant" : "smooth" });
+}
+
+export function setMobileMapOpen(open: boolean) {
+  if (window.innerWidth > 900) return;
+  document.querySelector(".room")!.classList.toggle("map-open", open);
+  document.body.classList.toggle("mobile-map-open", open);
+  const button = $<HTMLButtonElement>("map-toggle");
+  button.setAttribute("aria-expanded", String(open));
+  button.textContent = open ? "收起 3D 地圖" : "看 3D 地圖";
+  $<HTMLButtonElement>(open ? "map-close" : "map-toggle").focus({ preventScroll: true });
+}
+
 export function select(code: string, { byUser = false, district = null as number | null, noCamera = false } = {}) {
   if (byUser && app.view === "county" && app.detail && code !== app.detail.code) {
-    enterCounty(code).then(() => { if (district !== null) select(code, { byUser: true, noCamera: true, district }); });
-    return;
+    if (window.innerWidth <= 900 && !document.querySelector(".room")!.classList.contains("map-open")) exitCounty();
+    else {
+      enterCounty(code).then(() => { if (district !== null) select(code, { byUser: true, noCamera: true, district }); });
+      return;
+    }
   }
   if (byUser) {
     app.follow = false;
+    app.closeScope = code;
     $<HTMLInputElement>("follow").checked = false;
     if (!noCamera && app.view === "island" && sceneOk) focusCamera(countyView(code).anchor);
   }
@@ -54,6 +79,8 @@ export function select(code: string, { byUser = false, district = null as number
 
 export function setMode(next: Mode) {
   app.mode = next;
+  if (next === "close" && app.view === "county") app.closeScope = app.selected;
+  $<HTMLSelectElement>("county-select").options[0].disabled = next !== "close";
   document.querySelectorAll<HTMLButtonElement>(".mode button").forEach((b) => b.setAttribute("aria-pressed", String(b.dataset.mode === next)));
   const copy = modeCopy(next, app.councilSeats);
   updateLegend();
@@ -88,12 +115,50 @@ export function updateLegend() {
 }
 
 export function initModeSwitch() {
+  const picker = $<HTMLSelectElement>("county-select");
+  picker.replaceChildren(new Option("全台", ""), ...app.counties.map((c) => new Option(c.name, c.code)));
+  picker.addEventListener("change", () => {
+    if (picker.value) select(picker.value, { byUser: true, noCamera: true });
+    else {
+      if (app.view === "county") exitCounty();
+      app.closeScope = null;
+      renderBoard();
+    }
+    scrollMobileTo("board");
+  });
+  $("map-close").addEventListener("click", () => setMobileMapOpen(false));
+  const topbar = document.querySelector<HTMLElement>(".topbar")!;
+  const tallyToggle = $<HTMLButtonElement>("tally-toggle");
+  const closeTally = () => {
+    topbar.classList.remove("is-open");
+    tallyToggle.setAttribute("aria-expanded", "false");
+  };
+  tallyToggle.addEventListener("click", () => {
+    const open = topbar.classList.toggle("is-open");
+    tallyToggle.setAttribute("aria-expanded", String(open));
+  });
+  $("seats").addEventListener("click", closeTally);
+  document.addEventListener("pointerdown", (e) => { if (!topbar.contains(e.target as Node)) closeTally(); });
+  document.addEventListener("keydown", (e) => {
+    if (e.key === "Escape" && topbar.classList.contains("is-open")) { closeTally(); tallyToggle.focus(); }
+  });
   document.querySelectorAll<HTMLButtonElement>(".mode button").forEach((b) => b.addEventListener("click", () => {
     const m = b.dataset.mode as Mode;
     if (m !== app.mode) setMode(m);
+    closeTally();
+    scrollMobileTo("board");
   }));
+  $("mobile-duel").addEventListener("click", () => { setMode("close"); scrollMobileTo("board"); });
+  $("map-toggle").addEventListener("click", () => {
+    const open = !document.querySelector(".room")!.classList.contains("map-open");
+    setMobileMapOpen(open);
+    if (open && app.view !== "county" && (app.closeScope || !app.follow)) void enterCounty(app.closeScope ?? app.selected);
+  });
   $<HTMLInputElement>("follow").addEventListener("change", (e) => {
     app.follow = (e.target as HTMLInputElement).checked;
-    if (app.follow) app.lastFollowSwitch = -Infinity;
+    if (app.follow) {
+      if (app.view === "island") app.closeScope = null;
+      app.lastFollowSwitch = -Infinity;
+    }
   });
 }

@@ -14,6 +14,7 @@ export function startCountdown(target: number, { test, footer, onDone }: { test:
   document.body.classList.add("is-counting");
   $("notice-label").textContent = test ? "測試倒數" : "距離開票";
   $("notice-line").innerHTML = test ? "倒數結束後開始開票" : "11 月 28 日（六）16:00<br>投票結束，開始開票";
+  if (footer && test) $("standby-date").textContent = "測試倒數";
   if (footer) $("clock-date").textContent = test ? "測試倒數" : "距離開票";
   let shown = "";
   const tick = () => {
@@ -24,6 +25,7 @@ export function startCountdown(target: number, { test, footer, onDone }: { test:
       shown = key;
       $("notice-time").innerHTML = (days ? `<span>${days}<small>天</small></span>` : "") + `<span>${hms}</span>`;
       if (footer) $("clock-time").textContent = days ? `${days}天 ${hms}` : hms;
+      if (footer) $("standby-time").innerHTML = days ? `<span>${days}<small>天</small></span><span>${hms}</span>` : `<span>${hms}</span>`;
     }
     if (left <= 0) {
       clearInterval(timer);
@@ -42,6 +44,9 @@ export function showWaiting() {
   $("notice-line").innerHTML = "等待中選會第一筆開票資料<br>本頁會自動更新";
   $("clock-time").textContent = "16:00";
   $("clock-date").textContent = "開票開始";
+  $("standby-title").textContent = "開票開始";
+  $("standby-time").textContent = "16:00";
+  $("standby-description").textContent = "等待中選會第一筆開票資料，本頁會自動更新。";
 }
 
 export function hideNotice() {

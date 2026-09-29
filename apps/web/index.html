@@ -34,21 +34,87 @@
       <div class="mode" role="group" aria-label="選舉類別">
         <button type="button" data-mode="mayor" aria-pressed="true">縣市長</button>
         <button type="button" data-mode="council" aria-pressed="false">議員</button>
-        <button type="button" data-mode="close" aria-pressed="false">最接近</button>
+        <button type="button" data-mode="close" aria-pressed="false">拉鋸戰</button>
       </div>
       <section class="tally-national" aria-label="全國當選席次">
         <p class="seat-count"><span class="num" id="seat-decided">0</span><span class="num seat-of" id="seat-of">／22</span><span class="seat-total" id="seat-label">席當選確定</span></p>
-        <ul class="party-totals" id="party-totals"></ul>
-        <ol class="seats" id="seats"></ol>
-        <div class="seatbar" id="seatbar" hidden aria-hidden="true"></div>
+        <button class="tally-toggle" id="tally-toggle" type="button" aria-expanded="false" aria-controls="tally-details">查看席次<svg viewBox="0 0 24 24" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg></button>
+        <div class="tally-details" id="tally-details">
+          <ul class="party-totals" id="party-totals"></ul>
+          <ol class="seats" id="seats"></ol>
+          <div class="seatbar" id="seatbar" hidden aria-hidden="true"></div>
+        </div>
       </section>
     </header>
 
+    <details class="source-note" id="source-note" open>
+      <summary><strong id="source-note-label">2026 開票預備</strong><span class="source-note-short" id="source-note-short">中選會資料・開票後更新</span><span class="source-note-arrow" aria-hidden="true"></span></summary>
+      <span id="source-note-detail">11 月 28 日開票後依中選會資料約每分鐘查詢；本頁每 30 秒檢查，有新票數才更新。</span>
+    </details>
+
     <main class="room">
+      <section class="standby-home" aria-labelledby="standby-title">
+        <div class="standby-hero">
+          <p class="standby-eyebrow">2026 地方選舉</p>
+          <h2 id="standby-title">距離開票</h2>
+          <p class="standby-date" id="standby-date">11 月 28 日（六）16:00</p>
+          <p class="standby-time num" id="standby-time" role="timer" aria-live="off">—</p>
+          <p class="standby-description" id="standby-description">投票結束後，本頁會自動更新開票結果。</p>
+        </div>
+        <div class="standby-next">
+          <h3>開票前可以看什麼？</h3>
+          <p id="standby-status">候選人名單公布後會顯示在計票板。</p>
+          <p>想先熟悉操作，可以用 2022 年真實結果觀看模擬的開票過程。</p>
+        </div>
+        <p class="standby-credit">資料來源：中央選舉委員會。11 月 28 日 16:00 後有新票數才更新。</p>
+      </section>
+      <button class="mobile-duel" id="mobile-duel" type="button" hidden>
+        <span class="mobile-duel-title">拉鋸戰</span><span class="mobile-duel-text" id="mobile-duel-text">開票後顯示</span><span class="mobile-duel-arrow" aria-hidden="true">›</span>
+      </button>
+
+      <aside class="board" id="board" aria-labelledby="board-county">
+        <div class="board-frame">
+          <div class="board-head">
+            <h2><span id="board-county">臺北市</span><span class="county-choice"><select id="county-select" aria-label="選擇縣市"></select></span><span class="board-race" id="board-race">市長選舉</span><button class="text-board-toggle" id="text-board-toggle" type="button" aria-label="文字版結果" aria-expanded="false" aria-controls="text-view">文字版</button></h2>
+            <div class="board-tools">
+              <label class="follow"><input type="checkbox" id="follow" checked><span>當選自動切換</span></label>
+              <button class="map-toggle" id="map-toggle" type="button" aria-controls="scene" aria-expanded="false">看 3D 地圖</button>
+            </div>
+          </div>
+          <dl class="board-stats">
+            <div><dt id="st-progress-label">開票進度</dt><dd class="num" id="st-progress">0.0%</dd></div>
+            <div><dt id="st-mid-label">已開出票數</dt><dd class="num" id="st-counted">0</dd></div>
+            <div><dt id="st-turnout-label">投票率</dt><dd class="num" id="st-turnout">開票中</dd></div>
+          </dl>
+          <div class="council-panel" id="council-panel" hidden>
+            <div class="council-seats" id="council-seats" aria-label="議會席次，依選區分組"></div>
+            <div class="district-tabs" id="district-tabs" role="tablist" aria-label="選區"></div>
+            <p class="district-head" id="district-head"></p>
+          </div>
+          <div class="close-panel" id="close-panel" hidden>
+            <div class="district-tabs close-tabs" role="tablist" aria-label="排行類別">
+              <button type="button" role="tab" class="district-tab" data-tab="mayor" aria-selected="true">縣市長</button>
+              <button type="button" role="tab" class="district-tab" data-tab="council" aria-selected="false">議員最後一席</button>
+              <button type="button" role="tab" class="district-tab" data-tab="town" aria-selected="false">鄉鎮市區</button>
+            </div>
+            <p class="close-note" id="close-note"></p>
+            <ol class="close-list" id="close-list"></ol>
+          </div>
+          <p class="unit" id="unit"></p>
+          <ol class="rows" id="rows"></ol>
+        </div>
+      </aside>
+
       <section class="scene" id="scene" aria-label="全台選票紙堆立體圖">
         <div class="scene-canvas" id="scene-canvas"></div>
         <div class="scene-tip" id="scene-tip" role="status" hidden></div>
-        <div class="scene-legend">
+        <button class="map-close" id="map-close" type="button">關閉地圖</button>
+        <button class="legend-trigger" type="button" popovertarget="scene-legend" aria-haspopup="dialog">圖例說明</button>
+        <div class="scene-legend" id="scene-legend" popover role="dialog" aria-labelledby="legend-title">
+          <div class="legend-head">
+            <h2 id="legend-title">地圖圖例</h2>
+            <button class="legend-close" type="button" popovertarget="scene-legend" popovertargetaction="hide">關閉</button>
+          </div>
           <p id="legend-height"></p>
           <p id="legend-top"></p>
           <p id="legend-inset"></p>
@@ -87,35 +153,6 @@
         <p class="cr-empty" id="cr-empty"></p>
       </aside>
 
-      <aside class="board" id="board" aria-labelledby="board-county">
-        <div class="board-frame">
-          <div class="board-head">
-            <h2><span id="board-county">臺北市</span><span class="board-race" id="board-race">市長選舉</span></h2>
-            <label class="follow"><input type="checkbox" id="follow" checked><span>跟隨開票</span></label>
-          </div>
-          <dl class="board-stats">
-            <div><dt id="st-progress-label">開票進度</dt><dd class="num" id="st-progress">0.0%</dd></div>
-            <div><dt id="st-mid-label">已開出票數</dt><dd class="num" id="st-counted">0</dd></div>
-            <div><dt id="st-turnout-label">投票率</dt><dd class="num" id="st-turnout">開票中</dd></div>
-          </dl>
-          <div class="council-panel" id="council-panel" hidden>
-            <div class="council-seats" id="council-seats" aria-label="議會席次，依選區分組"></div>
-            <div class="district-tabs" id="district-tabs" role="tablist" aria-label="選區"></div>
-            <p class="district-head" id="district-head"></p>
-          </div>
-          <div class="close-panel" id="close-panel" hidden>
-            <div class="district-tabs close-tabs" role="tablist" aria-label="排行類別">
-              <button type="button" role="tab" class="district-tab" data-tab="mayor" aria-selected="true">縣市長</button>
-              <button type="button" role="tab" class="district-tab" data-tab="council" aria-selected="false">議員最後一席</button>
-              <button type="button" role="tab" class="district-tab" data-tab="town" aria-selected="false">鄉鎮市區</button>
-            </div>
-            <p class="close-note" id="close-note"></p>
-            <ol class="close-list" id="close-list"></ol>
-          </div>
-          <p class="unit" id="unit"></p>
-          <ol class="rows" id="rows"></ol>
-        </div>
-      </aside>
     </main>
 
     <footer class="clock" id="clock" aria-label="開票重播控制">
@@ -139,7 +176,7 @@
           <span class="live-bar" aria-hidden="true"><i id="live-bar"></i></span>
         </div>
         <span class="live-note" id="live-note" role="status"></span>
-        <a class="live-link" id="live-link" href="?source=replay" hidden>看 2022 開票重播</a>
+        <a class="live-link" id="live-link" href="?source=replay" hidden>看 2022 模擬重播</a>
       </div>
     </footer>
 

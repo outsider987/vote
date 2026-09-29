@@ -52,7 +52,7 @@ export const INTRO_MS = 1600;
 export function initStage() {
   if (!sceneOk) {
     host.classList.add("no-webgl");
-    host.innerHTML = '<p class="no-webgl-note">這個瀏覽器無法顯示立體圖。右側計票板與「文字版結果」照常更新。</p>';
+    host.innerHTML = '<p class="no-webgl-note">這個瀏覽器無法顯示立體圖。計票板與「文字版結果」照常更新。</p>';
     return;
   }
   host.appendChild(renderer.domElement);
@@ -146,6 +146,7 @@ export const islandDistance = () => fitFor(cam.framePts, islandTarget(), host.cl
 
 function resize() {
   const w = host.clientWidth, h = host.clientHeight;
+  if (!w || !h) return;
   renderer.setSize(w, h);
   labelRenderer.setSize(w, h);
   camera.aspect = (w || 1) / (h || 1);

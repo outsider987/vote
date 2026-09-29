@@ -147,7 +147,7 @@ components:
 
 The results page is the polling-station counting room every Taiwanese voter has seen, under cool fluorescent light. Ballots pile up as white paper stacks on a pale sage desk. Each county's stack rises with the ballots counted and takes the leading party's marker ink on its top sheet. A whiteboard (the 計票板) fills with hand-drawn 正 strokes. When a race is decided, a red 卜 stamp comes down. The world is physical and familiar: paper, tape, marker, stamp. The spectacle comes from watching the count happen, not from glow or darkness.
 
-Density is operational. The first viewport holds the whole island, the focused race's board, the national seat stamps and the clock, because on election night people want everything at once. Motion is driven by the count: stacks rise, strokes draw, rows re-rank, stamps press. Nothing moves just to decorate. The world explicitly rejects the dark-newsroom, neon-map, big-number-card default of results pages.
+Density is operational. On desktop, the first viewport holds the whole island, the focused race's board, the national seat stamps and the clock, because on election night people want everything at once. On mobile, the fixed header keeps the mode switch and decided-seat count visible while the party tally and seat stamps open on demand. A one-line close-race summary leads into the county vote board; the 3D island opens from that board and the source note expands on demand. Motion is driven by the count: stacks rise, strokes draw, rows re-rank, stamps press. Nothing moves just to decorate. The world explicitly rejects the dark-newsroom, neon-map, big-number-card default of results pages.
 
 **Key Characteristics:**
 - A light, cool, paper-and-desk palette. Color comes only from party marker inks, the closeness highlighter and the stamp.
@@ -221,10 +221,12 @@ Desktop is a fixed, full-viewport room with no page scroll:
 
 The 拉鋸戰 column floats over the scene's right edge. The camera target shifts right to leave it room, so the island never sits under it. The scene legend sits bottom-left and the 文字版結果 toggle top-right.
 
-At ≤ 1180px the top bar tightens. At ≤ 900px it becomes a scrolling single column:
-- the scene is `min(42dvh, 340px)` tall (at least 280px)
-- the board follows below it
-- the clock bar is fixed to the bottom at 64px plus the safe-area inset
+At ≤ 1180px the top bar tightens. At ≤ 900px the room becomes a scrolling single column:
+- a fixed, two-row top bar keeps the wordmark, mode switch and decided-seat count visible
+- 查看席次 opens the party totals and a horizontally scrollable row of 44px county seat buttons below the bar; it starts closed and closes after a county is selected
+- the county board comes first, with a native county picker; the 3D scene opens over the content on demand
+- the replay clock uses two rows at the bottom; the live status bar stays compact
+- before the 2026 count, a countdown and replay link replace the empty board on phones
 - side gutters are 16px
 - the text view is full width
 - labels shrink to 13px
@@ -277,7 +279,7 @@ Dashed lines mean "not yet": an unfilled seat stamp, the pending chip, the edges
 
 ### Navigation
 - **District tabs and 最接近 tabs:** pills with a 1px frame border and 13px label text. A selected tab fills with ink. A district tab gets a done state once it's decided.
-- **Seat stamps (top bar):** 22 circles with a dashed outline and short county names. A decided seat fills with a 14% tint of the winner's ink and a solid 2px ink ring, and presses in.
+- **Seat stamps (top bar):** 22 circles with a dashed outline and short county names. A decided seat fills with a 14% tint of the winner's ink and a solid 2px ink ring, and presses in. On mobile they appear in the expandable seat panel.
 
 ### Signature Components
 - **Paper stacks (3D):** the county extrusions. Height is the ballots counted ÷ electors, so a finished stack stands at turnout. The top sheet is ballot paper, then a pale party ink while leading, then solid ink when decided. Kinmen and Matsu sit in dashed inset frames, which the scene legend explains (示意位置, enlarged 1.8×). Clicking a county drills down to its towns with the same grammar.

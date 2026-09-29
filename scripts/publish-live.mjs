@@ -6,9 +6,10 @@
 // the site fetches both files from that Worker (VITE_LIVE_URL). Before election night, publishing
 // candidates.json alone lets the 2026 countdown page show the rosters.
 //
-//   node scripts/publish-live.mjs [--out apps/poller/out] [--once]
+//   node scripts/publish-live.mjs [--out apps/poller/out] [--once] [--dry-run]
 //
-// Needs this project's Cloudflare credentials in deploy/.env (see deploy/.env.example) or the environment.
+// A real publish needs this project's Cloudflare credentials in deploy/.env or the environment.
+// --dry-run validates the assets locally without credentials or an upload.
 import { execFile } from "node:child_process";
 import { createHash } from "node:crypto";
 import { copyFileSync, existsSync, mkdirSync, readFileSync, rmSync, statSync, writeFileSync } from "node:fs";
@@ -30,7 +31,7 @@ const wrangler = join(root, "node_modules/.bin/wrangler");
 const CHECK_MS = 3_000;          // how often to look for a new results.json
 const RETRY_MS = 15_000;         // wait after a failed deploy
 const log = (msg) => console.log(`${new Date().toISOString()} ${msg}`);
-const env = cloudflareEnv(root);   // fail fast, before watching anything
+const env = flags["dry-run"] ? process.env : cloudflareEnv(root);   // real publishes fail fast without credentials
 
 let published = "";
 let lastStat = "";
@@ -45,7 +46,10 @@ function check(name, body) {
 async function publishIfChanged() {
   // before election night there is only candidates.json, so the 2026 countdown page can show the rosters
   const files = ["results.json", "candidates.json"].filter((f) => existsSync(join(outDir, f)));
-  if (!files.length) return false;
+  if (!files.length) {
+    if (flags.once) throw new Error(`No results.json or candidates.json in ${outDir}`);
+    return false;
+  }
   const stamp = files.map((f) => { const st = statSync(join(outDir, f)); return `${f}:${st.mtimeMs}:${st.size}`; }).join("|");
   if (stamp === lastStat) return false;
   const bodies = files.map((f) => readFileSync(join(outDir, f)));
@@ -59,11 +63,15 @@ async function publishIfChanged() {
   files.forEach((f, i) => writeFileSync(join(stage, f), bodies[i]));
   copyFileSync(join(liveDir, "_headers"), join(stage, "_headers"));
   const started = Date.now();
-  await run(wrangler, ["deploy", "--config", join(liveDir, "wrangler.jsonc")], { cwd: root, env, timeout: 120_000 });
+  try {
+    await run(wrangler, ["deploy", "--config", join(liveDir, "wrangler.jsonc"), ...(flags["dry-run"] ? ["--dry-run"] : [])], { cwd: root, env, timeout: 120_000 });
+  } finally {
+    if (flags["dry-run"]) rmSync(stage, { recursive: true, force: true });
+  }
   published = hash;
   lastStat = stamp;
   const what = snap ? `${snap.election}, ${snap.stage}, generated ${snap.generatedAt}` : "candidates only";
-  log(`published ${files.join(" + ")} (${what}) in ${((Date.now() - started) / 1000).toFixed(1)}s`);
+  log(`${flags["dry-run"] ? "dry-run validated" : "published"} ${files.join(" + ")} (${what}) in ${((Date.now() - started) / 1000).toFixed(1)}s`);
   return true;
 }
 
@@ -73,12 +81,12 @@ async function loop() {
     await publishIfChanged();
     if (flags.once) return;
   } catch (err) {
-    log(`publish failed, retrying: ${(err instanceof Error ? err.message : String(err)).split("\n")[0]}`);
+    log(`publish failed${flags.once ? "" : ", retrying"}: ${(err instanceof Error ? err.message : String(err)).split("\n")[0]}`);
     if (flags.once) { process.exitCode = 1; return; }
     wait = RETRY_MS;
   }
   setTimeout(loop, wait);
 }
 
-log(`watching ${outDir} (results.json, candidates.json); publishing to the vote-live Worker`);
+log(`watching ${outDir} (results.json, candidates.json); ${flags["dry-run"] ? "validating locally" : "publishing to the vote-live Worker"}`);
 loop();

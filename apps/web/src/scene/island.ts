@@ -3,7 +3,7 @@ import { CSS2DObject } from "three/addons/renderers/CSS2DRenderer.js";
 import { feature } from "topojson-client";
 import type { MultiPolygon, Polygon } from "geojson";
 import type { GeometryCollection, Topology } from "topojson-specification";
-import { app } from "../app";
+import { app, scrollMobileTo } from "../app";
 import { HEIGHT_SCALE, INSET_SCALE, PAPER, RAMP, RECEDE, SHIFT, partyOf } from "../config";
 import { reducedMotion } from "../dom";
 import { turnoutCounted } from "../model/analysis";
@@ -69,7 +69,7 @@ export function buildIsland(topo: Topology) {
     tape.className = "tape";
     tape.style.setProperty("--rot", `${(rng() * 5 - 2.5).toFixed(1)}deg`);
     tape.innerHTML = `<span>${c.name}</span><svg class="mini-stamp" aria-hidden="true"><use href="#stamp"/></svg>`;
-    tape.addEventListener("click", () => enterCounty(code));
+    tape.addEventListener("click", () => enterCounty(code).then(() => scrollMobileTo("board")));
     hoverFromTape(tape, code);
     wrap.appendChild(tape);
     const label = new CSS2DObject(wrap);

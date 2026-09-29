@@ -105,9 +105,10 @@ function frame() {
   const dt = Math.min(timer.getDelta(), 0.05);
   const now = performance.now();
   const src = app.source;
+  const mapVisible = sceneOk && (window.innerWidth > 900 || document.querySelector(".room")!.classList.contains("map-open"));
   src.tick(dt);
   updateModel();
-  if (sceneOk) {
+  if (mapVisible) {
     updateIsland(dt);
     updateDetail(reducedMotion ? 1 : 1 - Math.exp(-dt * 9));
     updateCamera(now, dt, src.playing);
@@ -115,7 +116,7 @@ function frame() {
   pumpCallouts(now);
   refreshDuels(now);
   if (frameNo % 2 === 0) updateDuels(now);
-  if (sceneOk && app.pointer.inside && frameNo % 3 === 0) setHover(pick(app.pointer.x, app.pointer.y));
+  if (mapVisible && app.pointer.inside && frameNo % 3 === 0) setHover(pick(app.pointer.x, app.pointer.y));
   if (frameNo % 2 === 0) {
     updateBoard();
     renderNational();
@@ -123,7 +124,7 @@ function frame() {
     if (src instanceof ReplaySource) updateReplayClock(src);
   }
   if (isTextOpen() && frameNo % 20 === 0) renderText();
-  if (sceneOk) {
+  if (mapVisible) {
     renderer.render(scene, camera);
     labelRenderer.render(scene, camera);
     if (frameNo % 8 === 0) avoidLabelCollisions(app.view === "county" && app.detail ? app.detail.items : allCountyViews());
@@ -135,24 +136,32 @@ function frame() {
 
 const EMBLEM_CREDIT = "黨徽：維基共享資源，公有領域（中國國民黨、民主進步黨黨旗中央、台灣民眾黨）；無黨籍及其他政黨以文字圓印表示。";
 
+function setSourceNote(label: string, short: string, detail: string) {
+  $("source-note-label").textContent = label;
+  $("source-note-short").textContent = short;
+  $("source-note-detail").textContent = detail;
+}
+
 function applyReplayCopy() {
   document.title = "開票所｜2022 開票重播";
-  $("brand-sub").innerHTML = '<span class="sub-long">以 2022 年真實結果重播・<a href="./">看 2026 開票</a></span><span class="sub-short">2022 重播・<a href="./">看 2026</a></span>';
-  $("text-credit").textContent = `資料來源：中央選舉委員會選舉資料庫（2022 年結果重播）。${EMBLEM_CREDIT}`;
+  $("brand-sub").innerHTML = '<span class="sub-long">2022 真實結果・過程模擬・<a href="./">看 2026</a></span><span class="sub-short">2022 過程模擬・<a href="./">看 2026</a></span>';
+  setSourceNote("2022 結果重播", "中途模擬・最終結果真實", "最終票數與當選結果為真實資料；中途票數與開票進度為模擬。");
+  $("text-credit").textContent = `資料來源：中央選舉委員會選舉資料庫。最終票數與當選結果為真實資料；中途票數與開票進度為模擬。${EMBLEM_CREDIT}`;
 }
 
 function applyStandbyCopy() {
   document.title = "開票所｜2026 地方選舉開票";
   $("brand-sub").innerHTML = '<span class="sub-long">2026 地方選舉・11 月 28 日 16:00 開票</span><span class="sub-short">2026・11/28 開票</span>';
-  $("text-credit").textContent = `資料來源：中央選舉委員會。11 月 28 日 16:00 起本頁自動顯示即時開票結果，以中選會公告為準。${EMBLEM_CREDIT}`;
+  setSourceNote("2026 開票預備", "中選會資料・開票後更新", `11 月 28 日開票後依中選會資料約每分鐘查詢；本頁每 ${Math.round(POLL_MS / 1000)} 秒檢查，有新票數才更新。`);
+  $("text-credit").textContent = `資料來源：中央選舉委員會。11 月 28 日 16:00 後約每分鐘檢查開票資料，本頁每 ${Math.round(POLL_MS / 1000)} 秒確認新資料；有新票數才更新，以中選會公告為準。${EMBLEM_CREDIT}`;
 }
 
 function standbyStatus(list: CandidateList | null) {
   // an empty list is the placeholder published before the real one exists
-  if (!list || !Object.keys(list.mayors).length) return "候選人名單公布後會顯示在計票板（號次 10 月 23 日抽籤）・16:00 起自動切換為即時開票";
+  if (!list || !Object.keys(list.mayors).length) return "候選人名單尚未公布；有資料後會自動更新。";
   const mayors = Object.values(list.mayors).reduce((a, l) => a + l.length, 0);
   const councils = Object.values(list.councils).reduce((a, d) => a + d.candidates.length, 0);
-  return `已公布 ${fmt(mayors)} 位縣市長、${fmt(councils)} 位議員候選人・16:00 起自動切換為即時開票`;
+  return `已公布 ${fmt(mayors)} 位縣市長、${fmt(councils)} 位議員候選人；開票後有新票數才更新。`;
 }
 
 /** After the countdown: look for the first real 2026 results, then reload straight into live mode. */
@@ -161,9 +170,10 @@ async function waitForResults() {
   setStandbyStatus(`開票開始，等待中選會第一筆資料・每 ${Math.round(POLL_MS / 1000)} 秒自動檢查`);
   const probe = new LiveSource(LIVE_URL);
   for (;;) {
-    if ((await probe.fetch()) && !probe.rehearsal) {
+    if ((await probe.fetch()) && !probe.rehearsal && probe.started) {
       const url = new URL(location.href);
       url.searchParams.delete("countdown");
+      if (COUNTDOWN_TEST && Date.now() < COUNT_STARTS_AT) url.searchParams.set("source", "live");
       location.replace(url.toString());
       return;
     }
@@ -181,12 +191,14 @@ function applyLiveCopy(live: LiveSource) {
     document.title = "開票所｜彩排資料";
     $("brand-sub").innerHTML = `<span class="sub-long">彩排・以 ${snap.election} 資料模擬開票，非即時結果</span><span class="sub-short">彩排資料・非即時</span>`;
     $("text-credit").textContent = `彩排資料：以 ${snap.election} 選舉結果模擬中選會開票網站，並非即時開票結果。${emblems}`;
+    setSourceNote("彩排資料", "模擬資料・非即時結果", "這是模擬開票，並非 2026 即時結果。");
     $("intro-line").textContent = "彩排資料，非即時開票";
     return;
   }
   document.title = "開票所｜2026 地方選舉即時開票";
   $("brand-sub").innerHTML = '<span class="sub-long">2026 地方選舉・即時開票</span><span class="sub-short">2026 即時開票</span>';
-  $("text-credit").textContent = `資料來源：中央選舉委員會開票網站，約每分鐘更新；以中選會公告為準。${emblems}`;
+  $("text-credit").textContent = `資料來源：中央選舉委員會開票網站。約每分鐘檢查來源，本頁每 ${Math.round(POLL_MS / 1000)} 秒確認新資料；有新票數才更新，以中選會公告為準。${emblems}`;
+  setSourceNote("2026 即時開票", `中選會資料・每 ${Math.round(POLL_MS / 1000)} 秒檢查`, `依中選會資料約每分鐘查詢；本頁每 ${Math.round(POLL_MS / 1000)} 秒檢查，有新票數才更新。`);
   $("intro-line").textContent = snap.stage === "prior" ? "16:00 開始開票" : snap.stage === "final" ? "開票結束" : "即時開票中";
 }
 
@@ -209,12 +221,12 @@ async function boot() {
     live = new LiveSource(LIVE_URL, POLL_MS);
     if (REQUESTED === "live") {
       while (!(await live.fetch())) {
-        loadingText.innerHTML = '即時開票資料尚未開始，稍後自動重試<br><a href="?source=replay">先看 2022 年結果重播</a>';
+        loadingText.innerHTML = '即時開票資料尚未開始，稍後自動重試<br><a href="?source=replay">先看 2022 模擬重播</a>';
         await wait(LIVE_RETRY_MS);
       }
     } else {
       // the 2026 site: live once real results exist after the count starts; until then it stands ready
-      standby = !(Date.now() >= COUNT_AT && (await live.fetch()) && !live.rehearsal);
+      standby = !(Date.now() >= COUNT_AT && (await live.fetch()) && !live.rehearsal && live.started);
       if (standby) live.useEmpty();
     }
     list = await live.fetchCandidates();
@@ -228,7 +240,7 @@ async function boot() {
   // URL state: ?mode=mayor|council, ?c=county code, ?d=district index, ?t=0–1 (replay), ?intro=0
   app.mode = params.get("mode") === "council" ? "council" : "mayor";
   const c = params.get("c");
-  if (c && app.byCode.has(c)) app.selected = c;
+  if (c && app.byCode.has(c)) { app.selected = c; app.closeScope = c; }
   app.selectedDistrict = Number(params.get("d")) || 0;
   app.follow = !c;
 
@@ -301,5 +313,10 @@ async function boot() {
     }
   });
 }
+
+const sourceNote = $<HTMLDetailsElement>("source-note");
+const mobileWidth = matchMedia("(max-width: 900px)");
+sourceNote.open = !mobileWidth.matches;
+mobileWidth.addEventListener("change", () => { sourceNote.open = !mobileWidth.matches; });
 
 boot();

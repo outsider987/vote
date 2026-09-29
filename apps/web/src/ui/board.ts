@@ -166,15 +166,17 @@ function updateRows(initial: boolean) {
 export function renderBoard() {
   const c = county(app.selected);
   const idx = app.counties.indexOf(c);
+  $<HTMLSelectElement>("county-select").value = app.mode === "close" ? app.closeScope ?? "" : c.code;
+  $("board").classList.remove("has-turnout");
   $("board-county").textContent = c.name;
   $("st-progress-label").textContent = "開票進度";
   $("st-turnout-label").textContent = "投票率";
   if (app.mode === "close") {
-    $("board-county").textContent = "選情最接近";
-    $("board-race").textContent = "即時排名";
-    $("st-progress-label").textContent = "縣市長差 5% 內";
-    $("st-mid-label").textContent = "議員最後一席差 1% 內";
-    $("st-turnout-label").textContent = "鄉鎮差 5% 內";
+    $("board-county").textContent = app.closeScope ? c.name : "拉鋸戰";
+    $("board-race").textContent = app.closeScope ? "拉鋸戰" : "即時排名";
+    $("st-progress-label").textContent = "縣市長 <5%";
+    $("st-mid-label").textContent = "議員末席 <1%";
+    $("st-turnout-label").textContent = "鄉鎮 <5%";
     renderCloseList(true);
     return;
   }
@@ -245,6 +247,7 @@ export function updateBoard(initial = false) {
   if (r && (r.unit !== board.unit || (r.candidates.length > 0 && !board.rows.length))) { renderRows(r, board.seed); initial = true; }
   if (app.mode === "mayor") {
     const r = c.mayor, s = r.state;
+    $("board").classList.toggle("has-turnout", s.decided && r.turnout !== null);
     const key = `${s.p}|${s.counted}|${s.decided}|${app.source.started}`;
     if (key !== board.lastStats) {
       board.lastStats = key;
@@ -254,6 +257,7 @@ export function updateBoard(initial = false) {
     }
   } else {
     const cn = c.council, s = cn.state;
+    $("board").classList.toggle("has-turnout", s.complete && councilTurnout(cn) !== null);
     const key = `${s.p}|${s.decidedSeats}|${app.source.started}`;
     if (key !== board.lastStats) {
       board.lastStats = key;

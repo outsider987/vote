@@ -1,6 +1,6 @@
 # 開票所
 
-2026 年 11 月 28 日地方選舉的 3D 即時開票網站，涵蓋 22 席直轄市長、縣市長，以及直轄市議員、縣市議員。畫面就是開票所：每個縣市是一疊選票，高度等於已開出票數，頂層顏色是目前領先的政黨；計票板上的「正」字一筆一筆增加；當選時蓋上紅色「卜」字章。開票前預設以 2022 年的真實結果重播。
+2026 年 11 月 28 日地方選舉的 3D 即時開票網站，涵蓋 22 席直轄市長、縣市長，以及直轄市議員、縣市議員。畫面就是開票所：每個縣市是一疊選票，高度等於已開出票數，頂層顏色是目前領先的政黨；計票板上的「正」字一筆一筆增加；當選時蓋上紅色「卜」字章。首頁在 2026 開票前顯示倒數；2022 年結果重播另有測試網址。
 
 本站非中選會官方網站，所有數字取自中央選舉委員會公開資料。
 
@@ -21,7 +21,7 @@ npm workspaces monorepo，需要 Node 24、npm 11。
 
 ```sh
 npm install
-npm run dev            # http://127.0.0.1:5188/ ，以 2022 年結果重播
+npm run dev            # http://127.0.0.1:5188/ 顯示 2026 倒數；重播加 ?source=replay
 npm test               # 前端模型與 poller 的測試
 npm run typecheck
 npm run build          # 輸出 apps/web/dist/，可放任何靜態主機或 CDN
@@ -33,7 +33,7 @@ npm run build          # 輸出 apps/web/dist/，可放任何靜態主機或 CDN
 
 | 網址 | 內容 |
 |---|---|
-| `/` | **2026 正式版**。開票前倒數到 11 月 28 日 16:00，時間一到自動切換成即時開票，不用手動改任何設定。 |
+| `/` | **2026 正式版**。開票前倒數到 11 月 28 日 16:00；時間到後每 30 秒檢查資料，收到標記為 2026 的 `results.json` 才切換畫面。 |
 | `/?source=replay` | **2022 開票重播**，用真實結果模擬整晚開票，測試與展示用。 |
 | `/?source=live` | 強制進入即時模式，彩排用。非 2026 的資料會標示「彩排」。 |
 
@@ -82,13 +82,15 @@ npm run dev                                                             # 開 ht
 
 開發伺服器的 `/live/` 直接讀 `apps/poller/out/`（可用 `VOTE_LIVE_DIR` 改路徑），彩排資料不會進到正式建置。
 
+`node scripts/publish-live.mjs --once --dry-run` 可驗證目前 `apps/poller/out/` 的 JSON 與 Wrangler 發布打包，不需 Cloudflare 憑證，也不會上傳；這一步不能代替正式網址的連線檢查。
+
 ## 選舉夜
 
 時程：
 
 - **10/23 抽號次後、11/17 公告後**：
   - 各跑一次 `npm run import-candidates -w @vote/poller -- --config poller.config.json`，取得候選人與議員選區清單。
-  - 接著跑 `node scripts/publish-live.mjs --once` 發布 `candidates.json`，2026 倒數頁的計票板就會列出候選人。
+  - 接著跑 `node scripts/publish-live.mjs --once` 發布 `candidates.json`；桌機計票板會列出候選人，手機倒數頁會顯示已公布人數。
 - **約開票前一週**：中選會公布 2026 開票網站。
   - 把主機與代碼填進 `apps/poller/poller.config.json`。
   - 從台灣的機器跑 `npm run probe -w @vote/poller -- --config poller.config.json`，每一項都要通過。
@@ -97,20 +99,28 @@ npm run dev                                                             # 開 ht
   - 同一台機器另開 `node scripts/publish-live.mjs`，把結果持續發布到 Cloudflare。
   - 網站 16:00 倒數結束後會自動讀取，一收到 2026 的開票資料就切換成即時畫面。
 
-## 部署（Cloudflare Workers）
+## 部署（Cloudflare）
 
-網站網址列在 GitHub repo 首頁右側的 About 欄（Website）。
+正式網站：https://vote.courage-mazu.workers.dev/ 。手機測試站：https://kaipiao-4xj.pages.dev/ 。
 
 整個網站放在 Cloudflare Workers 的靜態檔案服務，分成兩個只有靜態檔、沒有程式的 Worker：
 
 | Worker | 內容 | 誰來部署 |
 |---|---|---|
-| `vote` | 網站本身（`deploy/site/wrangler.jsonc`） | push 到 `main` 時由 `.github/workflows/deploy.yml` 部署，先跑型別檢查與測試 |
+| `vote` | 網站本身（`deploy/site/wrangler.jsonc`） | push 到 `main` 時由 `.github/workflows/deploy.yml` 檢查與建置；設定 Cloudflare secrets 後才會部署 |
 | `vote-live` | 只有 `results.json` 與 `candidates.json`（`deploy/live/wrangler.jsonc`） | 選舉夜由 `scripts/publish-live.mjs` 直接部署 |
 
 兩者分開，程式與資料的部署就不會互相覆蓋。網站透過 `VITE_LIVE_URL` 讀取 `vote-live` 的資料。Pull request 另有 `ci.yml` 檢查。
 
-- **帳號：** 這個專案用獨立的 Cloudflare 帳號，不跟其他專案共用 workers.dev 子網域。部署腳本一律讀 `deploy/.env` 裡這個帳號的憑證，不會用本機 `wrangler login` 的預設帳號；沒設就拒絕執行。
+- **帳號：** 開發測試使用本人代管客戶專案的 Cloudflare 帳號；`workers.dev` 子網域是帳號共用的。Worker 部署腳本一律讀 `deploy/.env` 的憑證，不會用本機 `wrangler login` 的預設帳號；沒設就拒絕執行。
+- **不帶客戶名稱的測試網址：** 同帳號另有 Pages 專案 `kaipiao`，網址是 https://kaipiao-4xj.pages.dev/ 。目前手動更新，`main` 的 workflow 仍只部署 `vote` Worker。更新測試站時執行：
+
+  ```sh
+  VITE_LIVE_URL=https://vote-live.courage-mazu.workers.dev/results.json npm run build
+  npx wrangler pages deploy apps/web/dist --project-name kaipiao --branch main
+  ```
+
+  測試站的即時資料仍來自 `vote-live.courage-mazu.workers.dev`；`?source=replay` 可用來測試 2022 重播。
 - **第一次設定：**
   1. 在這個帳號的 My Profile → API Tokens → Create Token，選 **Edit Cloudflare Workers** 範本。
   2. 把 `deploy/.env.example` 複製成 `deploy/.env`（不進版控），填入帳號 ID、token 和 `VITE_LIVE_URL`。

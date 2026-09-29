@@ -110,6 +110,7 @@ export async function enterCounty(code: string) {
   const heightScale = Math.min(HEIGHT_SCALE, Math.max(0.35, span * 0.34));   // same relief ratio as the island view
   app.detail = { code, group, items, points, heightScale, leaving: false };
   app.view = "county";
+  app.closeScope = code;
   cam.userMoved = true;
   document.body.classList.add("in-county");
   setInsetsVisible(false);
@@ -129,6 +130,7 @@ export function exitCounty() {
   if (!leaving || leaving.leaving) return;
   leaving.leaving = true;
   app.view = "island";
+  app.closeScope = null;
   document.body.classList.remove("in-county");
   setInsetsVisible(true);
   $("back").hidden = true;
@@ -141,6 +143,7 @@ export function exitCounty() {
     cam.userMoved = false;
   }, reducedMotion ? 0 : 800);
   updateLegend();
+  if (app.mode === "close") select(app.selected);
 }
 
 function disposeDetail(d: Detail) {

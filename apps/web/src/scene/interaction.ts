@@ -1,5 +1,5 @@
 import * as THREE from "three";
-import { app } from "../app";
+import { app, scrollMobileTo } from "../app";
 import { clickTown, enterCounty } from "./detail";
 import { countyView, pickables } from "./island";
 import { camera, renderer, sceneOk } from "./stage";
@@ -25,7 +25,7 @@ export function initPointer() {
     const code = pick(e.clientX, e.clientY);
     if (!code) return;
     if (code.length > 5) { const it = townItem(code); if (it) clickTown(it); }
-    else enterCounty(code);
+    else enterCounty(code).then(() => scrollMobileTo("board"));
   });
 }
 

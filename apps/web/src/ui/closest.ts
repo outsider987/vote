@@ -1,4 +1,4 @@
-import { app, county, select, setMode } from "../app";
+import { app, county, scrollMobileTo, select, setMobileMapOpen, setMode } from "../app";
 import { districtLabel, partyOf } from "../config";
 import { $, reducedMotion } from "../dom";
 import { duelOf } from "../model/analysis";
@@ -55,18 +55,21 @@ export function initClosest() {
 
 function closeEntries(tab: Tab): Entry[] {
   const out: Entry[] = [];
+  const scope = app.closeScope;
+  const counties = scope ? [county(scope)] : app.counties;
   if (tab === "mayor") {
-    for (const c of app.counties) {
+    for (const c of counties) {
       const du = duelOf(c.mayor);
       if (du) out.push({ key: `m:${c.code}`, code: c.code, place: c.name, sub: c.raceLabel.replace("選舉", ""), race: c.mayor, s: c.mayor.state, ...du });
     }
   } else if (tab === "council") {
-    for (const c of app.counties) c.council.districts.forEach((d, k) => {
+    for (const c of counties) c.council.districts.forEach((d, k) => {
       const du = duelOf(d);
       if (du) out.push({ key: `c:${d.id}`, code: c.code, district: k, place: `${c.name} ${districtLabel(d)}`, sub: `最後一席・應選 ${d.seats}`, race: d, s: d.state, ...du });
     });
   } else if (townBoard) {
     for (const t of townBoard) {
+      if (scope && t.county !== scope) continue;
       app.source.refresh(t.race);
       const du = duelOf(t.race);
       if (du) out.push({ key: `t:${t.code}`, code: t.county, town: t.code, place: t.name, sub: county(t.county).raceLabel.replace("選舉", ""), race: t.race, s: t.race.state, ...du });
@@ -90,7 +93,7 @@ export function renderCloseList(force: boolean) {
   if (force) { list.innerHTML = ""; closeRows = new Map(); closeOrder = []; }
   const entries = closeEntries(closeTab).slice(0, 15);
   $("close-note").textContent = closeTab === "town" && !townBoard ? "正在載入鄉鎮資料…"
-    : entries.length ? "依目前差距由小到大排列，點選可查看該地區" : "開票開始後，差距最小的地方會列在這裡";
+    : entries.length ? "依差距百分比排序，點選可查看該地區" : "開票開始後，差距最小的地方會列在這裡";
   const keys = new Set(entries.map((e) => e.key));
   for (const [key, row] of closeRows) if (!keys.has(key)) { row.li.remove(); closeRows.delete(key); }
   for (const e of entries) {
@@ -108,8 +111,8 @@ export function renderCloseList(force: boolean) {
     row.li.style.setProperty("--fc", va >= vb ? partyOf(A.party).color : partyOf(B.party).color);
     row.nA.classList.toggle("is-ahead", va > vb);
     row.nB.classList.toggle("is-ahead", vb > va);
-    row.gap.textContent = `差 ${fmt(Math.abs(va - vb))} 票`;
-    row.pct.textContent = `${(Math.abs(m) * 100).toFixed(2)}%`;
+    row.gap.textContent = `${(Math.abs(m) * 100).toFixed(2)}%`;
+    row.pct.textContent = `差 ${fmt(Math.abs(va - vb))} 票`;
     row.status.textContent = e.s.decided ? "確定" : `開票 ${(e.s.p * 100).toFixed(0)}%`;
     row.status.classList.toggle("is-final", e.s.decided);
   }
@@ -151,6 +154,23 @@ function createCloseRow(e: Entry): CloseRow {
 }
 
 function openCloseEntry(e: Entry) {
+  if (window.innerWidth <= 900) {
+    if (e.town) {
+      setMode("mayor");
+      setMobileMapOpen(true);
+      enterCounty(e.code).then(() => {
+        const tape = townItem(e.town!)?.tape;
+        if (tape) { tape.classList.remove("is-flash"); void tape.offsetWidth; tape.classList.add("is-flash"); }
+        scrollMobileTo("scene");
+      });
+    } else {
+      if (document.querySelector(".room")!.classList.contains("map-open")) setMobileMapOpen(false);
+      setMode(e.district === undefined ? "mayor" : "council");
+      select(e.code, { byUser: true, noCamera: true, district: e.district ?? null });
+      scrollMobileTo("board");
+    }
+    return;
+  }
   if (e.district !== undefined) {
     setMode("council");
     enterCounty(e.code).then(() => select(e.code, { byUser: true, noCamera: true, district: e.district! }));

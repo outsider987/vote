@@ -7,16 +7,21 @@ import { pendingLabel } from "./board";
 /* 文字版結果: the same results as a plain table, for screen readers and anyone who prefers text. */
 
 const textView = $("text-view");
+let textTrigger = $("text-toggle");
 export const isTextOpen = () => !textView.hidden;
 
 function openText(open: boolean) {
   textView.hidden = !open;
   $("text-toggle").setAttribute("aria-expanded", String(open));
-  if (open) { renderText(); $("text-close").focus(); } else { $("text-toggle").focus(); }
+  $("text-board-toggle").setAttribute("aria-expanded", String(open));
+  if (open) { renderText(); $("text-close").focus(); } else { (textTrigger.getClientRects().length ? textTrigger : $("text-board-toggle")).focus(); }
 }
 
 export function initTextView() {
-  $("text-toggle").addEventListener("click", () => openText(!isTextOpen()));
+  for (const id of ["text-toggle", "text-board-toggle"]) $(id).addEventListener("click", () => {
+    textTrigger = $(id);
+    openText(!isTextOpen());
+  });
   $("text-close").addEventListener("click", () => openText(false));
   document.addEventListener("keydown", (e) => {
     if (e.key !== "Escape") return;

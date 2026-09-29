@@ -24,6 +24,7 @@ const clockText = (t: number) => {
 };
 
 export function initReplayClock(src: ReplaySource) {
+  $("clock-date").textContent = "2022 年 11 月 26 日";
   playBtn.addEventListener("click", () => {
     if (!src.playing && src.T >= 1) { src.seek(0); clearCallouts(); }
     src.playing = !src.playing;
@@ -91,9 +92,9 @@ export function updateLiveClock(src: LiveSource) {
   $("live-note").textContent = src.rehearsal ? "彩排資料，非即時開票"
     : offline ? "連線中斷，稍後自動重試"
     : stalled ? `資料 ${Math.round(age / 60_000)} 分鐘未更新`
-    : snap.stage === "prior" ? "尚未開票，16:00 起自動更新"
+    : snap.stage === "prior" ? "尚未開票，16:00 後有資料才更新"
     : snap.stage === "final" ? "開票結束"
-    : `每 ${Math.round(src.intervalMs / 1000)} 秒自動更新`;
+    : `每 ${Math.round(src.intervalMs / 1000)} 秒檢查新資料`;
 }
 
 /* ---------- 2026 standby (before the count) ---------- */
@@ -106,10 +107,12 @@ export function initStandbyClock(status: string) {
   $("live-status").hidden = false;
   $("live-badge").textContent = "預備";
   $("live-progress-text").textContent = status;
+  $("standby-status").textContent = status;
   $("live-note").textContent = "";
   $("live-link").hidden = false;
 }
 
 export function setStandbyStatus(status: string) {
   $("live-progress-text").textContent = status;
+  $("standby-status").textContent = status;
 }

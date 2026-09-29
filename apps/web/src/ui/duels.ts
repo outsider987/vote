@@ -23,7 +23,7 @@ const crList = $("cr-list");
 let duels: Duel[] = [];
 let lastPick = -Infinity;
 
-/** The 最接近 mode uses the mayor settings. */
+/** The 拉鋸戰 mode uses the mayor settings. */
 export const duelCfg = (): Cfg => CLOSE[app.mode === "council" ? "council" : "mayor"];
 
 function pickDuels() {
@@ -89,6 +89,16 @@ export function refreshDuels(now: number) {
   if (now - lastPick < 1500) return;
   lastPick = now;
   const picks = pickDuels();
+  const nearest = picks[0];
+  $("mobile-duel").hidden = !nearest;
+  $("mobile-duel-text").textContent = nearest
+    ? `${county(nearest.code).name}${nearest.district === null ? "" : ` ${districtLabel(nearest.race as District)}`}・差 ${fmt(Math.abs(nearest.race.state.votes[nearest.a] - nearest.race.state.votes[nearest.b]))} 票・開票 ${(nearest.race.state.p * 100).toFixed(0)}%`
+    : app.source.started ? "目前沒有接近戰局・查看排行" : "開票後顯示";
+  if (window.innerWidth <= 900) {
+    duels.forEach((d) => d.el.remove());
+    duels = [];
+    return;
+  }
   const keys = new Set(picks.map((pk) => pk.key));
   for (const d of duels) {
     if (!d.leaving && !d.finalAt && !keys.has(d.key) && now - d.bornAt > 3500) retireDuel(d);
