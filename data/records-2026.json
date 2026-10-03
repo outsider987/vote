@@ -1,0 +1,3529 @@
+{
+ "asOf": "2026-09-30",
+ "source": {
+  "name": "台灣前進製作民間版選舉公報",
+  "url": "https://council2026.taiwangogo.tw/",
+  "license": "CC BY 4.0"
+ },
+ "people": [
+  {
+   "level": "council",
+   "county": "宜蘭縣",
+   "district": 1,
+   "name": "林錫明",
+   "records": [
+    {
+     "type": "guilty",
+     "offense": "妨害公務執行罪、侮辱公務員罪",
+     "sentence": "應執行有期徒刑5月；如易科罰金，以新台幣1,000元折算1日",
+     "status": "已確定",
+     "caseNo": "臺灣宜蘭地方法院98年度簡上字第85號",
+     "judgmentUrl": "https://judgment.judicial.gov.tw/FJUD/data.aspx?ty=JD&id=ILDM%2C98%2C%E7%B0%A1%E4%B8%8A%2C85%2C20100105%2C1",
+     "sources": [
+      {
+       "media": "原審",
+       "date": "2009-09-30",
+       "url": "https://judgment.judicial.gov.tw/FJUD/data.aspx?ty=JD&id=ILDM%2C98%2C%E7%B0%A1%2C594%2C20090930%2C1"
+      },
+      {
+       "media": "二審",
+       "date": "2010-01-05",
+       "url": "https://judgment.judicial.gov.tw/FJUD/data.aspx?ty=JD&id=ILDM%2C98%2C%E7%B0%A1%E4%B8%8A%2C85%2C20100105%2C1"
+      },
+      {
+       "media": "TVBS",
+       "date": "2009-05-06",
+       "url": "https://news.tvbs.com.tw/politics/129490"
+      },
+      {
+       "media": "中國時報",
+       "date": "2009-10-14",
+       "url": "https://www.chinatimes.com/newspapers/20091014000442-260107"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "level": "council",
+   "county": "宜蘭縣",
+   "district": 1,
+   "name": "項秀蘭",
+   "records": [
+    {
+     "type": "guilty",
+     "offense": "傷害罪",
+     "sentence": "拘役40日，易科罰金1000元折算1日",
+     "status": "已確定，2018-09-06。二審就傷害罪部分上訴駁回維持原判，且判決末載不得上訴",
+     "caseNo": "臺灣宜蘭地方法院106年度易字第674號",
+     "judgmentUrl": "https://judgment.judicial.gov.tw/FJUD/data.aspx?ty=JD&id=ILDM%2C106%2C易%2C674%2C20180531%2C1",
+     "sources": []
+    }
+   ]
+  },
+  {
+   "level": "council",
+   "county": "宜蘭縣",
+   "district": 4,
+   "name": "黃浴沂",
+   "records": [
+    {
+     "type": "guilty",
+     "offense": "刑法第168條偽證罪（於檢察官偵訊時具結後虛偽證述）",
+     "sentence": "有期徒刑6月，緩刑3年，並向國庫支付10萬元",
+     "status": "已確定",
+     "caseNo": "臺灣高等法院100年度上訴字第1149號",
+     "judgmentUrl": "https://judgment.judicial.gov.tw/FJUD/data.aspx?ty=JD&id=TPHM%2C100%2C上訴%2C1149%2C20111221%2C1",
+     "sources": []
+    }
+   ]
+  },
+  {
+   "level": "council",
+   "county": "宜蘭縣",
+   "district": 6,
+   "name": "陳漢鍾",
+   "records": [
+    {
+     "type": "guilty",
+     "offense": "刑法第204條交付、收受供偽造有價證券之器械、原料罪（共同正犯）",
+     "sentence": "有期徒刑1年；扣案物沒收",
+     "status": "已確定，2011-02-23。本人所犯刑法第204條之罪，被告一造不得上訴第三審",
+     "caseNo": "臺灣高等法院98年度上訴字第4955號",
+     "judgmentUrl": "https://judgment.judicial.gov.tw/FJUD/data.aspx?ty=JD&id=TPHM%2C98%2C%E4%B8%8A%E8%A8%B4%2C4955%2C20110223%2C3",
+     "sources": []
+    }
+   ]
+  },
+  {
+   "level": "council",
+   "county": "宜蘭縣",
+   "district": 12,
+   "name": "陳傑麟",
+   "records": [
+    {
+     "type": "guilty",
+     "offense": "使公務員登載不實罪（共同正犯）；被訴貪污部分，終局無罪",
+     "sentence": "有期徒刑6月，易科罰金1000元折算1日；緩刑3年，向公庫支付20萬元；沒收已繳回犯罪所得342萬4258元",
+     "status": "已確定",
+     "caseNo": "最高法院110年度台上字第105號",
+     "judgmentUrl": "https://judgment.judicial.gov.tw/FJUD/data.aspx?ty=JD&id=TPSM%2C110%2C台上%2C105%2C20210310%2C1",
+     "sources": []
+    }
+   ]
+  },
+  {
+   "level": "mayor",
+   "county": "花蓮縣",
+   "district": 0,
+   "name": "張峻",
+   "records": [
+    {
+     "type": "guilty",
+     "offense": "水土保持法非法占用致水土流失未遂罪",
+     "sentence": "有期徒刑6月，如易科罰金以新臺幣1,000元折算1日；未扣案犯罪所得535萬344元沒收",
+     "status": "未確定，已上訴",
+     "caseNo": "臺灣花蓮地方法院113年度訴字第101號",
+     "judgmentUrl": "https://judgment.judicial.gov.tw/FJUD/data.aspx?ty=JD&id=HLDM,113%2c%e8%a8%b4%2c101%2c20260709%2c1",
+     "sources": []
+    }
+   ]
+  },
+  {
+   "level": "council",
+   "county": "花蓮縣",
+   "district": 1,
+   "name": "胡仁順",
+   "records": [
+    {
+     "type": "guilty",
+     "offense": "隱匿關係他人刑事被告案件之證據罪",
+     "sentence": "有期徒刑4月，易科罰金1000元折算1日；緩刑3年，向公庫支付5萬元",
+     "status": "本次查核未追到上級審",
+     "caseNo": "臺灣花蓮地方法院100年度訴字第269號",
+     "judgmentUrl": "https://judgment.judicial.gov.tw/FJUD/data.aspx?ty=JD&id=HLDM%2C100%2C訴%2C269%2C20111215%2C1",
+     "sources": []
+    }
+   ]
+  },
+  {
+   "level": "council",
+   "county": "花蓮縣",
+   "district": 1,
+   "name": "傅國淵",
+   "records": [
+    {
+     "type": "guilty",
+     "offense": "刑法第277條第1項傷害罪（共同正犯）",
+     "sentence": "拘役55日，易科罰金1000元折算1日",
+     "status": "本次查核未追到上級審",
+     "caseNo": "臺灣花蓮地方法院108年度花簡字第367號",
+     "judgmentUrl": "https://judgment.judicial.gov.tw/FJUD/data.aspx?ty=JD&id=HLDM%2C108%2C花簡%2C367%2C20190912%2C1",
+     "sources": []
+    }
+   ]
+  },
+  {
+   "level": "council",
+   "county": "花蓮縣",
+   "district": 4,
+   "name": "詹金富",
+   "records": [
+    {
+     "type": "guilty",
+     "offense": "政府採購法第87條第5項前段妨害投標罪",
+     "sentence": "有期徒刑5月，易科罰金1000元折算1日；沒收犯罪所得10萬7100元，不能沒收時追徵",
+     "status": "終局未確認",
+     "caseNo": "臺灣花蓮地方法院106年度原訴字第33號",
+     "judgmentUrl": "https://judgment.judicial.gov.tw/FJUD/data.aspx?ty=JD&id=HLDM%2C106%2C%E5%8E%9F%E8%A8%B4%2C33%2C20171228%2C1",
+     "sources": []
+    },
+    {
+     "type": "guilty",
+     "offense": "政府採購法第87條第5項前段妨害投標罪（共同正犯）",
+     "sentence": "有期徒刑6月，易科罰金1000元折算1日；緩刑3年",
+     "status": "二審確定 2011-03-31（二審判決載「本判決不得上訴」，刑事訴訟法第376條）。緩刑3年期滿未經撤銷者刑之宣告失其效力（刑法第76條），本輪未查得撤銷紀錄",
+     "caseNo": "臺灣高等法院花蓮分院99年度上易字第123號",
+     "judgmentUrl": "https://judgment.judicial.gov.tw/FJUD/data.aspx?ty=JD&id=HLHM%2C99%2C上易%2C123%2C20110331%2C1\nhttps://judgment.judicial.gov.tw/FJUD/data.aspx?ty=JD&id=HLDM%2C98%2C易%2C113%2C20100722%2C1",
+     "sources": []
+    }
+   ]
+  },
+  {
+   "level": "council",
+   "county": "花蓮縣",
+   "district": 4,
+   "name": "鍾素政",
+   "records": [
+    {
+     "type": "guilty",
+     "offense": "預備對於候選人交付賄賂而約其放棄競選罪（共同正犯）",
+     "sentence": "有期徒刑6月，易科罰金1000元折算1日；褫奪公權2年；未扣案預備交付賄款270萬元連帶沒收，不能沒收時連帶追徵",
+     "status": "已確定",
+     "caseNo": "臺灣高等法院花蓮分院105年度選上訴字第6號",
+     "judgmentUrl": "https://judgment.judicial.gov.tw/FJUD/data.aspx?ty=JD&id=HLHM%2C105%2C選上訴%2C6%2C20170331%2C1",
+     "sources": []
+    }
+   ]
+  },
+  {
+   "level": "council",
+   "county": "花蓮縣",
+   "district": 5,
+   "name": "周駿宥",
+   "records": [
+    {
+     "type": "guilty",
+     "offense": "刑法第185條之3第1項第1款不能安全駕駛罪",
+     "sentence": "有期徒刑3月，易科罰金1000元折算1日",
+     "status": "已確定",
+     "caseNo": "臺灣花蓮地方法院115年度花原交簡字第49號",
+     "judgmentUrl": "https://judgment.judicial.gov.tw/FJUD/data.aspx?ty=JD&id=HLDM%2C115%2C花原交簡%2C49%2C20260330%2C1",
+     "sources": []
+    }
+   ]
+  },
+  {
+   "level": "council",
+   "county": "花蓮縣",
+   "district": 6,
+   "name": "邱福順Kacaw．Folaw",
+   "records": [
+    {
+     "type": "guilty",
+     "offense": "刑法第146條第2項意圖使特定候選人當選以虛偽遷徙戶籍取得投票權而為投票罪（共同正犯）",
+     "sentence": "有期徒刑4月，易科罰金1000元折算1日；緩刑3年，向公庫支付5萬元；褫奪公權1年",
+     "status": "不得上訴而確定（刑事訴訟法第455條之10）",
+     "caseNo": "臺灣花蓮地方法院108年度原選訴字第19號",
+     "judgmentUrl": "https://judgment.judicial.gov.tw/FJUD/data.aspx?ty=JD&id=HLDM%2C108%2C原選訴%2C19%2C20200130%2C4",
+     "sources": []
+    }
+   ]
+  },
+  {
+   "level": "mayor",
+   "county": "金門縣",
+   "district": 0,
+   "name": "張國威",
+   "records": [
+    {
+     "type": "guilty",
+     "offense": "建築法未經許可擅自復工經制止不從罪",
+     "sentence": "有期徒刑6月，易科罰金3000元折算1日",
+     "status": "已確定（簡上駁回，刑事訴訟法第455條之1不得再上訴）",
+     "caseNo": "福建金門地方法院109年度簡上字第8號",
+     "judgmentUrl": "https://judgment.judicial.gov.tw/FJUD/data.aspx?ty=JD&id=KMDM%2C109%2C簡上%2C8%2C20200506%2C1",
+     "sources": [
+      {
+       "media": "聯合報",
+       "date": "2026-09-02",
+       "url": "https://money.udn.com/money/story/7307/9730288"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "level": "mayor",
+   "county": "金門縣",
+   "district": 0,
+   "name": "陳玉珍",
+   "records": [
+    {
+     "type": "indicted",
+     "offense": "傷害罪嫌（起訴罪名，法院未認定）",
+     "sentence": "尚未判決",
+     "status": "未確定",
+     "caseNo": "",
+     "judgmentUrl": "",
+     "sources": [
+      {
+       "media": "風傳媒",
+       "date": "2026-02-12",
+       "url": "https://www.storm.mg/article/11102906"
+      },
+      {
+       "media": "自由時報",
+       "date": "2026-02-12",
+       "url": "https://news.ltn.com.tw/news/politics/breakingnews/5341348"
+      },
+      {
+       "media": "ETtoday",
+       "date": "2026-02-12",
+       "url": "https://www.ettoday.net/news/20260212/3117985.htm"
+      },
+      {
+       "media": "民視",
+       "date": "2026-02-12",
+       "url": "https://tw.news.yahoo.com/%E9%99%B3%E7%8E%89%E7%8F%8D%E9%87%8D%E6%91%94%E6%9E%97%E6%9C%88%E7%90%B4%E9%81%AD%E8%B5%B7%E8%A8%B4-%E6%9E%97-%E6%88%91%E8%A2%AB%E8%B8%B9%E5%88%B0%E5%87%BA%E8%A1%80-%E7%B5%95%E4%B8%8D%E5%92%8C%E8%A7%A3-063314373.html"
+      },
+      {
+       "media": "自由時報",
+       "date": "2026-01-12",
+       "url": "https://news.ltn.com.tw/topic/%E6%9E%97%E6%9C%88%E7%90%B4"
+      }
+     ]
+    },
+    {
+     "type": "indicted",
+     "offense": "傷害罪嫌；重傷害未遂罪嫌（自訴罪名，法院未認定）",
+     "sentence": "尚未判決",
+     "status": "未確定",
+     "caseNo": "",
+     "judgmentUrl": "",
+     "sources": [
+      {
+       "media": "自由時報",
+       "date": "2025-11-03",
+       "url": "https://news.ltn.com.tw/news/society/breakingnews/5233063"
+      },
+      {
+       "media": "ETtoday",
+       "date": "2025-11-03",
+       "url": "https://www.ettoday.net/news/20251103/3061285.htm"
+      },
+      {
+       "media": "自由時報",
+       "date": "2026-01-19",
+       "url": "https://news.ltn.com.tw/news/society/breakingnews/5315077"
+      },
+      {
+       "media": "NOWnews",
+       "date": "2026-01-19",
+       "url": "https://www.nownews.com/news/6777449"
+      },
+      {
+       "media": "ETtoday",
+       "date": "2026-01-19",
+       "url": "https://www.ettoday.net/news/20260119/3103884.htm"
+      }
+     ]
+    },
+    {
+     "type": "guilty",
+     "offense": "偽證罪",
+     "sentence": "有期徒刑6月",
+     "status": "已確定",
+     "caseNo": "最高法院100年度台上字第6899號",
+     "judgmentUrl": "https://judgment.judicial.gov.tw/FJUD/data.aspx?ty=JD&id=TPSM%2C100%2C%E5%8F%B0%E4%B8%8A%2C6899%2C20111208",
+     "sources": []
+    }
+   ]
+  },
+  {
+   "level": "council",
+   "county": "金門縣",
+   "district": 1,
+   "name": "楊霈璿",
+   "records": [
+    {
+     "type": "guilty",
+     "offense": "刑法第146條第2項意圖使特定候選人當選以虛偽遷徙戶籍取得投票權而為投票罪（共同正犯）",
+     "sentence": "有期徒刑5月，易科罰金1000元折算1日；褫奪公權1年；緩刑3年，向公庫支付16萬元公益金",
+     "status": "本次查核未追到上級審",
+     "caseNo": "福建金門地方法院109年度訴字第6號",
+     "judgmentUrl": "https://judgment.judicial.gov.tw/FJUD/data.aspx?ty=JD&id=KMDM%2C109%2C訴%2C6%2C20201218%2C1",
+     "sources": []
+    }
+   ]
+  },
+  {
+   "level": "council",
+   "county": "金門縣",
+   "district": 1,
+   "name": "蔡其雍",
+   "records": [
+    {
+     "type": "guilty",
+     "offense": "政府採購法第87條第3項妨害投標罪（共同正犯，苗栗地院103年度苗簡字第55號，有期徒刑2月）；另一有期徒刑之罪（新北地院109年度聲字第1938號裁定附表編號2，判決庫未收）",
+     "sentence": "各罪刑度載於判決附表；應執行有期徒刑7月，易科罰金1000元折算1日",
+     "status": "已確定（臺灣新北地方法院109年度聲字第1938號定應執行刑裁定載各罪先後判決確定）",
+     "caseNo": "臺灣新北地方法院105年度訴字第200號（附表編號六）；另 臺灣苗栗地方法院103年度苗簡字第55號",
+     "judgmentUrl": "https://judgment.judicial.gov.tw/FJUD/data.aspx?ty=JD&id=PCDM%2C105%2C%E8%A8%B4%2C200%2C20190417%2C1",
+     "sources": []
+    }
+   ]
+  },
+  {
+   "level": "council",
+   "county": "金門縣",
+   "district": 2,
+   "name": "王國代",
+   "records": [
+    {
+     "type": "guilty",
+     "offense": "刑法第214條使公務員登載不實罪",
+     "sentence": "主文以代號指稱，本人宣告刑未歸戶",
+     "status": "本次查核未追到上級審",
+     "caseNo": "福建金門地方法院108年度訴字第26號",
+     "judgmentUrl": "https://judgment.judicial.gov.tw/FJUD/data.aspx?ty=JD&id=KMDM%2C108%2C訴%2C26%2C20210324%2C1",
+     "sources": []
+    }
+   ]
+  },
+  {
+   "level": "council",
+   "county": "南投縣",
+   "district": 1,
+   "name": "史雪燕",
+   "records": [
+    {
+     "type": "guilty",
+     "offense": "刑法第310條第2項散布文字誹謗罪",
+     "sentence": "罰金5000元，易服勞役1000元折算1日",
+     "status": "已確定",
+     "caseNo": "臺灣南投地方法院106年度投簡字第420號",
+     "judgmentUrl": "https://judgment.judicial.gov.tw/FJUD/data.aspx?ty=JD&id=NTDM%2C106%2C投簡%2C420%2C20171212%2C1",
+     "sources": []
+    }
+   ]
+  },
+  {
+   "level": "council",
+   "county": "南投縣",
+   "district": 1,
+   "name": "賴燕雪",
+   "records": [
+    {
+     "type": "guilty",
+     "offense": "刑法第320條第1項竊盜罪",
+     "sentence": "拘役30日，易科罰金1000元折算1日；緩刑2年，並向公庫支付5000元",
+     "status": "終局未確認",
+     "caseNo": "臺灣臺中地方法院108年度中簡字第2775號",
+     "judgmentUrl": "https://judgment.judicial.gov.tw/FJUD/data.aspx?ty=JD&id=TCDM%2C108%2C%E4%B8%AD%E7%B0%A1%2C2775%2C20191220%2C1",
+     "sources": [
+      {
+       "media": "ETtoday",
+       "date": "2022-11-23",
+       "url": "https://www.ettoday.net/news/20221123/2386689.htm"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "level": "council",
+   "county": "南投縣",
+   "district": 2,
+   "name": "李洲忠",
+   "records": [
+    {
+     "type": "guilty",
+     "offense": "刑法第185條之3第1項不能安全駕駛罪",
+     "sentence": "有期徒刑3月，易科罰金1000元折算1日",
+     "status": "本次查核未追到上級審",
+     "caseNo": "臺灣南投地方法院110年度投交簡字第12號",
+     "judgmentUrl": "https://judgment.judicial.gov.tw/FJUD/data.aspx?ty=JD&id=NTDM%2C110%2C投交簡%2C12%2C20210202%2C1",
+     "sources": []
+    }
+   ]
+  },
+  {
+   "level": "council",
+   "county": "南投縣",
+   "district": 2,
+   "name": "廖梓佑",
+   "records": [
+    {
+     "type": "guilty",
+     "offense": "刑法第214條使公務員登載不實罪（共同正犯）",
+     "sentence": "有期徒刑3月，易科罰金1000元折算1日；緩刑2年，向公庫支付15萬元",
+     "status": "已確定",
+     "caseNo": "臺灣南投地方法院110年度投簡字第299號",
+     "judgmentUrl": "https://judgment.judicial.gov.tw/FJUD/data.aspx?ty=JD&id=NTDM%2C110%2C投簡%2C299%2C20220310%2C1",
+     "sources": []
+    }
+   ]
+  },
+  {
+   "level": "council",
+   "county": "南投縣",
+   "district": 2,
+   "name": "簡百聰",
+   "records": [
+    {
+     "type": "guilty",
+     "offense": "刑法第309條第1項公然侮辱罪",
+     "sentence": "拘役50日，易科罰金1000元折算1日",
+     "status": "本次查核未追到上級審",
+     "caseNo": "臺灣南投地方法院104年度審易字第211號",
+     "judgmentUrl": "https://judgment.judicial.gov.tw/FJUD/data.aspx?ty=JD&id=NTDM%2C104%2C審易%2C211%2C20151020%2C1",
+     "sources": []
+    },
+    {
+     "type": "guilty",
+     "offense": "刑法第310條第2項散布文字誹謗罪（4罪）",
+     "sentence": "4罪各有期徒刑3月，易科罰金1000元折算1日；應執行有期徒刑6月，易科罰金1000元折算1日；沒收扣案文宣2張",
+     "status": "不得上訴而確定（刑事訴訟法第376條）",
+     "caseNo": "臺灣高等法院臺中分院114年度上易字第670號",
+     "judgmentUrl": "https://judgment.judicial.gov.tw/FJUD/data.aspx?ty=JD&id=TCHM%2C114%2C上易%2C670%2C20251112%2C1",
+     "sources": []
+    }
+   ]
+  },
+  {
+   "level": "council",
+   "county": "南投縣",
+   "district": 7,
+   "name": "田東憲",
+   "records": [
+    {
+     "type": "guilty",
+     "offense": "刑法第213條公務員登載不實罪（信義鄉公所建設課技士，虛構採購驗收文書）",
+     "sentence": "有期徒刑1年1月，緩刑3年，並於判決確定後1年內向公庫支付3萬元",
+     "status": "本次查核未追到上級審",
+     "caseNo": "臺灣南投地方法院110年度原訴字第11號",
+     "judgmentUrl": "https://judgment.judicial.gov.tw/FJUD/data.aspx?ty=JD&id=NTDM%2C110%2C原訴%2C11%2C20211210%2C2",
+     "sources": []
+    }
+   ]
+  },
+  {
+   "level": "council",
+   "county": "南投縣",
+   "district": 7,
+   "name": "全文才Balan‧Soqluman",
+   "records": [
+    {
+     "type": "guilty",
+     "offense": "刑法第185條之3第1項不能安全駕駛罪",
+     "sentence": "拘役55日，易科罰金1000元折算1日",
+     "status": "本次查核未追到上級審",
+     "caseNo": "臺灣南投地方法院101年度投交簡字第653號",
+     "judgmentUrl": "https://judgment.judicial.gov.tw/FJUD/data.aspx?ty=JD&id=NTDM%2C101%2C投交簡%2C653%2C20121227%2C1",
+     "sources": []
+    }
+   ]
+  },
+  {
+   "level": "mayor",
+   "county": "屏東縣",
+   "district": 0,
+   "name": "蘇清泉",
+   "records": [
+    {
+     "type": "indicted",
+     "offense": "違反建築法致人於死罪嫌（起訴罪名，法院未認定）",
+     "sentence": "尚未判決",
+     "status": "未確定，起訴後尚未判決",
+     "caseNo": "",
+     "judgmentUrl": "",
+     "sources": [
+      {
+       "media": "聯合新聞網",
+       "date": "2026-06-03",
+       "url": "https://udn.com/news/story/7321/9542653"
+      },
+      {
+       "media": "聯合新聞網",
+       "date": "2026-06-03",
+       "url": "https://udn.com/news/story/7321/9542819"
+      },
+      {
+       "media": "自由時報",
+       "date": "2026-06-03",
+       "url": "https://news.ltn.com.tw/news/society/breakingnews/5459036"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "level": "council",
+   "county": "屏東縣",
+   "district": 1,
+   "name": "林明順",
+   "records": [
+    {
+     "type": "guilty",
+     "offense": "刑法第304條第1項強制罪（累犯）",
+     "sentence": "有期徒刑3月，累犯，易科罰金1000元折算1日",
+     "status": "終局未確認",
+     "caseNo": "臺灣屏東地方法院101年度易字第424號",
+     "judgmentUrl": "https://judgment.judicial.gov.tw/FJUD/data.aspx?ty=JD&id=PTDM%2C101%2C易%2C424%2C20130418%2C2",
+     "sources": []
+    },
+    {
+     "type": "guilty",
+     "offense": "行使使公務員登載不實文書罪（共同正犯）（累犯）",
+     "sentence": "有期徒刑1年，減為6月，累犯，易科罰金銀元300元即新臺幣900元折算1日",
+     "status": "已確定，2008-08-05；2008-10-15 易科罰金執行完畢",
+     "caseNo": "臺灣高等法院高雄分院97年度選上易字第1號",
+     "judgmentUrl": "https://judgment.judicial.gov.tw/FJUD/data.aspx?ty=JD&id=KSHM%2C97%2C%E9%81%B8%E4%B8%8A%E6%98%93%2C1%2C20080805%2C1",
+     "sources": []
+    },
+    {
+     "type": "guilty",
+     "offense": "槍砲彈藥刀械管制條例案件（罪名條項依他案判決事實欄引述，原判決本輪未取得）",
+     "sentence": "有期徒刑1年4月（他案判決引述：臺灣高等法院高雄分院90年度上訴字第1954號確定）",
+     "status": "終局未確認",
+     "caseNo": "KSHM 90年度上訴字第1954號（判決庫查無全文）",
+     "judgmentUrl": "",
+     "sources": []
+    }
+   ]
+  },
+  {
+   "level": "council",
+   "county": "屏東縣",
+   "district": 1,
+   "name": "蔣月惠",
+   "records": [
+    {
+     "type": "guilty",
+     "offense": "傷害罪（2罪）",
+     "sentence": "2罪各拘役50日，應執行拘役80日，易科罰金1000元折算1日",
+     "status": "不得上訴而確定（刑事訴訟法第376條第1項第1款）",
+     "caseNo": "臺灣高等法院高雄分院109年度上易字第314號",
+     "judgmentUrl": "https://judgment.judicial.gov.tw/FJUD/data.aspx?ty=JD&id=KSHM%2C109%2C上易%2C314%2C20200820%2C1",
+     "sources": []
+    },
+    {
+     "type": "guilty",
+     "offense": "傷害罪（2罪）",
+     "sentence": "2罪各拘役50日，應執行拘役80日，易科罰金1000元折算1日",
+     "status": "已確定",
+     "caseNo": "臺灣屏東地方法院108年度訴字第687號",
+     "judgmentUrl": "https://judgment.judicial.gov.tw/FJUD/data.aspx?ty=JD&id=PTDM%2C108%2C訴%2C687%2C20200417%2C1",
+     "sources": []
+    }
+   ]
+  },
+  {
+   "level": "council",
+   "county": "屏東縣",
+   "district": 2,
+   "name": "王景山",
+   "records": [
+    {
+     "type": "guilty",
+     "offense": "廢棄物清理法第46條第4款非法清理廢棄物罪（共同正犯）",
+     "sentence": "有期徒刑1年10月；沒收犯罪所得80萬168元，未扣案部分不能沒收時追徵",
+     "status": "已確定，2024-06-05 最高法院上訴駁回",
+     "caseNo": "最高法院113年度台上字第1115號",
+     "judgmentUrl": "https://judgment.judicial.gov.tw/FJUD/data.aspx?ty=JD&id=TPSM%2C113%2C台上%2C1115%2C20240605%2C1",
+     "sources": [
+      {
+       "media": "司法院新聞稿",
+       "date": "2023-12-08",
+       "url": "https://www.judicial.gov.tw/tw/cp-1888-999006-45c67-1.html（臺灣高等法院高雄分院112年度上訴字第165號新聞稿：處有期徒刑1年10月、不予緩刑"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "level": "council",
+   "county": "屏東縣",
+   "district": 4,
+   "name": "方冠丁",
+   "records": [
+    {
+     "type": "guilty",
+     "offense": "刑法第310條第1項誹謗罪",
+     "sentence": "拘役59日，易科罰金1000元折算1日",
+     "status": "本次查核未追到上級審",
+     "caseNo": "臺灣屏東地方法院112年度易字第526號",
+     "judgmentUrl": "https://judgment.judicial.gov.tw/FJUD/data.aspx?ty=JD&id=PTDM%2C112%2C易%2C526%2C20240221%2C1",
+     "sources": []
+    }
+   ]
+  },
+  {
+   "level": "council",
+   "county": "屏東縣",
+   "district": 12,
+   "name": "n越秋女",
+   "records": [
+    {
+     "type": "indicted",
+     "offense": "醫療器材管理法未經核准擅自輸入醫療器材罪嫌（起訴罪名，法院未認定）",
+     "sentence": "尚未判決",
+     "status": "未確定",
+     "caseNo": "此欄未列於公開版",
+     "judgmentUrl": "",
+     "sources": [
+      {
+       "media": "中央社",
+       "date": "2026-06-08",
+       "url": "https://www.cna.com.tw/news/asoc/202606080249.aspx"
+      },
+      {
+       "media": "自由時報",
+       "date": "2026-06-08",
+       "url": "https://news.ltn.com.tw/news/Taipei/breakingnews/5464930"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "level": "mayor",
+   "county": "苗栗縣",
+   "district": 0,
+   "name": "鍾東錦",
+   "records": [
+    {
+     "type": "guilty",
+     "offense": "傷害致人於死罪",
+     "sentence": "有期徒刑3年9月",
+     "status": "已確定，1988-06-16 最高法院判決（報導所載日期）",
+     "caseNo": "最高法院77年度台上字第2846號",
+     "judgmentUrl": "",
+     "sources": [
+      {
+       "media": "中央社",
+       "date": "2022-10-03",
+       "url": "https://www.cna.com.tw/news/aipl/202210030229.aspx"
+      },
+      {
+       "media": "風傳媒",
+       "date": "2022-10-04",
+       "url": "https://www.storm.mg/article/4548964"
+      },
+      {
+       "media": "自由時報",
+       "date": "2022-10-13",
+       "url": "https://news.ltn.com.tw/news/politics/breakingnews/4088077"
+      },
+      {
+       "media": "TVBS",
+       "date": "2026-01-14",
+       "url": "https://news.tvbs.com.tw/politics/3099791"
+      },
+      {
+       "media": "ETtoday",
+       "date": "2026-01-14",
+       "url": "https://www.ettoday.net/news/20260114/3100732.htm"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "level": "council",
+   "county": "苗栗縣",
+   "district": 2,
+   "name": "羅貴星",
+   "records": [
+    {
+     "type": "guilty",
+     "offense": "詐欺取財未遂罪",
+     "sentence": "有期徒刑5月，易科罰金1000元折算1日；沒收扣案行動電話1支",
+     "status": "不得上訴而確定（刑事訴訟法第376條）",
+     "caseNo": "臺灣高等法院臺中分院110年度上易字第699號",
+     "judgmentUrl": "https://judgment.judicial.gov.tw/FJUD/data.aspx?ty=JD&id=TCHM%2C110%2C上易%2C699%2C20211230%2C1",
+     "sources": []
+    }
+   ]
+  },
+  {
+   "level": "council",
+   "county": "苗栗縣",
+   "district": 4,
+   "name": "陳碧華",
+   "records": [
+    {
+     "type": "guilty",
+     "offense": "公職人員選舉罷免法第104條傳播不實罪",
+     "sentence": "有期徒刑6月，易科罰金1000元折算1日；褫奪公權1年",
+     "status": "已確定",
+     "caseNo": "臺灣高等法院臺中分院106年度選上訴字第138號",
+     "judgmentUrl": "https://judgment.judicial.gov.tw/FJUD/data.aspx?ty=JD&id=TCHM%2C106%2C選上訴%2C138%2C20170323%2C1",
+     "sources": []
+    }
+   ]
+  },
+  {
+   "level": "council",
+   "county": "苗栗縣",
+   "district": 5,
+   "name": "陳光軒",
+   "records": [
+    {
+     "type": "guilty",
+     "offense": "刑法第185條之3第1項第1款不能安全駕駛罪",
+     "sentence": "有期徒刑4月，易科罰金1000元折算1日",
+     "status": "已確定",
+     "caseNo": "臺灣苗栗地方法院113年度苗交簡字第595號",
+     "judgmentUrl": "https://judgment.judicial.gov.tw/FJUD/data.aspx?ty=JD&id=MLDM%2C113%2C苗交簡%2C595%2C20241112%2C1",
+     "sources": []
+    },
+    {
+     "type": "guilty",
+     "offense": "相姦罪",
+     "sentence": "主文以代號指稱，本人宣告刑未歸戶",
+     "status": "本次查核未追到上級審",
+     "caseNo": "臺灣高等法院臺中分院107年度上易字第539號",
+     "judgmentUrl": "https://judgment.judicial.gov.tw/FJUD/data.aspx?ty=JD&id=TCHM%2C107%2C上易%2C539%2C20180531%2C1",
+     "sources": []
+    }
+   ]
+  },
+  {
+   "level": "council",
+   "county": "苗栗縣",
+   "district": 5,
+   "name": "温俊勇",
+   "records": [
+    {
+     "type": "guilty",
+     "offense": "毒品危害防制條例施用第二級毒品罪（2罪）",
+     "sentence": "2罪各有期徒刑2月，易科罰金1000元折算1日",
+     "status": "本次查核未追到上級審",
+     "caseNo": "臺灣苗栗地方法院103年度苗簡字第727號",
+     "judgmentUrl": "https://judgment.judicial.gov.tw/FJUD/data.aspx?ty=JD&id=MLDM%2C103%2C苗簡%2C727%2C20140808%2C1",
+     "sources": []
+    }
+   ]
+  },
+  {
+   "level": "council",
+   "county": "苗栗縣",
+   "district": 5,
+   "name": "鍾孟儒",
+   "records": [
+    {
+     "type": "guilty",
+     "offense": "個人資料保護法第41條非公務機關未於蒐集特定目的必要範圍內利用個人資料罪（共同正犯）",
+     "sentence": "有期徒刑3月，如易科罰金以1,000元折算1日；緩刑2年，應於判決確定後6個月內向公庫支付4萬元",
+     "status": "本次查核未追到上級審（簡易判決，判決庫查無上訴紀錄）",
+     "caseNo": "臺灣苗栗地方法院112年度苗簡字第1594號",
+     "judgmentUrl": "https://judgment.judicial.gov.tw/FJUD/data.aspx?ty=JD&id=MLDM%2C112%2C%E8%8B%97%E7%B0%A1%2C1594%2C20240131%2C1",
+     "sources": []
+    }
+   ]
+  },
+  {
+   "level": "council",
+   "county": "苗栗縣",
+   "district": 8,
+   "name": "劉美蘭Iwan．Sigiy",
+   "records": [
+    {
+     "type": "indicted",
+     "offense": "貪污治罪條例第4條第1項第3款經辦公用工程收取回扣罪嫌（起訴罪名，法院未認定）",
+     "sentence": "尚未判決",
+     "status": "未確定",
+     "caseNo": "",
+     "judgmentUrl": "https://judgment.judicial.gov.tw/FJUD/data.aspx?ty=JD&id=MLDM%2C114%2C%E7%A7%91%E6%8E%A7%2C11%2C20260106%2C1",
+     "sources": [
+      {
+       "media": "中央社",
+       "date": "2025-05-13",
+       "url": "https://www.cna.com.tw/news/asoc/202505130098.aspx"
+      },
+      {
+       "media": "自由時報",
+       "date": "2025-05-13",
+       "url": "https://news.ltn.com.tw/news/Miaoli/breakingnews/5041005"
+      },
+      {
+       "media": "聯合報",
+       "date": "2025-05-13",
+       "url": "https://udn.com/news/story/7321/8735727"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "level": "council",
+   "county": "桃園市",
+   "district": 1,
+   "name": "朱永煇",
+   "records": [
+    {
+     "type": "indicted",
+     "offense": "律師法第127條第1項無律師證書意圖營利辦理訴訟事件罪嫌（起訴罪名，法院未認定）",
+     "sentence": "尚未判決",
+     "status": "未確定",
+     "caseNo": "臺灣桃園地方法院115年度易字第782號",
+     "judgmentUrl": "",
+     "sources": [
+      {
+       "media": "三立",
+       "date": "2026-03-27",
+       "url": "https://www.setn.com/news/1813650"
+      },
+      {
+       "media": "自由時報",
+       "date": "2026-03-26",
+       "url": "https://news.ltn.com.tw/news/Taoyuan/breakingnews/5383204"
+      },
+      {
+       "media": "ETtoday",
+       "date": "2026-03-26",
+       "url": "https://www.ettoday.net/news/20260326/3139087.htm"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "level": "council",
+   "county": "桃園市",
+   "district": 1,
+   "name": "黃婉如",
+   "records": [
+    {
+     "type": "guilty",
+     "offense": "刑法第135條第1項於公務員依法執行職務時施強暴罪",
+     "sentence": "有期徒刑4月，易科罰金1000元折算1日",
+     "status": "已確定",
+     "caseNo": "臺灣桃園地方法院108年度易字第952號",
+     "judgmentUrl": "https://judgment.judicial.gov.tw/FJUD/data.aspx?ty=JD&id=TYDM%2C108%2C易%2C952%2C20191120%2C1",
+     "sources": []
+    }
+   ]
+  },
+  {
+   "level": "council",
+   "county": "桃園市",
+   "district": 1,
+   "name": "詹江村",
+   "records": [
+    {
+     "type": "guilty",
+     "offense": "刑法第310條第1項誹謗罪（2罪）",
+     "sentence": "2罪各拘役50日，應執行拘役80日，易科罰金1000元折算1日",
+     "status": "不得上訴而確定（刑事訴訟法第376條第1項第1款）",
+     "caseNo": "臺灣高等法院110年度上易字第989號",
+     "judgmentUrl": "https://judgment.judicial.gov.tw/FJUD/data.aspx?ty=JD&id=TPHM%2C110%2C上易%2C989%2C20211027%2C1",
+     "sources": []
+    }
+   ]
+  },
+  {
+   "level": "council",
+   "county": "桃園市",
+   "district": 1,
+   "name": "蕭湘瀚",
+   "records": [
+    {
+     "type": "guilty",
+     "offense": "刑法第135條第3項第1款駕駛動力交通工具妨害公務執行罪；刑法第305條恐嚇危害安全罪",
+     "sentence": "妨害公務執行罪有期徒刑1年2月（二審改判）；恐嚇危害安全罪有期徒刑5月，易科罰金1000元折算1日（上訴駁回）",
+     "status": "未確定（二審 2026-03-11 判決，得上訴第三審；以 match_phrase 查判決庫未見第三審）",
+     "caseNo": "臺灣高等法院114年度上訴字第2999號",
+     "judgmentUrl": "https://judgment.judicial.gov.tw/FJUD/data.aspx?ty=JD&id=TPHM%2C114%2C%E4%B8%8A%E8%A8%B4%2C2999%2C20260311%2C1",
+     "sources": []
+    }
+   ]
+  },
+  {
+   "level": "council",
+   "county": "桃園市",
+   "district": 2,
+   "name": "孫韻璇",
+   "records": [
+    {
+     "type": "guilty",
+     "offense": "貪污治罪條例第5條第1項第2款利用職務上機會詐取財物罪（2罪）（共同正犯）",
+     "sentence": "2罪分別處有期徒刑7年4月、7年6月；應執行有期徒刑8年；褫奪公權4年；沒收犯罪所得39萬2661元及62萬4387元",
+     "status": "終局未確認",
+     "caseNo": "臺灣桃園地方法院111年度訴字第1159號",
+     "judgmentUrl": "https://judgment.judicial.gov.tw/FJUD/data.aspx?ty=JD&id=TYDM%2C111%2C訴%2C1159%2C20240708%2C1",
+     "sources": []
+    }
+   ]
+  },
+  {
+   "level": "council",
+   "county": "桃園市",
+   "district": 3,
+   "name": "朱珍瑤",
+   "records": [
+    {
+     "type": "indicted",
+     "offense": "貪污治罪條例利用職務上機會詐取財物罪嫌；刑法使公務員登載不實罪嫌（起訴罪名，法院未認定）",
+     "sentence": "尚未判決",
+     "status": "未確定",
+     "caseNo": "",
+     "judgmentUrl": "",
+     "sources": [
+      {
+       "media": "ETtoday",
+       "date": "2024-05-09",
+       "url": "https://www.ettoday.net/news/20240509/2735397.htm"
+      },
+      {
+       "media": "中央社",
+       "date": "2024-05-09",
+       "url": "https://www.cna.com.tw/news/asoc/202405090138.aspx"
+      },
+      {
+       "media": "自由時報",
+       "date": "2024-05-09",
+       "url": "https://news.ltn.com.tw/news/society/breakingnews/4667287"
+      },
+      {
+       "media": "中央社",
+       "date": "2021-08-26",
+       "url": "https://www.cna.com.tw/news/asoc/202108260246.aspx"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "level": "council",
+   "county": "桃園市",
+   "district": 4,
+   "name": "郭麗華",
+   "records": [
+    {
+     "type": "guilty",
+     "offense": "總統副總統選舉罷免法第87條第1項第2款對連署人交付賄賂使其為特定被連署人連署罪（共同正犯）",
+     "sentence": "有期徒刑3年10月，併科罰金300萬元，易服勞役以罰金總額與1年之日數比例折算；褫奪公權5年；沒收附表所示扣案物",
+     "status": "本次查核未追到上級審",
+     "caseNo": "臺灣桃園地方法院112年度選訴字第12號",
+     "judgmentUrl": "https://judgment.judicial.gov.tw/FJUD/data.aspx?ty=JD&id=TYDM%2C112%2C選訴%2C12%2C20250930%2C2",
+     "sources": []
+    }
+   ]
+  },
+  {
+   "level": "council",
+   "county": "桃園市",
+   "district": 4,
+   "name": "劉勝全",
+   "records": [
+    {
+     "type": "guilty",
+     "offense": "農會法第47條之1第1項第2款對於有選舉權之人交付不正利益罪（共同正犯）",
+     "sentence": "有期徒刑3月，易科罰金1000元折算1日；緩刑5年，付保護管束，向公庫支付10萬元",
+     "status": "終局未確認",
+     "caseNo": "臺灣桃園地方法院98年度簡字第130號",
+     "judgmentUrl": "https://judgment.judicial.gov.tw/FJUD/data.aspx?ty=JD&id=TYDM%2C98%2C簡%2C130%2C20090728%2C1",
+     "sources": []
+    },
+    {
+     "type": "indicted",
+     "offense": "貪污治罪條例公務員收賄罪嫌（起訴罪名，法院未認定）",
+     "sentence": "尚未判決",
+     "status": "未確定",
+     "caseNo": "",
+     "judgmentUrl": "",
+     "sources": [
+      {
+       "media": "自由時報",
+       "date": "2023-05-11",
+       "url": "https://news.ltn.com.tw/news/society/breakingnews/4298289"
+      },
+      {
+       "media": "聯合新聞網",
+       "date": "2023-05-11",
+       "url": "https://udn.com/news/story/7321/7159587"
+      },
+      {
+       "media": "聯合新聞網",
+       "date": "2023-01-13",
+       "url": "https://udn.com/news/story/7321/6908910"
+      },
+      {
+       "media": "中國時報",
+       "date": "2023-05-11",
+       "url": "https://www.chinatimes.com/realtimenews/20230511004944-260402"
+      },
+      {
+       "media": "中央社",
+       "date": "2023-05-11",
+       "url": "https://www.cna.com.tw/news/asoc/202305110086.aspx"
+      },
+      {
+       "media": "大紀元",
+       "date": "2023-05-11",
+       "url": "https://www.epochtimes.com/b5/23/5/11/n13993919.htm"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "level": "council",
+   "county": "桃園市",
+   "district": 5,
+   "name": "游吾和",
+   "records": [
+    {
+     "type": "indicted",
+     "offense": "貪污治罪條例利用職務上機會詐取財物罪嫌；刑法使公務員登載不實罪嫌（起訴罪名，法院未認定）",
+     "sentence": "尚未判決",
+     "status": "偵查或審理中（桃園地檢 2025-11-18 起訴，尚無判決）",
+     "caseNo": "",
+     "judgmentUrl": "",
+     "sources": [
+      {
+       "media": "中央社",
+       "date": "2025-11-18",
+       "url": "https://www.cna.com.tw/news/asoc/202511180103.aspx"
+      },
+      {
+       "media": "自由時報",
+       "date": "2025-11-18",
+       "url": "https://news.ltn.com.tw/news/Taoyuan/breakingnews/5249686"
+      },
+      {
+       "media": "公視新聞",
+       "date": "2025-11-18",
+       "url": "https://news.pts.org.tw/article/781765"
+      },
+      {
+       "media": "聯合新聞網",
+       "date": "2025-11-18",
+       "url": "https://udn.com/news/story/7321/9148138"
+      },
+      {
+       "media": "中央社",
+       "date": "2025-08-05",
+       "url": "https://www.cna.com.tw/news/asoc/202508050039.aspx"
+      },
+      {
+       "media": "聯合新聞網",
+       "date": "2026-01-24",
+       "url": "https://udn.com/news/story/7321/9285474"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "level": "council",
+   "county": "桃園市",
+   "district": 7,
+   "name": "毛嘉慶",
+   "records": [
+    {
+     "type": "guilty",
+     "offense": "刑法第277條第1項傷害罪",
+     "sentence": "拘役30日，易科罰金1000元折算1日；緩刑2年",
+     "status": "已確定，2014-12-30（案由字別「上易」，不得上訴第三審，刑事訴訟法第376條）",
+     "caseNo": "臺灣高等法院103年度上易字第2197號",
+     "judgmentUrl": "https://judgment.judicial.gov.tw/FJUD/data.aspx?ty=JD&id=TPHM%2C103%2C上易%2C2197%2C20141230%2C1",
+     "sources": [
+      {
+       "media": "1｜自由時報",
+       "date": "2026-01-28",
+       "url": "https://news.ltn.com.tw/news/Taoyuan/breakingnews/5324591"
+      },
+      {
+       "media": "東森新聞",
+       "date": "2026-01-28",
+       "url": "https://news.ebc.net.tw/news/politics/534855"
+      },
+      {
+       "media": "鏡週刊",
+       "date": "2026-01-29",
+       "url": "https://www.mirrormedia.mg/external/mnews_20260129nm005"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "level": "council",
+   "county": "桃園市",
+   "district": 8,
+   "name": "舒翠玲",
+   "records": [
+    {
+     "type": "guilty",
+     "offense": "刑法第214條使公務員登載不實罪（共同正犯）",
+     "sentence": "有期徒刑1年；緩刑3年，向公庫支付50萬元",
+     "status": "本次查核未追到上級審",
+     "caseNo": "臺灣桃園地方法院110年度訴字第134號",
+     "judgmentUrl": "https://judgment.judicial.gov.tw/FJUD/data.aspx?ty=JD&id=TYDM%2C110%2C訴%2C134%2C20250821%2C1",
+     "sources": []
+    }
+   ]
+  },
+  {
+   "level": "council",
+   "county": "桃園市",
+   "district": 14,
+   "name": "林秋霖",
+   "records": [
+    {
+     "type": "guilty",
+     "offense": "刑法第146條第2項意圖使特定候選人當選以虛偽遷徙戶籍取得投票權而為投票罪（共同正犯）",
+     "sentence": "有期徒刑4月，易科罰金1000元折算1日；褫奪公權1年",
+     "status": "已確定，2024-11-13（三審最高法院上訴駁回）",
+     "caseNo": "最高法院113年度台上字第4523號",
+     "judgmentUrl": "https://judgment.judicial.gov.tw/FJUD/data.aspx?ty=JD&id=TPSM%2C113%2C%E5%8F%B0%E4%B8%8A%2C4523%2C20241113%2C1",
+     "sources": []
+    }
+   ]
+  },
+  {
+   "level": "council",
+   "county": "桃園市",
+   "district": 14,
+   "name": "張倉豪",
+   "records": [
+    {
+     "type": "guilty",
+     "offense": "刑法第185條之3第1項第1款不能安全駕駛罪",
+     "sentence": "有期徒刑4月，併科罰金2萬元，均易科／易服1000元折算1日",
+     "status": "本次查核未追到上級審",
+     "caseNo": "臺灣桃園地方法院107年度壢原交簡字第173號",
+     "judgmentUrl": "https://judgment.judicial.gov.tw/FJUD/data.aspx?ty=JD&id=TYDM%2C107%2C壢原交簡%2C173%2C20180807%2C1",
+     "sources": []
+    }
+   ]
+  },
+  {
+   "level": "mayor",
+   "county": "高雄市",
+   "district": 0,
+   "name": "張靜",
+   "records": [
+    {
+     "type": "guilty",
+     "offense": "公然侮辱罪",
+     "sentence": "罰金新台幣8,000元，如易服勞役以新台幣1,000元折算1日",
+     "status": "已確定",
+     "caseNo": "臺灣高等法院114年度上易字第7號",
+     "judgmentUrl": "https://judgment.judicial.gov.tw/FJUD/data.aspx?ty=JD&id=TPHM%2C114%2C%E4%B8%8A%E6%98%93%2C7%2C20250515%2C1",
+     "sources": []
+    }
+   ]
+  },
+  {
+   "level": "council",
+   "county": "高雄市",
+   "district": 6,
+   "name": "李喬如",
+   "records": [
+    {
+     "type": "guilty",
+     "offense": "刑法第214條使公務員登載不實罪（32罪，共同正犯）",
+     "sentence": "應執行有期徒刑1年10月，易科罰金銀元300元即新臺幣900元折算1日",
+     "status": "不得上訴而確定（判決正文載不得上訴）",
+     "caseNo": "臺灣高等法院高雄分院103年度上訴字第715號",
+     "judgmentUrl": "https://judgment.judicial.gov.tw/FJUD/data.aspx?ty=JD&id=KSHM%2C103%2C上訴%2C715%2C20150114%2C1\nhttps://judgment.judicial.gov.tw/FJUD/data.aspx?ty=JD&id=KSDM%2C100%2C%E8%A8%B4%2C1167%2C20140430%2C3",
+     "sources": [
+      {
+       "media": "司法院裁判書",
+       "date": "2014-04-30",
+       "url": "https://judgment.judicial.gov.tw/FJUD/data.aspx?ty=JD&id=KSDM%2C100%2C%E8%A8%B4%2C1167%2C20140430%2C3"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "level": "council",
+   "county": "高雄市",
+   "district": 6,
+   "name": "陳美雅",
+   "records": [
+    {
+     "type": "guilty",
+     "offense": "刑法第214條使公務員登載不實罪（共同正犯）",
+     "sentence": "應執行有期徒刑1年，易科罰金1000元折算1日",
+     "status": "已確定",
+     "caseNo": "臺灣高等法院高雄分院103年度上訴字第715號",
+     "judgmentUrl": "https://judgment.judicial.gov.tw/FJUD/data.aspx?ty=JD&id=KSHM%2C103%2C上訴%2C715%2C20150114%2C1",
+     "sources": []
+    }
+   ]
+  },
+  {
+   "level": "council",
+   "county": "高雄市",
+   "district": 6,
+   "name": "蔡金晏",
+   "records": [
+    {
+     "type": "guilty",
+     "offense": "誹謗罪",
+     "sentence": "拘役25日，易科罰金1000元折算1日",
+     "status": "不得上訴而確定（刑事訴訟法第376條第1項第1款）",
+     "caseNo": "臺灣高等法院高雄分院109年度上易字第257號",
+     "judgmentUrl": "https://judgment.judicial.gov.tw/FJUD/data.aspx?ty=JD&id=KSHM%2C109%2C上易%2C257%2C20200818%2C2",
+     "sources": []
+    }
+   ]
+  },
+  {
+   "level": "council",
+   "county": "高雄市",
+   "district": 7,
+   "name": "康裕成",
+   "records": [
+    {
+     "type": "guilty",
+     "offense": "刑法第214條使公務員登載不實罪",
+     "sentence": "應執行有期徒刑4月，易科罰金銀元300元即新臺幣900元折算1日",
+     "status": "已確定",
+     "caseNo": "臺灣高等法院高雄分院103年度上訴字第715號",
+     "judgmentUrl": "https://judgment.judicial.gov.tw/FJUD/data.aspx?ty=JD&id=KSHM%2C103%2C上訴%2C715%2C20150114%2C1",
+     "sources": []
+    }
+   ]
+  },
+  {
+   "level": "council",
+   "county": "高雄市",
+   "district": 7,
+   "name": "童燕珍",
+   "records": [
+    {
+     "type": "guilty",
+     "offense": "刑法第214條使公務員登載不實罪（共同正犯）",
+     "sentence": "應執行有期徒刑1年4月，易科罰金銀元300元即新臺幣900元折算1日",
+     "status": "不得上訴而確定（判決正文載不得上訴）",
+     "caseNo": "臺灣高等法院高雄分院103年度上訴字第715號",
+     "judgmentUrl": "https://judgment.judicial.gov.tw/FJUD/data.aspx?ty=JD&id=KSHM%2C103%2C上訴%2C715%2C20150114%2C1",
+     "sources": []
+    }
+   ]
+  },
+  {
+   "level": "council",
+   "county": "高雄市",
+   "district": 7,
+   "name": "黃柏霖",
+   "records": [
+    {
+     "type": "guilty",
+     "offense": "刑法第214條使公務員登載不實罪",
+     "sentence": "應執行有期徒刑10月，易科罰金銀元300元即新臺幣900元折算1日",
+     "status": "已確定",
+     "caseNo": "臺灣高等法院高雄分院103年度上訴字第715號",
+     "judgmentUrl": "https://judgment.judicial.gov.tw/FJUD/data.aspx?ty=JD&id=KSHM%2C103%2C上訴%2C715%2C20150114%2C1",
+     "sources": []
+    }
+   ]
+  },
+  {
+   "level": "council",
+   "county": "高雄市",
+   "district": 7,
+   "name": "黃淑美",
+   "records": [
+    {
+     "type": "guilty",
+     "offense": "刑法第214條使公務員登載不實罪（共同正犯）",
+     "sentence": "應執行有期徒刑10月，易科罰金銀元300元即新臺幣900元折算1日",
+     "status": "不得上訴而確定（判決正文載不得上訴）",
+     "caseNo": "臺灣高等法院高雄分院103年度上訴字第715號",
+     "judgmentUrl": "https://judgment.judicial.gov.tw/FJUD/data.aspx?ty=JD&id=KSHM%2C103%2C上訴%2C715%2C20150114%2C1",
+     "sources": []
+    }
+   ]
+  },
+  {
+   "level": "council",
+   "county": "高雄市",
+   "district": 8,
+   "name": "鄒約翰",
+   "records": [
+    {
+     "type": "guilty",
+     "offense": "刑法第309條第1項公然侮辱罪",
+     "sentence": "罰金5000元，易服勞役1000元折算1日",
+     "status": "本次查核未追到上級審",
+     "caseNo": "臺灣高雄地方法院109年度簡字第2867號",
+     "judgmentUrl": "https://judgment.judicial.gov.tw/FJUD/data.aspx?ty=JD&id=KSDM%2C109%2C簡%2C2867%2C20201204%2C1",
+     "sources": []
+    }
+   ]
+  },
+  {
+   "level": "council",
+   "county": "高雄市",
+   "district": 9,
+   "name": "徐尚賢",
+   "records": [
+    {
+     "type": "guilty",
+     "offense": "個人資料保護法非法利用個人資料罪（罷免黃捷、許智傑提議人名冊，認罪部分）；刑法行使偽造私文書罪（偽造孫姓提議人部分）",
+     "sentence": "非法利用個資部分合併有期徒刑2年，緩刑5年，向公庫支付30萬元，褫奪公權2年；偽造孫姓提議人部分有期徒刑5月，得易科罰金，未宣告緩刑",
+     "status": "未確定（一審判決，全案可上訴）",
+     "caseNo": "臺灣高雄地方法院114年度選訴字第2號（繫屬案號，判決書尚未公開）",
+     "judgmentUrl": "https://udn.com/news/story/7321/9751544",
+     "sources": [
+      {
+       "media": "ETtoday",
+       "date": "2025-08-12",
+       "url": "https://www.ettoday.net/news/20250812/3013429.htm"
+      },
+      {
+       "media": "聯合新聞網",
+       "date": "2025-08-12",
+       "url": "https://udn.com/news/story/7321/8933212"
+      },
+      {
+       "media": "中國時報",
+       "date": "2025-08-12",
+       "url": "https://www.chinatimes.com/realtimenews/20250812002403-260402"
+      },
+      {
+       "media": "三立新聞網",
+       "date": "2025-08-14",
+       "url": "https://www.setn.com/News.aspx?NewsID=1703894"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "level": "council",
+   "county": "高雄市",
+   "district": 10,
+   "name": "陳麗娜",
+   "records": [
+    {
+     "type": "guilty",
+     "offense": "公務員洩漏國防以外之秘密文書罪",
+     "sentence": "有期徒刑5月，易科罰金1000元折算1日",
+     "status": "已確定",
+     "caseNo": "臺灣高雄地方法院101年度易字第228號",
+     "judgmentUrl": "https://judgment.judicial.gov.tw/FJUD/data.aspx?ty=JD&id=KSDM%2C101%2C易%2C228%2C20121031%2C5",
+     "sources": []
+    }
+   ]
+  },
+  {
+   "level": "council",
+   "county": "高雄市",
+   "district": 11,
+   "name": "黃天煌",
+   "records": [
+    {
+     "type": "guilty",
+     "offense": "集會遊行法第29條首謀不遵令解散集會罪（共同正犯）；刑法第136條第1項首謀聚眾妨害公務罪（共同正犯）",
+     "sentence": "首謀不遵令解散集會罪有期徒刑3月；首謀聚眾妨害公務罪有期徒刑1年4月；應執行有期徒刑1年6月；緩刑3年，法治及認知教育6場次，付保護管束",
+     "status": "終局未確認",
+     "caseNo": "臺灣高雄地方法院99年度審簡字第3172號",
+     "judgmentUrl": "https://judgment.judicial.gov.tw/FJUD/data.aspx?ty=JD&id=KSDM%2C99%2C%E5%AF%A9%E7%B0%A1%2C3172%2C20100730%2C1",
+     "sources": []
+    }
+   ]
+  },
+  {
+   "level": "council",
+   "county": "高雄市",
+   "district": 12,
+   "name": "王義雄",
+   "records": [
+    {
+     "type": "guilty",
+     "offense": "刑法第185條之3第1項第1款不能安全駕駛罪",
+     "sentence": "有期徒刑4月，易科罰金1000元折算1日",
+     "status": "本次查核未追到上級審",
+     "caseNo": "臺灣橋頭地方法院114年度原交簡字第69號",
+     "judgmentUrl": "https://judgment.judicial.gov.tw/FJUD/data.aspx?ty=JD&id=CTDM%2C114%2C原交簡%2C69%2C20251124%2C1",
+     "sources": []
+    }
+   ]
+  },
+  {
+   "level": "council",
+   "county": "基隆市",
+   "district": 3,
+   "name": "張芳麗",
+   "records": [
+    {
+     "type": "guilty",
+     "offense": "投票受賄罪",
+     "sentence": "有期徒刑7月；褫奪公權2年；緩刑4年",
+     "status": "已確定（經最高法院87年度台上字第616號上訴駁回確定）",
+     "caseNo": "最高法院87年度台上字第616號（判決庫查無全文）",
+     "judgmentUrl": "",
+     "sources": []
+    }
+   ]
+  },
+  {
+   "level": "council",
+   "county": "連江縣",
+   "district": 1,
+   "name": "吳軾子",
+   "records": [
+    {
+     "type": "guilty",
+     "offense": "侵占罪（案由依後案判決前案紀錄引述，原判決本輪未取得）",
+     "sentence": "有期徒刑1年6月",
+     "status": "已確定（他案判決記載：1997-09-13 縮短刑期假釋出監，1998-03-23 縮刑期滿以已執行論）",
+     "caseNo": "臺灣高等法院85年度上訴字第3258號（判決庫查無全文）",
+     "judgmentUrl": "https://judgment.judicial.gov.tw/FJUD/data.aspx?ty=JD&id=TPHM%2C104%2C%E4%B8%8A%E6%98%93%2C715%2C20150616%2C1",
+     "sources": []
+    },
+    {
+     "type": "guilty",
+     "offense": "電信法第58條擅自使用無線電頻率罪（共同正犯）",
+     "sentence": "拘役30日，併科罰金10萬元，均易科／易服300元折算1日",
+     "status": "已確定（臺灣士林地方法院93年度簡上字第156號 事實段載「業經臺灣高等法院以93年度上易字第1862號判決有罪確定」；上易案件不得上訴第三審）",
+     "caseNo": "臺灣高等法院93年度上易字第1862號",
+     "judgmentUrl": "https://judgment.judicial.gov.tw/FJUD/data.aspx?ty=JD&id=TPHM%2C93%2C%E4%B8%8A%E6%98%93%2C1862%2C20050119%2C1",
+     "sources": []
+    },
+    {
+     "type": "guilty",
+     "offense": "刑法第339條第1項詐欺取財罪（共同正犯）",
+     "sentence": "有期徒刑3月，易科罰金300元折算1日；緩刑2年",
+     "status": "已確定（臺灣臺北地方法院103年度簡字第3058號 量刑段載：上訴至士林地院95年度簡上字第137號後撤回上訴而確定；緩刑期滿未經撤銷，刑之宣告失其效力）",
+     "caseNo": "臺灣士林地方法院95年度簡字第292號",
+     "judgmentUrl": "https://judgment.judicial.gov.tw/FJUD/data.aspx?ty=JD&id=SLDM%2C95%2C%E7%B0%A1%2C292%2C20060630%2C1",
+     "sources": []
+    },
+    {
+     "type": "guilty",
+     "offense": "刑法第339條第1項詐欺取財罪",
+     "sentence": "有期徒刑3月，易科罰金1000元折算1日",
+     "status": "已確定",
+     "caseNo": "臺灣臺北地方法院103年度簡字第3058號",
+     "judgmentUrl": "https://judgment.judicial.gov.tw/FJUD/data.aspx?ty=JD&id=TPDM%2C103%2C簡%2C3058%2C20141128%2C1",
+     "sources": []
+    },
+    {
+     "type": "guilty",
+     "offense": "刑法第339條第1項詐欺取財罪（累犯）；業務侵占罪（累犯）",
+     "sentence": "詐欺取財罪有期徒刑1年10月，累犯；業務侵占罪有期徒刑10月，累犯，減為5月，易科罰金銀元300元即新臺幣900元折算1日",
+     "status": "已確定",
+     "caseNo": "臺灣高等法院104年度上易字第715號",
+     "judgmentUrl": "https://judgment.judicial.gov.tw/FJUD/data.aspx?ty=JD&id=TPHM%2C104%2C上易%2C715%2C20150616%2C1",
+     "sources": []
+    },
+    {
+     "type": "guilty",
+     "offense": "刑法第339條第1項詐欺取財罪",
+     "sentence": "有期徒刑4月，易科罰金1000元折算1日",
+     "status": "已確定",
+     "caseNo": "臺灣臺北地方法院104年度審簡上字第101號",
+     "judgmentUrl": "https://judgment.judicial.gov.tw/FJUD/data.aspx?ty=JD&id=TPDM%2C104%2C審簡上%2C101%2C20150729%2C1",
+     "sources": []
+    },
+    {
+     "type": "guilty",
+     "offense": "業務侵占罪（累犯）",
+     "sentence": "有期徒刑1年4月，累犯，減為8月；沒收犯罪所得104萬8466元，不能沒收時追徵",
+     "status": "已確定",
+     "caseNo": "臺灣高等法院106年度上易字第300號",
+     "judgmentUrl": "https://judgment.judicial.gov.tw/FJUD/data.aspx?ty=JD&id=TPHM%2C106%2C上易%2C300%2C20170518%2C1",
+     "sources": []
+    },
+    {
+     "type": "guilty",
+     "offense": "刑法第310條第2項加重誹謗罪",
+     "sentence": "拘役30日，易科罰金1000元折算1日",
+     "status": "本次查核未追到上級審（一審載得上訴，判決庫查無引用本案號之判決）",
+     "caseNo": "臺灣臺北地方法院114年度簡字第1388號",
+     "judgmentUrl": "https://judgment.judicial.gov.tw/FJUD/data.aspx?ty=JD&id=TPDM%2C114%2C%E7%B0%A1%2C1388%2C20250702%2C1",
+     "sources": []
+    },
+    {
+     "type": "guilty",
+     "offense": "刑法第310條第2項散布文字誹謗罪",
+     "sentence": "有期徒刑3月，易科罰金1000元折算1日",
+     "status": "本次查核未追到上級審（二審 2026-03-10 撤銷一審個資法有罪判決改判誹謗罪，個資法部分不另為無罪諭知；判決庫查無三審）",
+     "caseNo": "臺灣高等法院115年度上訴字第117號",
+     "judgmentUrl": "https://judgment.judicial.gov.tw/FJUD/data.aspx?ty=JD&id=TPHM%2C115%2C%E4%B8%8A%E8%A8%B4%2C117%2C20260310%2C1",
+     "sources": []
+    }
+   ]
+  },
+  {
+   "level": "council",
+   "county": "連江縣",
+   "district": 1,
+   "name": "曹以標",
+   "records": [
+    {
+     "type": "guilty",
+     "offense": "銀行法非法辦理國內外匯兌業務罪（共同正犯）",
+     "sentence": "有期徒刑1年10月；緩刑5年，向公庫支付30萬元",
+     "status": "本次查核未追到上級審",
+     "caseNo": "福建連江地方法院101年度訴字第3號",
+     "judgmentUrl": "https://judgment.judicial.gov.tw/FJUD/data.aspx?ty=JD&id=LCDM%2C101%2C訴%2C3%2C20120808%2C1",
+     "sources": []
+    }
+   ]
+  },
+  {
+   "level": "council",
+   "county": "連江縣",
+   "district": 3,
+   "name": "王孝榛",
+   "records": [
+    {
+     "type": "guilty",
+     "offense": "刑法第146條第2項意圖使特定候選人當選以虛偽遷徙戶籍取得投票權而為投票罪（共同正犯）；被訴公職人員選舉罷免法第99條第1項交付賄賂罪部分，終局無罪",
+     "sentence": "有期徒刑6月，易科罰金1000元折算1日",
+     "status": "已確定",
+     "caseNo": "最高法院111年度台上字第787號",
+     "judgmentUrl": "https://judgment.judicial.gov.tw/FJUD/data.aspx?ty=JD&id=TPSM%2C111%2C台上%2C787%2C20220519%2C1",
+     "sources": []
+    }
+   ]
+  },
+  {
+   "level": "mayor",
+   "county": "雲林縣",
+   "district": 0,
+   "name": "劉建國",
+   "records": [
+    {
+     "type": "guilty",
+     "offense": "傷害罪",
+     "sentence": "拘役40日，緩刑2年（他案判決引述）",
+     "status": "已確定（刑度與確定均取自他案判決引述之前案紀錄表；確定日期未取得）",
+     "caseNo": "",
+     "judgmentUrl": "",
+     "sources": []
+    }
+   ]
+  },
+  {
+   "level": "council",
+   "county": "雲林縣",
+   "district": 1,
+   "name": "江文登",
+   "records": [
+    {
+     "type": "guilty",
+     "offense": "刑法第214條使公務員登載不實文書罪（7罪）",
+     "sentence": "7罪各有期徒刑4月，易科罰金1000元折算1日；應執行有期徒刑10月，易科罰金1000元折算1日；緩刑2年，向公庫支付20萬元",
+     "status": "不得上訴而確定（刑事訴訟法第376條第1項第1款）",
+     "caseNo": "臺灣高等法院臺南分院107年度上易字第725號",
+     "judgmentUrl": "https://judgment.judicial.gov.tw/FJUD/data.aspx?ty=JD&id=TNHM%2C107%2C上易%2C725%2C20181227%2C1",
+     "sources": []
+    }
+   ]
+  },
+  {
+   "level": "council",
+   "county": "雲林縣",
+   "district": 1,
+   "name": "黃勝志",
+   "records": [
+    {
+     "type": "guilty",
+     "offense": "共同犯非法清理廢棄物罪；共同犯強制罪",
+     "sentence": "非法清理廢棄物罪有期徒刑1年4月；強制罪有期徒刑4月，如易科罰金，以新台幣1,000元折算1日；緩刑3年，判決確定起1年內向公庫支付30萬元。",
+     "status": "已確定（法院2019-04-18官方稿具名載明；精確確定日期未取得）",
+     "caseNo": "103年度矚訴字第1號",
+     "judgmentUrl": "https://judgment.judicial.gov.tw/FJUD/data.aspx?ty=JD&id=ULDM%2C103%2C%E7%9F%9A%E8%A8%B4%2C1%2C20141111%2C17",
+     "sources": []
+    }
+   ]
+  },
+  {
+   "level": "council",
+   "county": "雲林縣",
+   "district": 2,
+   "name": "吳延豐",
+   "records": [
+    {
+     "type": "guilty",
+     "offense": "傷害罪（共同正犯）",
+     "sentence": "拘役20日，易科罰金1000元折算1日",
+     "status": "本次查核未追到上級審",
+     "caseNo": "臺灣雲林地方法院111年度六簡字第34號",
+     "judgmentUrl": "https://judgment.judicial.gov.tw/FJUD/data.aspx?ty=JD&id=ULDM%2C111%2C六簡%2C34%2C20220428%2C1",
+     "sources": []
+    }
+   ]
+  },
+  {
+   "level": "council",
+   "county": "雲林縣",
+   "district": 2,
+   "name": "賴明源",
+   "records": [
+    {
+     "type": "guilty",
+     "offense": "95年5月24日修正施行前商業會計法第71條第1款填製不實會計憑證罪（共同正犯）",
+     "sentence": "有期徒刑3月，易科罰金銀元300元即新臺幣900元折算1日，減為有期徒刑1月15日；緩刑2年",
+     "status": "一審簡易判決確定。判決載被告於準備程序自白並經檢察官同意求刑範圍，依刑事訴訟法第451條之1第3項、第455條之1第2項「檢察官及被告等5人均不得上訴」；判決庫無上訴審紀錄。",
+     "caseNo": "臺灣雲林地方法院100年度簡字第50號",
+     "judgmentUrl": "https://judgment.judicial.gov.tw/FJUD/data.aspx?ty=JD&id=ULDM%2C100%2C%E7%B0%A1%2C50%2C20110922%2C1",
+     "sources": []
+    }
+   ]
+  },
+  {
+   "level": "council",
+   "county": "雲林縣",
+   "district": 3,
+   "name": "陳乙辰",
+   "records": [
+    {
+     "type": "guilty",
+     "offense": "刑法第305條恐嚇危害安全罪（共同正犯）",
+     "sentence": "有期徒刑3月，易科罰金1000元折算1日",
+     "status": "不得上訴而確定（刑事訴訟法第376條第1項第1款）",
+     "caseNo": "臺灣高等法院臺南分院103年度上訴字第975號",
+     "judgmentUrl": "https://judgment.judicial.gov.tw/FJUD/data.aspx?ty=JD&id=TNHM%2C103%2C上訴%2C975%2C20150422%2C2",
+     "sources": []
+    }
+   ]
+  },
+  {
+   "level": "council",
+   "county": "雲林縣",
+   "district": 3,
+   "name": "黃凱",
+   "records": [
+    {
+     "type": "guilty",
+     "offense": "刑法第214條使公務員登載不實罪（5罪）",
+     "sentence": "應執行有期徒刑1年10月，得易科罰金",
+     "status": "已確定，2018-07-26",
+     "caseNo": "最高法院107年度台上字第1241號",
+     "judgmentUrl": "https://judgment.judicial.gov.tw/FJUD/data.aspx?ty=JD&id=TPSM%2C107%2C台上%2C1241%2C20180726%2C1",
+     "sources": []
+    },
+    {
+     "type": "guilty",
+     "offense": "刑法第346條第1項恐嚇取財罪（11罪）；政府採購法第87條第1項妨害投標罪",
+     "sentence": "應執行有期徒刑2年",
+     "status": "已確定，2016-11-03",
+     "caseNo": "最高法院一○五年度台上字第二八四七號",
+     "judgmentUrl": "https://judgment.judicial.gov.tw/FJUD/data.aspx?ty=JD&id=TPSM%2C105%2C%E5%8F%B0%E4%B8%8A%2C2847%2C20161103",
+     "sources": []
+    },
+    {
+     "type": "guilty",
+     "offense": "貪污治罪條例第5條第1項第3款不違背職務收受賄賂罪",
+     "sentence": "有期徒刑4年10月；褫奪公權3年；沒收犯罪所得1480萬元",
+     "status": "未確定，二審審理中",
+     "caseNo": "臺灣高等法院115年度審上訴字第1362號（繫屬中）",
+     "judgmentUrl": "",
+     "sources": []
+    }
+   ]
+  },
+  {
+   "level": "council",
+   "county": "雲林縣",
+   "district": 4,
+   "name": "李泓儀",
+   "records": [
+    {
+     "type": "guilty",
+     "offense": "刑法第129條第2項公務員抑留不發職務上應發給之款項罪（崙背鄉長任內抑留鄉民代表會研究費等，7罪）",
+     "sentence": "各罪刑度載於判決附表；應執行有期徒刑1年6月；緩刑3年",
+     "status": "本次查核未追到上級審",
+     "caseNo": "台灣雲林地方法院101年度訴字第23號",
+     "judgmentUrl": "https://judgment.judicial.gov.tw/FJUD/data.aspx?ty=JD&id=ULDM%2C101%2C訴%2C23%2C20120524%2C1",
+     "sources": []
+    },
+    {
+     "type": "indicted",
+     "offense": "背信罪嫌（起訴罪名，法院未認定）",
+     "sentence": "尚未判決",
+     "status": "未確定",
+     "caseNo": "",
+     "judgmentUrl": "",
+     "sources": [
+      {
+       "media": "聯合新聞網",
+       "date": "2026-09-17",
+       "url": "https://udn.com/news/story/7321/9760810"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "level": "council",
+   "county": "雲林縣",
+   "district": 5,
+   "name": "吳蕙蘭",
+   "records": [
+    {
+     "type": "guilty",
+     "offense": "刑法第268條意圖營利聚眾賭博罪（共同正犯）",
+     "sentence": "主文以代號指稱，本人宣告刑未歸戶",
+     "status": "一審簡易判決確定。臺灣高等法院臺南分院98年度上易字第517號（2009-11-24）事實段載吳蕙蘭等人「均經臺灣雲林地方法院以97年度簡字第125號判決確定」；判決庫無本案上訴審紀錄。",
+     "caseNo": "臺灣雲林地方法院97年度簡字第125號",
+     "judgmentUrl": "https://judgment.judicial.gov.tw/FJUD/data.aspx?ty=JD&id=ULDM%2C97%2C%E7%B0%A1%2C125%2C20081218%2C1\nhttps://judgment.judicial.gov.tw/FJUD/data.aspx?ty=JD&id=TNHM%2C98%2C%E4%B8%8A%E6%98%93%2C517%2C20091124%2C1",
+     "sources": []
+    }
+   ]
+  },
+  {
+   "level": "council",
+   "county": "雲林縣",
+   "district": 6,
+   "name": "黃文祥",
+   "records": [
+    {
+     "type": "guilty",
+     "offense": "刑法第216條、第213條行使公務員登載不實文書罪（共同正犯）",
+     "sentence": "有期徒刑1年，減為6月，易科罰金銀元300元即新臺幣900元折算1日；緩刑2年",
+     "status": "已確定（簡易判決，被告自白，判決庫查無上訴審）",
+     "caseNo": "臺灣雲林地方法院100年度簡字第55號",
+     "judgmentUrl": "https://judgment.judicial.gov.tw/FJUD/data.aspx?ty=JD&id=ULDM%2C100%2C%E7%B0%A1%2C55%2C20110922%2C1",
+     "sources": []
+    }
+   ]
+  },
+  {
+   "level": "council",
+   "county": "新北市",
+   "district": 4,
+   "name": "王威元",
+   "records": [
+    {
+     "type": "indicted",
+     "offense": "貪污治罪條例對於公務員關於違背職務之行為行求賄賂罪嫌（起訴罪名，法院未認定）",
+     "sentence": "尚未判決",
+     "status": "未確定",
+     "caseNo": "",
+     "judgmentUrl": "",
+     "sources": [
+      {
+       "media": "中央社",
+       "date": "2026-08-26",
+       "url": "https://www.cna.com.tw/news/asoc/202608260218.aspx"
+      },
+      {
+       "media": "自由時報",
+       "date": "2026-08-26",
+       "url": "https://news.ltn.com.tw/news/politics/breakingnews/5553012"
+      },
+      {
+       "media": "ETtoday",
+       "date": "2026-08-26",
+       "url": "https://www.ettoday.net/news/20260826/3226189.htm"
+      },
+      {
+       "media": "聯合新聞網",
+       "date": "2026-08-26",
+       "url": "https://udn.com/news/story/7321/9715917"
+      },
+      {
+       "media": "自由時報",
+       "date": "2026-08-11",
+       "url": "https://news.ltn.com.tw/news/society/breakingnews/5536765"
+      },
+      {
+       "media": "自由時報",
+       "date": "2026-09-02",
+       "url": "https://news.ltn.com.tw/news/NewTaipei/breakingnews/5561231"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "level": "council",
+   "county": "新北市",
+   "district": 5,
+   "name": "曾煥嘉",
+   "records": [
+    {
+     "type": "guilty",
+     "offense": "利用職務上機會詐取財物罪（共同正犯）",
+     "sentence": "有期徒刑3年；褫奪公權4年",
+     "status": "未確定",
+     "caseNo": "臺灣新北地方法院110年度訴字第261號",
+     "judgmentUrl": "https://judgment.judicial.gov.tw/FJUD/data.aspx?ty=JD&id=PCDM%2C110%2C訴%2C261%2C20250122%2C6",
+     "sources": []
+    },
+    {
+     "type": "guilty",
+     "offense": "詐欺取財罪（共同正犯）",
+     "sentence": "有期徒刑3月，易科罰金1000元折算1日；緩刑2年",
+     "status": "不得上訴而確定（刑事訴訟法第376條）",
+     "caseNo": "臺灣高等法院112年度上易字第1227號",
+     "judgmentUrl": "https://judgment.judicial.gov.tw/FJUD/data.aspx?ty=JD&id=TPHM%2C112%2C上易%2C1227%2C20231108%2C1",
+     "sources": []
+    }
+   ]
+  },
+  {
+   "level": "council",
+   "county": "新北市",
+   "district": 6,
+   "name": "邱烽堯",
+   "records": [
+    {
+     "type": "guilty",
+     "offense": "對主管事務圖利罪（共同正犯）",
+     "sentence": "有期徒刑3年6月；褫奪公權3年",
+     "status": "未確定",
+     "caseNo": "臺灣新北地方法院111年度訴字第796號",
+     "judgmentUrl": "https://judgment.judicial.gov.tw/FJUD/data.aspx?ty=JD&id=PCDM%2C111%2C訴%2C796%2C20240820%2C1",
+     "sources": []
+    }
+   ]
+  },
+  {
+   "level": "council",
+   "county": "新北市",
+   "district": 6,
+   "name": "金瑞龍",
+   "records": [
+    {
+     "type": "guilty",
+     "offense": "行使公務員登載不實公文書罪（共同正犯）",
+     "sentence": "有期徒刑1年，減為6月",
+     "status": "不得上訴而確定（刑事訴訟法第376條第1項第1款）",
+     "caseNo": "臺灣高等法院106年度重上更(三)字第28號",
+     "judgmentUrl": "https://judgment.judicial.gov.tw/FJUD/data.aspx?ty=JD&id=TPHM%2C106%2C重上更(三)%2C28%2C20181218%2C1",
+     "sources": []
+    }
+   ]
+  },
+  {
+   "level": "council",
+   "county": "新北市",
+   "district": 8,
+   "name": "黃永昌",
+   "records": [
+    {
+     "type": "guilty",
+     "offense": "刑法第214條使公務員登載不實罪（共同正犯）",
+     "sentence": "有期徒刑1年；緩刑3年，向公庫支付200萬元",
+     "status": "已確定",
+     "caseNo": "臺灣高等法院113年度上訴字第1784號",
+     "judgmentUrl": "https://judgment.judicial.gov.tw/FJUD/data.aspx?ty=JD&id=TPHM%2C113%2C上訴%2C1784%2C20250227%2C1",
+     "sources": []
+    }
+   ]
+  },
+  {
+   "level": "council",
+   "county": "新北市",
+   "district": 12,
+   "name": "忠仁‧達祿斯",
+   "records": [
+    {
+     "type": "guilty",
+     "offense": "對於有投票權人預備交付賄賂罪（共同正犯）",
+     "sentence": "有期徒刑7月",
+     "status": "已確定（二審上訴駁回，被告不得上訴第三審）",
+     "caseNo": "臺灣高等法院臺中分院110年度原選上訴字第1號",
+     "judgmentUrl": "https://judgment.judicial.gov.tw/FJUD/data.aspx?ty=JD&id=TCDM%2C109%2C原選訴%2C1%2C20210311%2C1",
+     "sources": []
+    }
+   ]
+  },
+  {
+   "level": "mayor",
+   "county": "新竹市",
+   "district": 0,
+   "name": "高虹安",
+   "records": [
+    {
+     "type": "guilty",
+     "offense": "刑法第214條使公務員登載不實罪（共同正犯）",
+     "sentence": "有期徒刑6月，易科罰金1000元折算1日",
+     "status": "未確定，檢察官上訴第三審中",
+     "caseNo": "臺灣高等法院113年度矚上重訴字第36號",
+     "judgmentUrl": "https://judgment.judicial.gov.tw/FJUD/data.aspx?ty=JD&id=TPHM%2C113%2C%E7%9F%9F%E4%B8%8A%E9%87%8D%E8%A8%B4%2C36%2C20251216%2C4",
+     "sources": [
+      {
+       "media": "中央社",
+       "date": "2025-12-16",
+       "url": "https://www.cna.com.tw/news/asoc/202512160062.aspx"
+      },
+      {
+       "media": "自由時報",
+       "date": "2026-01-05",
+       "url": "https://news.ltn.com.tw/news/society/breakingnews/5300047"
+      },
+      {
+       "media": "聯合報",
+       "date": "2026-01-05",
+       "url": "https://udn.com/news/story/7321/9246641"
+      }
+     ]
+    },
+    {
+     "type": "guilty",
+     "offense": "刑法第169條第1項誣告罪",
+     "sentence": "有期徒刑6月",
+     "status": "未確定，得上訴第三審；截至 2026-09-12 判決庫未見第三審裁判",
+     "caseNo": "臺灣高等法院113年度上訴字第5670號",
+     "judgmentUrl": "https://judgment.judicial.gov.tw/FJUD/data.aspx?ty=JD&id=TPHM%2C113%2C%E4%B8%8A%E8%A8%B4%2C5670%2C20250731%2C1",
+     "sources": [
+      {
+       "media": "中央社",
+       "date": "2025-07-31",
+       "url": "https://www.cna.com.tw/news/asoc/202507310146.aspx"
+      }
+     ]
+    },
+    {
+     "type": "indicted",
+     "offense": "被訴著作權法第91條第1項、第92條、第93條第1項第1款罪嫌（自訴罪名，法院未認定）",
+     "sentence": "尚未判決",
+     "status": "未確定，發回更審中",
+     "caseNo": "智慧財產及商業法院113年度刑智上易字第49號",
+     "judgmentUrl": "https://judgment.judicial.gov.tw/FJUD/data.aspx?ty=JD&id=IPCM%2C113%2C%E5%88%91%E6%99%BA%E4%B8%8A%E6%98%93%2C49%2C20260416%2C1",
+     "sources": []
+    }
+   ]
+  },
+  {
+   "level": "council",
+   "county": "新竹市",
+   "district": 1,
+   "name": "黃文政",
+   "records": [
+    {
+     "type": "guilty",
+     "offense": "貪污治罪條例第5條第1項第2款利用職務上機會詐取財物罪（2罪）",
+     "sentence": "2罪各有期徒刑1年8月，各褫奪公權2年；應執行有期徒刑2年；緩刑5年，向公庫支付30萬元；褫奪公權2年",
+     "status": "終局未確認",
+     "caseNo": "臺灣新竹地方法院112年度訴字第578號",
+     "judgmentUrl": "https://judgment.judicial.gov.tw/FJUD/data.aspx?ty=JD&id=SCDM%2C112%2C%E8%A8%B4%2C578%2C20250430%2C2",
+     "sources": []
+    }
+   ]
+  },
+  {
+   "level": "council",
+   "county": "新竹市",
+   "district": 2,
+   "name": "田雅芳",
+   "records": [
+    {
+     "type": "guilty",
+     "offense": "公職人員選舉罷免法第104條意圖使候選人當選以文字傳播不實之事罪",
+     "sentence": "有期徒刑3月；褫奪公權1年；緩刑2年",
+     "status": "已確定，2012-07-12",
+     "caseNo": "最高法院一○一年度台上字第三六七○號",
+     "judgmentUrl": "https://judgment.judicial.gov.tw/FJUD/data.aspx?ty=JD&id=TPSM%2C101%2C%E5%8F%B0%E4%B8%8A%2C3670%2C20120712",
+     "sources": []
+    }
+   ]
+  },
+  {
+   "level": "council",
+   "county": "新竹市",
+   "district": 2,
+   "name": "許修睿",
+   "records": [
+    {
+     "type": "guilty",
+     "offense": "刑法第304條第1項強制罪",
+     "sentence": "有期徒刑6月",
+     "status": "已確定，2001-08-31 二審宣判後未上訴第三審而確定；2001-11-06 易科罰金執行完畢",
+     "caseNo": "臺灣高等法院 89年度少連上訴字第1號（判決庫查無全文）",
+     "judgmentUrl": "https://judgment.judicial.gov.tw/FJUD/data.aspx?ty=JD&id=TPSM%2C91%2C%E5%8F%B0%E4%B8%8A%2C2236%2C20020425\nhttps://judgment.judicial.gov.tw/FJUD/data.aspx?ty=JD&id=SCDM%2C94%2C%E8%A8%B4%2C906%2C20100625%2C4",
+     "sources": [
+      {
+       "media": "菱傳媒",
+       "date": "2022-08-04",
+       "url": "https://rwnews.tw/article.php?news=313（存檔"
+      },
+      {
+       "media": "CTWANT",
+       "date": "2022-08-26",
+       "url": "https://www.ctwant.com/article/203512｜自由時報"
+      },
+      {
+       "media": "CTWANT",
+       "date": "2022-08-26",
+       "url": "https://www.ctwant.com/article/203512/"
+      }
+     ]
+    },
+    {
+     "type": "guilty",
+     "offense": "廢棄物清理法第46條第4款非法清理廢棄物罪（共同正犯）（累犯）；強制罪（共同正犯）（累犯）",
+     "sentence": "非法清理廢棄物罪有期徒刑1年2月，減為7月，累犯；強制罪有期徒刑1年，減為6月，累犯；應執行有期徒刑1年；緩刑3年；沒收附表所示之物",
+     "status": "終局未確認",
+     "caseNo": "臺灣新竹地方法院94年度訴字第906號",
+     "judgmentUrl": "https://judgment.judicial.gov.tw/FJUD/data.aspx?ty=JD&id=SCDM%2C94%2C%E8%A8%B4%2C906%2C20100625%2C4",
+     "sources": [
+      {
+       "media": "菱傳媒",
+       "date": "2022-08-04",
+       "url": "https://rwnews.tw/article.php?news=313（存檔"
+      },
+      {
+       "media": "CTWANT",
+       "date": "2022-08-26",
+       "url": "https://www.ctwant.com/article/203512｜自由時報"
+      },
+      {
+       "media": "CTWANT",
+       "date": "2022-08-26",
+       "url": "https://www.ctwant.com/article/203512/"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "level": "council",
+   "county": "新竹市",
+   "district": 5,
+   "name": "吳國寶",
+   "records": [
+    {
+     "type": "guilty",
+     "offense": "利用職務機會詐取財物罪（2罪）",
+     "sentence": "2罪各有期徒刑1年5月，各褫奪公權1年；應執行有期徒刑1年8月；緩刑3年，向公庫支付20萬元；褫奪公權1年",
+     "status": "本次查核未追到上級審",
+     "caseNo": "臺灣新竹地方法院112年度訴字第578號",
+     "judgmentUrl": "https://judgment.judicial.gov.tw/FJUD/data.aspx?ty=JD&id=SCDM%2C112%2C訴%2C578%2C20250430%2C2",
+     "sources": []
+    }
+   ]
+  },
+  {
+   "level": "council",
+   "county": "新竹縣",
+   "district": 3,
+   "name": "何建樺",
+   "records": [
+    {
+     "type": "guilty",
+     "offense": "刑法第339條第1項詐欺取財罪",
+     "sentence": "有期徒刑1年；緩刑3年",
+     "status": "不得上訴而確定（刑事訴訟法第455條之10）",
+     "caseNo": "臺灣新竹地方法院113年度易字第1182號",
+     "judgmentUrl": "https://judgment.judicial.gov.tw/FJUD/data.aspx?ty=JD&id=SCDM%2C113%2C易%2C1182%2C20250718%2C1",
+     "sources": []
+    }
+   ]
+  },
+  {
+   "level": "council",
+   "county": "新竹縣",
+   "district": 3,
+   "name": "余筱菁",
+   "records": [
+    {
+     "type": "guilty",
+     "offense": "散布文字、圖畫誹謗罪",
+     "sentence": "拘役30日，易科罰金1000元折算1日",
+     "status": "不得上訴而確定（刑事訴訟法第376條）",
+     "caseNo": "臺灣高等法院110年度上易字第696號",
+     "judgmentUrl": "https://judgment.judicial.gov.tw/FJUD/data.aspx?ty=JD&id=TPHM%2C110%2C上易%2C696%2C20210603%2C1",
+     "sources": []
+    }
+   ]
+  },
+  {
+   "level": "council",
+   "county": "新竹縣",
+   "district": 9,
+   "name": "林昭錡",
+   "records": [
+    {
+     "type": "guilty",
+     "offense": "刑法第284條第1項前段過失傷害罪",
+     "sentence": "有期徒刑2月，易科罰金1000元折算1日",
+     "status": "已確定（後案判決引述；確定日期未取得）",
+     "caseNo": "臺灣新竹地方法院103年度交易字第79號",
+     "judgmentUrl": "https://judgment.judicial.gov.tw/FJUD/data.aspx?ty=JD&id=SCDM%2C103%2C交易%2C79%2C20141031%2C1",
+     "sources": [
+      {
+       "media": "新竹地院後案判決引述",
+       "date": "2017-10-02",
+       "url": "https://judgment.judicial.gov.tw/FJUD/data.aspx?ty=JD&id=SCDM%2C106%2C竹交簡%2C668%2C20171002%2C1"
+      }
+     ]
+    },
+    {
+     "type": "guilty",
+     "offense": "侮辱公務員罪；酒駕公共危險罪（吐氣酒精濃度達每公升0.25毫克以上駕車，兩罪均為累犯）",
+     "sentence": "侮辱公務員罪有期徒刑4月；酒駕公共危險罪有期徒刑4月；應執行有期徒刑6月，均得易科罰金，以新臺幣1000元折算1日",
+     "status": "終局未確認",
+     "caseNo": "臺灣新竹地方法院106年度竹交簡字第668號",
+     "judgmentUrl": "https://judgment.judicial.gov.tw/FJUD/data.aspx?ty=JD&id=SCDM%2C106%2C竹交簡%2C668%2C20171002%2C1",
+     "sources": [
+      {
+       "media": "新竹地院",
+       "date": "2017-10-02",
+       "url": "https://judgment.judicial.gov.tw/FJUD/data.aspx?ty=JD&id=SCDM%2C106%2C竹交簡%2C668%2C20171002%2C1"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "level": "council",
+   "county": "新竹縣",
+   "district": 9,
+   "name": "黃豪杰",
+   "records": [
+    {
+     "type": "guilty",
+     "offense": "連續竊盜罪（盜採砂石）及違反水利法",
+     "sentence": "有期徒刑4年（一審，1996年，報導所載）",
+     "status": "終局未確認",
+     "caseNo": "案號報導未載",
+     "judgmentUrl": "",
+     "sources": []
+    }
+   ]
+  },
+  {
+   "level": "council",
+   "county": "新竹縣",
+   "district": 13,
+   "name": "林世偉",
+   "records": [
+    {
+     "type": "guilty",
+     "offense": "違反性騷擾防治法第25條第1項性騷擾罪",
+     "sentence": "有期徒刑4月，如易科罰金，以新臺幣1,000元折算1日",
+     "status": "已確定",
+     "caseNo": "臺灣高等法院花蓮分院114年度原侵上訴字第1號",
+     "judgmentUrl": "https://judgment.judicial.gov.tw/FJUD/data.aspx?ty=JD&id=TTDM%2C113%2C%E5%8E%9F%E4%BE%B5%E8%A8%B4%2C5%2C20241115%2C1",
+     "sources": []
+    }
+   ]
+  },
+  {
+   "level": "council",
+   "county": "新竹縣",
+   "district": 14,
+   "name": "張益生",
+   "records": [
+    {
+     "type": "guilty",
+     "offense": "貪污治罪條例第5條第1項第3款不違背職務收受賄賂罪（5罪，向露營區業者索賄）；刑法第214條使公務員登載不實罪（公費助理名冊）",
+     "sentence": "應執行有期徒刑9年，褫奪公權5年",
+     "status": "本次查核未追到上級審",
+     "caseNo": "臺灣新竹地方法院112年度原訴字第28號",
+     "judgmentUrl": "https://judgment.judicial.gov.tw/FJUD/data.aspx?ty=JD&id=SCDM%2C112%2C原訴%2C28%2C20240614%2C5",
+     "sources": []
+    }
+   ]
+  },
+  {
+   "level": "council",
+   "county": "嘉義市",
+   "district": 1,
+   "name": "郭文居",
+   "records": [
+    {
+     "type": "guilty",
+     "offense": "刑法第146條第2項妨害投票正確罪（共同正犯，2014 年市議員選舉虛遷戶籍幽靈人口）",
+     "sentence": "有期徒刑1年2月，緩刑4年，褫奪公權3年（二審改判，三審上訴駁回確定）",
+     "status": "已確定",
+     "caseNo": "最高法院106年度台上字第4093號",
+     "judgmentUrl": "https://judgment.judicial.gov.tw/FJUD/data.aspx?ty=JD&id=TPSM%2C106%2C台上%2C4093%2C20171227%2C1",
+     "sources": []
+    }
+   ]
+  },
+  {
+   "level": "council",
+   "county": "嘉義市",
+   "district": 2,
+   "name": "魏志軒",
+   "records": [
+    {
+     "type": "guilty",
+     "offense": "刑法第277條第1項傷害罪",
+     "sentence": "拘役20日，易科罰金1000元折算1日",
+     "status": "已確定，2020-03-25（簡易判決上訴第二審合議庭判決，傷害罪屬刑事訴訟法第376條第1項第1款最重本刑3年以下有期徒刑之罪，不得上訴第三審）",
+     "caseNo": "臺灣嘉義地方法院108年度簡上字第166號",
+     "judgmentUrl": "https://judgment.judicial.gov.tw/FJUD/data.aspx?ty=JD&id=CYDM%2C108%2C%E7%B0%A1%E4%B8%8A%2C166%2C20200325%2C1",
+     "sources": []
+    }
+   ]
+  },
+  {
+   "level": "council",
+   "county": "嘉義縣",
+   "district": 4,
+   "name": "蔡政宜",
+   "records": [
+    {
+     "type": "indicted",
+     "offense": "洗錢防制法罪嫌（起訴罪名，法院未認定）",
+     "sentence": "尚未判決",
+     "status": "未確定",
+     "caseNo": "臺灣橋頭地方法院114年度金重訴字第4號",
+     "judgmentUrl": "https://judgment.judicial.gov.tw/FJUD/data.aspx?ty=JD&id=CTDM%2C114%2C金重訴%2C4%2C20260210%2C1",
+     "sources": [
+      {
+       "media": "聯合新聞網",
+       "date": "2026-06-12",
+       "url": "https://udn.com/news/story/7321/9563352"
+      },
+      {
+       "media": "自由時報",
+       "date": "2026-06-12",
+       "url": "https://news.ltn.com.tw/news/society/breakingnews/5470109"
+      },
+      {
+       "media": "司法院裁判書",
+       "date": "2026-06-03",
+       "url": "https://judgment.judicial.gov.tw/FJUD/data.aspx?ty=JD&id=CTDM%2C115%2C%E7%B0%A1%2C531%2C20260603%2C1（他案"
+      }
+     ]
+    },
+    {
+     "type": "guilty",
+     "offense": "刑法第268條圖利聚眾賭博罪（共同正犯）",
+     "sentence": "有期徒刑5月，易科罰金2000元折算1日",
+     "status": "已確定",
+     "caseNo": "臺灣高雄地方法院102年度審易字第1249號",
+     "judgmentUrl": "https://judgment.judicial.gov.tw/FJUD/data.aspx?ty=JD&id=KSDM%2C102%2C審易%2C1249%2C20140207%2C2",
+     "sources": []
+    },
+    {
+     "type": "guilty",
+     "offense": "麻醉藥品管理條例案件（罪名條項依他案判決前科欄引述，原判決本輪未取得）",
+     "sentence": "有期徒刑3年2月（臺灣嘉義地方法院81年度訴字第38號，上訴經臺灣高等法院臺南分院駁回確定）；另同院80年度訴字第588號有期徒刑5月易科罰金；定應執行刑3年5月，83年假釋、84年保護管束期滿執行完畢",
+     "status": "已確定",
+     "caseNo": "字號他案未載（原審臺灣嘉義地方法院81年度訴字第38號）",
+     "judgmentUrl": "https://judgment.judicial.gov.tw/FJUD/data.aspx?ty=JD&id=PCDM%2C99%2C%E7%9F%9A%E8%A8%B4%2C1%2C20110630%2C2",
+     "sources": []
+    },
+    {
+     "type": "guilty",
+     "offense": "刑法第339條第1項詐欺取財罪（共同正犯，多罪）及第339條第3項、第1項詐欺取財未遂罪（職棒打假球簽賭詐欺）",
+     "sentence": "二審撤銷改判，應執行有期徒刑3年8月，如易科罰金以銀元300元即新臺幣900元折算1日（一審應執行3年10月併科罰金1000萬元）",
+     "status": "已確定",
+     "caseNo": "臺灣高等法院100年度矚上易字第6號",
+     "judgmentUrl": "https://judgment.judicial.gov.tw/FJUD/data.aspx?ty=JD&id=TPHM%2C100%2C%E7%9F%9A%E4%B8%8A%E6%98%93%2C6%2C20140813%2C2\nhttps://judgment.judicial.gov.tw/FJUD/data.aspx?ty=JD&id=PCDM%2C99%2C%E7%9F%9A%E8%A8%B4%2C1%2C20110630%2C2",
+     "sources": [
+      {
+       "media": "司法院裁判書",
+       "date": "2014-08-13",
+       "url": "https://judgment.judicial.gov.tw/FJUD/data.aspx?ty=JD&id=TPHM%2C100%2C%E7%9F%9A%E4%B8%8A%E6%98%93%2C6%2C20140813%2C2"
+      },
+      {
+       "media": "司法院裁判書",
+       "date": "2014-11-28",
+       "url": "https://judgment.judicial.gov.tw/FJUD/data.aspx?ty=JD&id=TPHM%2C103%2C%E8%81%B2%2C3816%2C20141128%2C1"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "level": "council",
+   "county": "嘉義縣",
+   "district": 6,
+   "name": "何博倫",
+   "records": [
+    {
+     "type": "guilty",
+     "offense": "個人資料保護法第41條非公務機關非法利用個人資料罪（共同正犯）",
+     "sentence": "有期徒刑1年；緩刑4年，付保護管束，向公庫支付20萬元，義務勞務80小時",
+     "status": "本次查核未追到上級審",
+     "caseNo": "臺灣高等法院臺南分院115年度上訴字第870號",
+     "judgmentUrl": "https://judgment.judicial.gov.tw/FJUD/data.aspx?ty=JD&id=TNHM%2C115%2C上訴%2C870%2C20260611%2C1",
+     "sources": []
+    }
+   ]
+  },
+  {
+   "level": "council",
+   "county": "嘉義縣",
+   "district": 6,
+   "name": "張明達",
+   "records": [
+    {
+     "type": "indicted",
+     "offense": "貪污治罪條例不違背職務行為收受賄賂罪嫌（起訴罪名，法院未認定）",
+     "sentence": "尚未判決",
+     "status": "未確定",
+     "caseNo": "",
+     "judgmentUrl": "",
+     "sources": [
+      {
+       "media": "中央社",
+       "date": "2026-04-10",
+       "url": "https://www.cna.com.tw/news/asoc/202604100329.aspx"
+      },
+      {
+       "media": "聯合新聞網",
+       "date": "2026-04-10",
+       "url": "https://udn.com/news/story/7321/9434254"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "level": "council",
+   "county": "嘉義縣",
+   "district": 6,
+   "name": "陳柏麟",
+   "records": [
+    {
+     "type": "guilty",
+     "offense": "刑法第304條恐嚇危害安全罪（共同正犯）",
+     "sentence": "有期徒刑4月，易科罰金1000元折算1日",
+     "status": "不得上訴而確定（刑事訴訟法第455條之1第2項）",
+     "caseNo": "臺灣嘉義地方法院106年度嘉簡字第150號",
+     "judgmentUrl": "https://judgment.judicial.gov.tw/FJUD/data.aspx?ty=JD&id=CYDM%2C106%2C嘉簡%2C150%2C20170413%2C1",
+     "sources": []
+    }
+   ]
+  },
+  {
+   "level": "council",
+   "county": "彰化縣",
+   "district": 1,
+   "name": "李成濟",
+   "records": [
+    {
+     "type": "guilty",
+     "offense": "刑法第132條第1項公務員交付國防以外之秘密文書罪",
+     "sentence": "有期徒刑3月，易科罰金1000元折算1日",
+     "status": "不得上訴而確定（刑事訴訟法第376條）",
+     "caseNo": "臺灣高等法院臺中分院112年度上易字第160號",
+     "judgmentUrl": "https://judgment.judicial.gov.tw/FJUD/data.aspx?ty=JD&id=TCHM%2C112%2C上易%2C160%2C20230516%2C1",
+     "sources": []
+    }
+   ]
+  },
+  {
+   "level": "council",
+   "county": "彰化縣",
+   "district": 1,
+   "name": "顧勝敏",
+   "records": [
+    {
+     "type": "indicted",
+     "offense": "貪污治罪條例對主管事務圖利罪嫌；刑法公務員假借職務上機會故意犯背信罪嫌（起訴罪名，法院未認定）",
+     "sentence": "尚未判決",
+     "status": "未確定",
+     "caseNo": "",
+     "judgmentUrl": "",
+     "sources": [
+      {
+       "media": "中央社",
+       "date": "2025-09-10",
+       "url": "https://www.cna.com.tw/news/asoc/202509100158.aspx"
+      },
+      {
+       "media": "中央社",
+       "date": "2026-06-12",
+       "url": "https://www.cna.com.tw/news/aipl/202606120117.aspx"
+      },
+      {
+       "media": "監察院新聞稿",
+       "date": "2026-06-10",
+       "url": "https://www.cy.gov.tw/News_Content.aspx?n=124&sms=8912&s=37547"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "level": "council",
+   "county": "彰化縣",
+   "district": 2,
+   "name": "凃淑媚",
+   "records": [
+    {
+     "type": "guilty",
+     "offense": "刑法第214條使公務員登載不實罪（7罪，提報未實際任職者為縣議員助理）",
+     "sentence": "各罪刑度載於判決附表；應執行有期徒刑2年，易科罰金1000元折算1日；緩刑5年，向公庫支付200萬元",
+     "status": "已確定（二審臺灣高等法院臺中分院108年度上訴字第1681號上訴駁回）",
+     "caseNo": "臺灣彰化地方法院107年度訴字第852號",
+     "judgmentUrl": "https://judgment.judicial.gov.tw/FJUD/data.aspx?ty=JD&id=CHDM%2C107%2C訴%2C852%2C20190528%2C1",
+     "sources": []
+    },
+    {
+     "type": "guilty",
+     "offense": "刑法第214條使公務員登載不實罪（7罪，提報未實際任職者為縣議員助理）",
+     "sentence": "應執行有期徒刑2年，易科罰金1000元折算1日；緩刑5年，向公庫支付200萬元",
+     "status": "已確定（二審臺灣高等法院臺中分院108年度上訴字第1681號上訴駁回）",
+     "caseNo": "臺灣高等法院臺中分院108年度上訴字第1681號",
+     "judgmentUrl": "https://judgment.judicial.gov.tw/FJUD/data.aspx?ty=JD&id=TCHM%2C108%2C上訴%2C1681%2C20191017%2C1",
+     "sources": []
+    }
+   ]
+  },
+  {
+   "level": "council",
+   "county": "彰化縣",
+   "district": 3,
+   "name": "柯振杯",
+   "records": [
+    {
+     "type": "guilty",
+     "offense": "刑法第185條之3第1項第1款不能安全駕駛罪（累犯）",
+     "sentence": "有期徒刑4月，累犯，易科罰金1000元折算1日",
+     "status": "已確定",
+     "caseNo": "臺灣彰化地方法院106年度交簡字第606號",
+     "judgmentUrl": "https://judgment.judicial.gov.tw/FJUD/data.aspx?ty=JD&id=CHDM%2C106%2C交簡%2C606%2C20170310%2C1",
+     "sources": []
+    },
+    {
+     "type": "guilty",
+     "offense": "行使偽造私文書罪（共同正犯）",
+     "sentence": "有期徒刑1年，減為6月，易科罰金銀元300元即新臺幣900元折算1日",
+     "status": "已確定",
+     "caseNo": "臺灣高等法院臺中分院102年度重上更(三)字第22號",
+     "judgmentUrl": "https://judgment.judicial.gov.tw/FJUD/data.aspx?ty=JD&id=TCHM%2C102%2C重上更(三)%2C22%2C20140619%2C1",
+     "sources": []
+    },
+    {
+     "type": "guilty",
+     "offense": "刑法第185條之3第1項第1款不能安全駕駛罪（累犯）",
+     "sentence": "有期徒刑7月，併科罰金6萬元，易服勞役1000元折算1日，累犯",
+     "status": "不得上訴而確定（刑事訴訟法第376條第1項第1款）",
+     "caseNo": "臺灣高等法院臺中分院106年度交上易字第1132號",
+     "judgmentUrl": "https://judgment.judicial.gov.tw/FJUD/data.aspx?ty=JD&id=TCHM%2C106%2C交上易%2C1132%2C20171207%2C1",
+     "sources": []
+    }
+   ]
+  },
+  {
+   "level": "council",
+   "county": "彰化縣",
+   "district": 4,
+   "name": "曹嘉豪",
+   "records": [
+    {
+     "type": "guilty",
+     "offense": "刑法第268條意圖營利聚眾賭博罪（共同正犯）",
+     "sentence": "有期徒刑1年，減為6月，易科罰金銀元300元即新臺幣900元折算1日；沒收扣案電腦主機等物",
+     "status": "二審判決確定（2008-01-22）。二審判決末載「不得上訴」（賭博罪屬刑事訴訟法第376條不得上訴第三審之罪）。",
+     "caseNo": "臺灣高等法院臺中分院96年度上易字第1991號",
+     "judgmentUrl": "https://judgment.judicial.gov.tw/FJUD/data.aspx?ty=JD&id=TCHM%2C96%2C%E4%B8%8A%E6%98%93%2C1991%2C20080122%2C1\nhttps://judgment.judicial.gov.tw/FJUD/data.aspx?ty=JD&id=CHDM%2C95%2C%E6%98%93%2C984%2C20070713%2C1",
+     "sources": []
+    }
+   ]
+  },
+  {
+   "level": "council",
+   "county": "彰化縣",
+   "district": 4,
+   "name": "賴澤民",
+   "records": [
+    {
+     "type": "guilty",
+     "offense": "公職人員選舉罷免法第104條第1項傳播不實罪",
+     "sentence": "有期徒刑3月，易科罰金1000元折算1日",
+     "status": "已確定",
+     "caseNo": "臺灣彰化地方法院112年度選訴字第17號",
+     "judgmentUrl": "https://judgment.judicial.gov.tw/FJUD/data.aspx?ty=JD&id=CHDM%2C112%2C選訴%2C17%2C20231130%2C1",
+     "sources": []
+    }
+   ]
+  },
+  {
+   "level": "council",
+   "county": "彰化縣",
+   "district": 7,
+   "name": "江熊一楓",
+   "records": [
+    {
+     "type": "indicted",
+     "offense": "貪污治罪條例第5條第1項第2款利用職務上機會詐取財物罪嫌；刑法第214條使公務員登載不實罪嫌（起訴罪名，法院未認定）",
+     "sentence": "尚未判決",
+     "status": "未確定",
+     "caseNo": "臺灣彰化地方法院115年度訴字第640號",
+     "judgmentUrl": "https://judgment.judicial.gov.tw/FJUD/data.aspx?ty=JD&id=CHDM%2C115%2C訴%2C640%2C20260616%2C1",
+     "sources": [
+      {
+       "media": "中央社",
+       "date": "2026-03-26",
+       "url": "https://www.cna.com.tw/news/asoc/202603260133.aspx"
+      },
+      {
+       "media": "自由時報",
+       "date": "2026-03-26",
+       "url": "https://news.ltn.com.tw/news/society/breakingnews/5383070"
+      },
+      {
+       "media": "自由時報",
+       "date": "2026-03-28",
+       "url": "https://news.ltn.com.tw/news/society/breakingnews/5385784"
+      },
+      {
+       "media": "自由時報",
+       "date": "2026-06-18",
+       "url": "https://news.ltn.com.tw/news/society/breakingnews/5476658"
+      },
+      {
+       "media": "自由時報",
+       "date": "2026-09-04",
+       "url": "https://news.ltn.com.tw/news/politics/breakingnews/5563224"
+      },
+      {
+       "media": "太報",
+       "date": "2026-03-26",
+       "url": "https://www.taisounds.com/news/content/71/248122"
+      },
+      {
+       "media": "鏡週刊",
+       "date": "2026-03-26",
+       "url": "https://www.mnews.tw/story/mm-20260326inv008"
+      },
+      {
+       "media": "ETtoday",
+       "date": "2026-08-21",
+       "url": "https://www.ettoday.net/news/20260821/3223237.htm"
+      },
+      {
+       "media": "TVBS",
+       "date": "2026-03-26",
+       "url": "https://news.tvbs.com.tw/politics/3161671"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "level": "council",
+   "county": "彰化縣",
+   "district": 7,
+   "name": "劉淑芳",
+   "records": [
+    {
+     "type": "guilty",
+     "offense": "刑法第214條使公務員登載不實罪（共同連續）",
+     "sentence": "有期徒刑1年，減為有期徒刑6月，易科罰金銀元300元即新臺幣900元折算1日",
+     "status": "已確定（判決載被告劉淑芳部分不得上訴第三審，2011-12-15 確定）",
+     "caseNo": "臺灣高等法院臺中分院99年度重上更(二)字第111號",
+     "judgmentUrl": "https://judgment.judicial.gov.tw/FJUD/data.aspx?ty=JD&id=TCHM%2C99%2C%E9%87%8D%E4%B8%8A%E6%9B%B4(%E4%BA%8C)%2C111%2C20111215%2C1",
+     "sources": [
+      {
+       "media": "自由時報",
+       "date": "2005-09-10",
+       "url": "https://news.ltn.com.tw/news/society/paper/33643"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "level": "council",
+   "county": "臺中市",
+   "district": 4,
+   "name": "王朝坤",
+   "records": [
+    {
+     "type": "guilty",
+     "offense": "農會法第47條之1第1項第2款交付財物罪（共同正犯）",
+     "sentence": "有期徒刑1年6月；緩刑4年，付保護管束，向公庫支付20萬元，法治教育40小時",
+     "status": "已確定，2019-10-23。案由字別「選上易」為不得上訴第三審之案件；以 match_phrase「王朝坤 選上易字第662號」查判決庫無第三審",
+     "caseNo": "臺灣高等法院臺中分院108年度選上易字第662號",
+     "judgmentUrl": "https://judgment.judicial.gov.tw/FJUD/data.aspx?ty=JD&id=TCHM%2C108%2C%E9%81%B8%E4%B8%8A%E6%98%93%2C662%2C20191023%2C1",
+     "sources": []
+    }
+   ]
+  },
+  {
+   "level": "council",
+   "county": "臺中市",
+   "district": 4,
+   "name": "黃朝淵",
+   "records": [
+    {
+     "type": "guilty",
+     "offense": "傷害罪；公然侮辱罪（家庭暴力防治法之家庭暴力罪，對配偶）",
+     "sentence": "傷害罪拘役50日；公然侮辱罪維持一審；應執行拘役60日，如易科罰金以1,000元折算1日",
+     "status": "已確定（不得上訴第三審）",
+     "caseNo": "臺灣高等法院臺中分院103年度上易字第587號",
+     "judgmentUrl": "https://judgment.judicial.gov.tw/FJUD/data.aspx?ty=JD&id=TCHM%2C103%2C%E4%B8%8A%E6%98%93%2C587%2C20141216%2C1",
+     "sources": []
+    },
+    {
+     "type": "guilty",
+     "offense": "駕駛動力交通工具發生交通事故致人傷害逃逸罪（刑法第185條之4第1項前段）",
+     "sentence": "有期徒刑8月；二審上訴駁回並宣告緩刑3年，應於判決確定後6個月內向公庫支付10萬元",
+     "status": "本次查核未追到上級審（最高法院查無上訴紀錄）",
+     "caseNo": "臺灣高等法院臺中分院114年度交上訴字第81號",
+     "judgmentUrl": "https://judgment.judicial.gov.tw/FJUD/data.aspx?ty=JD&id=TCHM%2C114%2C%E4%BA%A4%E4%B8%8A%E8%A8%B4%2C81%2C20251008%2C1",
+     "sources": []
+    }
+   ]
+  },
+  {
+   "level": "council",
+   "county": "臺中市",
+   "district": 8,
+   "name": "賴順仁",
+   "records": [
+    {
+     "type": "guilty",
+     "offense": "刑法第185條之3不能安全駕駛罪",
+     "sentence": "有期徒刑2月，易科罰金1000元折算1日",
+     "status": "本次查核未追到上級審",
+     "caseNo": "臺灣臺中地方法院101年度中交簡字第403號",
+     "judgmentUrl": "https://judgment.judicial.gov.tw/FJUD/data.aspx?ty=JD&id=TCDM%2C101%2C中交簡%2C403%2C20120326%2C1",
+     "sources": []
+    }
+   ]
+  },
+  {
+   "level": "council",
+   "county": "臺中市",
+   "district": 13,
+   "name": "鄭伯其",
+   "records": [
+    {
+     "type": "guilty",
+     "offense": "藥事法第83條第1項販賣偽藥罪（累犯）",
+     "sentence": "有期徒刑5月，累犯",
+     "status": "本次查核未追到上級審",
+     "caseNo": "臺灣臺中地方法院101年度訴字第1245號",
+     "judgmentUrl": "https://judgment.judicial.gov.tw/FJUD/data.aspx?ty=JD&id=TCDM%2C101%2C訴%2C1245%2C20120712%2C1",
+     "sources": []
+    },
+    {
+     "type": "guilty",
+     "offense": "傷害罪",
+     "sentence": "有期徒刑5月，如易科罰金以300元折算1日（95年5月30日易科罰金執行完畢）",
+     "status": "已確定（二審上訴駁回）",
+     "caseNo": "臺灣高等法院臺中分院94年度上易字第1390號",
+     "judgmentUrl": "https://judgment.judicial.gov.tw/FJUD/data.aspx?ty=JD&id=TCHM%2C94%2C%E4%B8%8A%E6%98%93%2C1390%2C20060322%2C1",
+     "sources": []
+    },
+    {
+     "type": "guilty",
+     "offense": "詐欺取財罪（9罪）（累犯）；三人以上共同犯詐欺取財罪（12罪）（累犯）",
+     "sentence": "9罪各有期徒刑8月；12罪各有期徒刑1年2月，均累犯；應執行有期徒刑1年6月；緩刑3年，向公庫支付40萬元",
+     "status": "本次查核未追到上級審",
+     "caseNo": "臺灣臺中地方法院109年度訴字第368號",
+     "judgmentUrl": "https://judgment.judicial.gov.tw/FJUD/data.aspx?ty=JD&id=TCDM%2C109%2C訴%2C368%2C20200708%2C1",
+     "sources": []
+    }
+   ]
+  },
+  {
+   "level": "council",
+   "county": "臺中市",
+   "district": 17,
+   "name": "朱元宏",
+   "records": [
+    {
+     "type": "guilty",
+     "offense": "詐欺取財罪",
+     "sentence": "有期徒刑2年2月、2年，應執行有期徒刑3年10月",
+     "status": "不得上訴而確定（刑事訴訟法第376條第1項第4款）",
+     "caseNo": "臺灣高等法院臺中分院97年度上易字第316號",
+     "judgmentUrl": "https://judgment.judicial.gov.tw/FJUD/data.aspx?ty=JD&id=TCHM%2C97%2C上易%2C316%2C20080624%2C2",
+     "sources": []
+    }
+   ]
+  },
+  {
+   "level": "council",
+   "county": "臺中市",
+   "district": 17,
+   "name": "柯靜志",
+   "records": [
+    {
+     "type": "guilty",
+     "offense": "違背安全駕駛罪（酒後駕車）",
+     "sentence": "罰金5萬元（依他案引述）",
+     "status": "已確定（他案引述：後案MLDM,105,苗原交簡,61,20160831,1所附聲請簡易判決處刑書明載本案「判處罰金新臺幣5萬元確定」）",
+     "caseNo": "臺灣臺中地方法院97年度豐交簡字第35號",
+     "judgmentUrl": "",
+     "sources": []
+    },
+    {
+     "type": "guilty",
+     "offense": "刑法第185條之3第1項第1款不能安全駕駛罪",
+     "sentence": "有期徒刑3月，併科罰金1萬元，均易科／易服1000元折算1日",
+     "status": "終局未確認",
+     "caseNo": "臺灣苗栗地方法院105年度苗原交簡字第61號",
+     "judgmentUrl": "https://judgment.judicial.gov.tw/FJUD/data.aspx?ty=JD&id=MLDM%2C105%2C%E8%8B%97%E5%8E%9F%E4%BA%A4%E7%B0%A1%2C61%2C20160831%2C1",
+     "sources": []
+    },
+    {
+     "type": "guilty",
+     "offense": "過失傷害致人重傷罪",
+     "sentence": "有期徒刑5月，易科罰金1000元折算1日",
+     "status": "終局未確認",
+     "caseNo": "臺灣臺中地方法院108年度沙原交簡字第93號",
+     "judgmentUrl": "https://judgment.judicial.gov.tw/FJUD/data.aspx?ty=JD&id=SDEM%2C108%2C%E6%B2%99%E5%8E%9F%E4%BA%A4%E7%B0%A1%2C93%2C20200522%2C1",
+     "sources": []
+    },
+    {
+     "type": "guilty",
+     "offense": "刑法第185條之3第1項第1款不能安全駕駛罪",
+     "sentence": "有期徒刑3月，併科罰金3萬元，均易科／易服1000元折算1日",
+     "status": "終局未確認",
+     "caseNo": "臺灣新北地方法院113年度原交簡字第153號",
+     "judgmentUrl": "https://judgment.judicial.gov.tw/FJUD/data.aspx?ty=JD&id=PCDM%2C113%2C%E5%8E%9F%E4%BA%A4%E7%B0%A1%2C153%2C20241119%2C1",
+     "sources": []
+    }
+   ]
+  },
+  {
+   "level": "mayor",
+   "county": "臺北市",
+   "district": 0,
+   "name": "郭璽",
+   "records": [
+    {
+     "type": "guilty",
+     "offense": "散布文字誹謗罪",
+     "sentence": "拘役50日，如易科罰金以新台幣1,000元折算1日",
+     "status": "已確定",
+     "caseNo": "臺灣高等法院112年度上易字第1626號",
+     "judgmentUrl": "https://judgment.judicial.gov.tw/FJUD/data.aspx?ty=JD&id=TPHM%2C112%2C%E4%B8%8A%E6%98%93%2C1626%2C20240530%2C1",
+     "sources": []
+    },
+    {
+     "type": "guilty",
+     "offense": "誹謗罪",
+     "sentence": "有期徒刑4月，如易科罰金以新台幣1,000元折算1日",
+     "status": "未確定，未見上級審；報導載一審判決後仍可上訴",
+     "caseNo": "臺灣高雄地方法院114年度自字第1號",
+     "judgmentUrl": "https://judgment.judicial.gov.tw/FJUD/data.aspx?ty=JD&id=KSDM%2C114%2C%E8%87%AA%2C1%2C20260609%2C3",
+     "sources": []
+    }
+   ]
+  },
+  {
+   "level": "council",
+   "county": "臺北市",
+   "district": 1,
+   "name": "李文",
+   "records": [
+    {
+     "type": "guilty",
+     "offense": "刑法第309條第1項公然侮辱罪（3罪）",
+     "sentence": "各罪拘役載於判決附表；應執行拘役30日，易科罰金1000元折算1日",
+     "status": "本次查核未追到上級審（一審載得上訴，判決庫查無引用本案號之上級審判決）",
+     "caseNo": "臺灣臺北地方法院107年度自字第60號",
+     "judgmentUrl": "https://judgment.judicial.gov.tw/FJUD/data.aspx?ty=JD&id=TPDM%2C107%2C%E8%87%AA%2C60%2C20190417%2C1",
+     "sources": [
+      {
+       "media": "自由時報",
+       "date": "2019-04-17",
+       "url": "https://news.ltn.com.tw/news/society/breakingnews/2762067"
+      }
+     ]
+    },
+    {
+     "type": "guilty",
+     "offense": "刑法第309條第1項公然侮辱罪（53罪）",
+     "sentence": "各罪拘役載於判決附表；應執行拘役120日，易科罰金1000元折算1日",
+     "status": "本次查核未追到上級審（判決庫查無引用本案號之上級審判決）",
+     "caseNo": "臺灣臺北地方法院107年度自字第92號",
+     "judgmentUrl": "https://judgment.judicial.gov.tw/FJUD/data.aspx?ty=JD&id=TPDM%2C107%2C%E8%87%AA%2C92%2C20190826%2C1",
+     "sources": [
+      {
+       "media": "ETtoday",
+       "date": "2019-08-26",
+       "url": "https://www.ettoday.net/news/20190826/1521784.htm"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "level": "council",
+   "county": "臺北市",
+   "district": 1,
+   "name": "侯漢廷",
+   "records": [
+    {
+     "type": "indicted",
+     "offense": "總統副總統選舉罷免法、公職人員選舉罷免法及刑法行使偽造私文書罪嫌（起訴罪名，法院未認定）",
+     "sentence": "尚未判決",
+     "status": "未確定",
+     "caseNo": "",
+     "judgmentUrl": "",
+     "sources": [
+      {
+       "media": "中央社",
+       "date": "2026-08-21",
+       "url": "https://www.cna.com.tw/news/asoc/202608210089.aspx"
+      },
+      {
+       "media": "自由時報",
+       "date": "2026-08-21",
+       "url": "https://news.ltn.com.tw/news/politics/breakingnews/5547247"
+      },
+      {
+       "media": "TVBS",
+       "date": "2026-08-21",
+       "url": "https://news.tvbs.com.tw/local/4010488"
+      },
+      {
+       "media": "三立新聞網",
+       "date": "2026-08-21",
+       "url": "https://www.setn.com/news/1893103"
+      },
+      {
+       "media": "聯合新聞網",
+       "date": "2026-08-21",
+       "url": "https://udn.com/news/story/7315/9705762"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "level": "council",
+   "county": "臺北市",
+   "district": 1,
+   "name": "陳重文",
+   "records": [
+    {
+     "type": "guilty",
+     "offense": "農會法第47條之1第1項第2款交付財物罪（共同正犯）",
+     "sentence": "有期徒刑5月，易科罰金1000元折算1日；沒收附表所示財物，不能沒收時追徵",
+     "status": "本次查核未追到上級審",
+     "caseNo": "臺灣士林地方法院115年度審選簡字第1號",
+     "judgmentUrl": "https://judgment.judicial.gov.tw/FJUD/data.aspx?ty=JD&id=SLDM%2C115%2C審選簡%2C1%2C20260313%2C1",
+     "sources": []
+    },
+    {
+     "type": "guilty",
+     "offense": "貪污治罪條例第6條第1項第5款公務員對於非主管監督之事務圖利罪（共同正犯）；公司法第9條第1項中段發還股款罪；刑法第214條使公務員登載不實罪；刑法第336條第2項業務侵占罪（2罪）；公司法第9條第1項前段未繳納股款罪",
+     "sentence": "圖利罪處有期徒刑7年4月褫奪公權6年，另業務侵占7月、10月、未繳納股款9月、發還股款5月、使公務員登載不實3月；不得易科罰金部分應執行有期徒刑8年6月，褫奪公權6年；得易科罰金部分應執行有期徒刑6月，易科罰金1000元折算1日；沒收犯罪所得90萬4120元、441萬元，不能沒收時追徵",
+     "status": "未確定（被告上訴，臺灣高等法院114年度上訴字第1420號審理中）",
+     "caseNo": "臺灣臺北地方法院113年度金訴字第32號",
+     "judgmentUrl": "https://judgment.judicial.gov.tw/FJUD/data.aspx?ty=JD&id=TPDM%2C113%2C金訴%2C32%2C20241227%2C3",
+     "sources": [
+      {
+       "media": "司法院裁判書",
+       "date": "2024-12-27",
+       "url": "https://judgment.judicial.gov.tw/FJUD/data.aspx?ty=JD&id=TPDM%2C113%2C%E9%87%91%E8%A8%B4%2C32%2C20241227%2C3"
+      },
+      {
+       "media": "司法院裁判書",
+       "date": "2026-01-12",
+       "url": "https://judgment.judicial.gov.tw/FJUD/data.aspx?ty=JD&id=TPHM%2C114%2C%E4%B8%8A%E8%A8%B4%2C1420%2C20260112%2C2"
+      },
+      {
+       "media": "中央社",
+       "date": "2024-12-27",
+       "url": "https://www.cna.com.tw/news/asoc/202412270039.aspx"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "level": "council",
+   "county": "臺北市",
+   "district": 1,
+   "name": "賴苡任",
+   "records": [
+    {
+     "type": "indicted",
+     "offense": "刑法第216條、第210條行使偽造私文書罪嫌；個人資料保護法非法利用個人資料罪嫌（起訴罪名，法院未認定）",
+     "sentence": "尚未判決",
+     "status": "未確定",
+     "caseNo": "",
+     "judgmentUrl": "",
+     "sources": [
+      {
+       "media": "中央社",
+       "date": "2025-06-16",
+       "url": "https://www.cna.com.tw/news/asoc/202506160309.aspx"
+      },
+      {
+       "media": "公視新聞網",
+       "date": "2025-06-16",
+       "url": "https://news.pts.org.tw/article/756358"
+      },
+      {
+       "media": "中時",
+       "date": "2025-06-16",
+       "url": "https://www.chinatimes.com/realtimenews/20250616003887-260407"
+      },
+      {
+       "media": "聯合新聞網",
+       "date": "2025-06-16",
+       "url": "https://udn.com/news/story/124323/8811021"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "level": "council",
+   "county": "臺北市",
+   "district": 4,
+   "name": "朱政騏",
+   "records": [
+    {
+     "type": "indicted",
+     "offense": "國家安全法罪嫌（起訴罪名，法院未認定）",
+     "sentence": "尚未判決",
+     "status": "未確定",
+     "caseNo": "",
+     "judgmentUrl": "",
+     "sources": [
+      {
+       "media": "公視新聞網",
+       "date": "2026-04-02",
+       "url": "https://news.pts.org.tw/article/801925/"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "level": "council",
+   "county": "臺北市",
+   "district": 4,
+   "name": "陳怡君",
+   "records": [
+    {
+     "type": "guilty",
+     "offense": "貪污治罪條例利用職務上機會詐取財物罪（詐領公費助理薪資等384萬8568元）及不違背職務收受賄賂罪（收賄70萬5894元）",
+     "sentence": "應執行有期徒刑7年10月，褫奪公權5年",
+     "status": "未確定（一審判決，檢察官上訴，臺灣高等法院審理中）",
+     "caseNo": "臺灣士林地方法院114年度訴字第629號",
+     "judgmentUrl": "https://judgment.judicial.gov.tw/FJUD/data.aspx?ty=JD&id=SLDM%2C114%2C%E8%A8%B4%2C629%2C20260112%2C2\nhttps://www.cna.com.tw/news/asoc/202601120163.aspx",
+     "sources": [
+      {
+       "media": "司法院裁判書",
+       "date": "2026-01-12",
+       "url": "https://judgment.judicial.gov.tw/FJUD/data.aspx?ty=JD&id=SLDM%2C114%2C%E8%A8%B4%2C629%2C20260112%2C2"
+      },
+      {
+       "media": "中央社",
+       "date": "2026-01-12",
+       "url": "https://www.cna.com.tw/news/asoc/202601120163.aspx"
+      },
+      {
+       "media": "公視新聞網",
+       "date": "2026-01-12",
+       "url": "https://news.pts.org.tw/article/790309"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "level": "council",
+   "county": "臺北市",
+   "district": 4,
+   "name": "葉林傳",
+   "records": [
+    {
+     "type": "indicted",
+     "offense": "貪污治罪條例對於主管或監督之事務圖利罪嫌；刑法意圖營利供給賭博場所罪嫌（起訴罪名，法院未認定）",
+     "sentence": "尚未判決",
+     "status": "未確定",
+     "caseNo": "",
+     "judgmentUrl": "",
+     "sources": [
+      {
+       "media": "中央社",
+       "date": "2025-08-29",
+       "url": "https://www.cna.com.tw/news/asoc/202508290073.aspx"
+      },
+      {
+       "media": "華視新聞",
+       "date": "2025-08-29",
+       "url": "https://news.cts.com.tw/cts/politics/202508/202508292507841.html"
+      },
+      {
+       "media": "中央社",
+       "date": "2025-08-01",
+       "url": "https://www.cna.com.tw/news/asoc/202508010015.aspx"
+      },
+      {
+       "media": "中央社",
+       "date": "2025-07-31",
+       "url": "https://www.cna.com.tw/news/asoc/202507310194.aspx"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "level": "council",
+   "county": "臺北市",
+   "district": 5,
+   "name": "鍾小平",
+   "records": [
+    {
+     "type": "guilty",
+     "offense": "97年8月13日修正前政治獻金法第23條第1項擬參選人違反同法第10條第1項未經許可設立專戶而收受政治獻金罪",
+     "sentence": "有期徒刑3月，易科罰金1000元折算1日，減為有期徒刑1月15日；沒收政治獻金10萬元，不能沒收時追徵",
+     "status": "終局未確認",
+     "caseNo": "臺灣臺北地方法院100年度審易字第318號",
+     "judgmentUrl": "https://judgment.judicial.gov.tw/FJUD/data.aspx?ty=JD&id=TPDM%2C100%2C%E5%AF%A9%E6%98%93%2C318%2C20111118%2C1",
+     "sources": []
+    }
+   ]
+  },
+  {
+   "level": "council",
+   "county": "臺北市",
+   "district": 6,
+   "name": "李道翔",
+   "records": [
+    {
+     "type": "guilty",
+     "offense": "刑法無故侵入建築物罪（共同正犯）",
+     "sentence": "拘役50日，易科罰金1000元折算1日",
+     "status": "終局未確認",
+     "caseNo": "臺灣臺北地方法院114年度易字第1472號",
+     "judgmentUrl": "https://judgment.judicial.gov.tw/FJUD/data.aspx?ty=JD&id=TPDM%2C114%2C易%2C1472%2C20260225%2C1",
+     "sources": []
+    }
+   ]
+  },
+  {
+   "level": "council",
+   "county": "臺北市",
+   "district": 6,
+   "name": "游智彬",
+   "records": [
+    {
+     "type": "guilty",
+     "offense": "刑法第310條第2項散布文字誹謗罪（2罪）",
+     "sentence": "2罪各處有期徒刑3月，易科罰金1000元折算1日",
+     "status": "不得上訴而確定（刑事訴訟法第376條）",
+     "caseNo": "臺灣高等法院114年度上易字第2276號",
+     "judgmentUrl": "https://judgment.judicial.gov.tw/FJUD/data.aspx?ty=JD&id=TPHM%2C114%2C上易%2C2276%2C20260415%2C1",
+     "sources": []
+    }
+   ]
+  },
+  {
+   "level": "council",
+   "county": "臺東縣",
+   "district": 1,
+   "name": "王春梅",
+   "records": [
+    {
+     "type": "guilty",
+     "offense": "公職人員選舉罷免法對於有投票權人預備交付賄賂罪（共同正犯，2020 年立法委員選舉，交付 20 萬元予忠仁‧達祿斯預備買票）",
+     "sentence": "有期徒刑10月，褫奪公權1年",
+     "status": "已確定（二審上訴駁回，被告不得上訴第三審；司法院新聞稿載檢察官仍得上訴，判決庫未見第三審）",
+     "caseNo": "臺灣高等法院臺中分院110年度原選上訴字第1號",
+     "judgmentUrl": "https://judgment.judicial.gov.tw/FJUD/data.aspx?ty=JD&id=TCDM%2C109%2C%E5%8E%9F%E9%81%B8%E8%A8%B4%2C1%2C20210311%2C1",
+     "sources": []
+    },
+    {
+     "type": "guilty",
+     "offense": "公職人員選舉罷免法意圖使候選人不當選以文字散布不實之事罪（共同正犯，2010 年台中市議員選舉文宣）",
+     "sentence": "有期徒刑6月，易科罰金1000元折算1日，褫奪公權2年（更一審改判）",
+     "status": "已確定（最高法院103年度台上字第496號 2014-02-20 駁回上訴，本人列上訴人；判決庫無該判決全文，同案黃仁同日確定並解職）",
+     "caseNo": "最高法院103年度台上字第496號",
+     "judgmentUrl": "https://judgment.judicial.gov.tw/FJUD/data.aspx?ty=JD&id=TCHM%2C102%2C%E9%81%B8%E4%B8%8A%E6%9B%B4(%E4%B8%80)%2C19%2C20130606%2C1",
+     "sources": []
+    }
+   ]
+  },
+  {
+   "level": "council",
+   "county": "臺東縣",
+   "district": 1,
+   "name": "傅文鵬",
+   "records": [
+    {
+     "type": "guilty",
+     "offense": "刑法第185條之3第1項第1款不能安全駕駛罪",
+     "sentence": "有期徒刑3月，易科罰金1000元折算1日",
+     "status": "本次查核未追到上級審",
+     "caseNo": "臺灣臺東地方法院103年度東交簡字第647號",
+     "judgmentUrl": "https://judgment.judicial.gov.tw/FJUD/data.aspx?ty=JD&id=TTDM%2C103%2C東交簡%2C647%2C20141226%2C1",
+     "sources": []
+    }
+   ]
+  },
+  {
+   "level": "council",
+   "county": "臺東縣",
+   "district": 7,
+   "name": "陳政宗",
+   "records": [
+    {
+     "type": "indicted",
+     "offense": "醫療器材管理法意圖供應未經核准擅自輸入醫療器材罪嫌（起訴罪名，法院未認定）",
+     "sentence": "尚未判決",
+     "status": "未確定",
+     "caseNo": "此欄未列於公開版",
+     "judgmentUrl": "",
+     "sources": [
+      {
+       "media": "中央社",
+       "date": "2026-06-08",
+       "url": "https://www.cna.com.tw/news/asoc/202606080249.aspx"
+      },
+      {
+       "media": "自由時報",
+       "date": "2026-06-08",
+       "url": "https://news.ltn.com.tw/news/Taipei/breakingnews/5464930"
+      },
+      {
+       "media": "自由時報",
+       "date": "2026-06-08",
+       "url": "https://news.ltn.com.tw/news/society/breakingnews/5465083"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "level": "mayor",
+   "county": "臺南市",
+   "district": 0,
+   "name": "謝龍介",
+   "records": [
+    {
+     "type": "indicted",
+     "offense": "傷害罪嫌（起訴罪名，法院未認定）",
+     "sentence": "尚未判決",
+     "status": "未確定，一審審理中",
+     "caseNo": "臺灣臺北地方法院115年度易字第315號（審理中）",
+     "judgmentUrl": "",
+     "sources": [
+      {
+       "media": "風傳媒",
+       "date": "2026-02-12",
+       "url": "https://www.storm.mg/article/11102906"
+      },
+      {
+       "media": "聯合新聞網",
+       "date": "2026-06-24",
+       "url": "https://udn.com/news/story/7321/9585327"
+      },
+      {
+       "media": "三立",
+       "date": "2026-06-24",
+       "url": "https://www.setn.com/News.aspx?NewsID=1861489"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "level": "council",
+   "county": "臺南市",
+   "district": 3,
+   "name": "吳通龍",
+   "records": [
+    {
+     "type": "guilty",
+     "offense": "刑法第214條使公務員登載不實罪（共同正犯）",
+     "sentence": "有期徒刑4月，易科罰金1000元折算1日；緩刑2年，向公庫支付5萬元",
+     "status": "終局未確認",
+     "caseNo": "臺灣高等法院臺南分院110年度上更一字第20號",
+     "judgmentUrl": "https://judgment.judicial.gov.tw/FJUD/data.aspx?ty=JD&id=TNHM%2C110%2C上更一%2C20%2C20211230%2C1",
+     "sources": []
+    }
+   ]
+  },
+  {
+   "level": "council",
+   "county": "臺南市",
+   "district": 5,
+   "name": "李文俊",
+   "records": [
+    {
+     "type": "guilty",
+     "offense": "農會法第47條之2第1項第2款行求財物罪（共同正犯）",
+     "sentence": "有期徒刑7月；沒收未扣案現金500萬元，不能沒收時追繳",
+     "status": "已確定",
+     "caseNo": "臺灣高等法院臺南分院104年度選上易字第140號",
+     "judgmentUrl": "https://judgment.judicial.gov.tw/FJUD/data.aspx?ty=JD&id=TNHM%2C104%2C選上易%2C140%2C20151124%2C1",
+     "sources": []
+    }
+   ]
+  },
+  {
+   "level": "council",
+   "county": "臺南市",
+   "district": 6,
+   "name": "唐儀靜",
+   "records": [
+    {
+     "type": "guilty",
+     "offense": "刑法第276條第1項過失致死罪",
+     "sentence": "有期徒刑8月；緩刑4年，付保護管束",
+     "status": "已確定，2015-09-17，不得上訴第三審（刑事訴訟法第376條）",
+     "caseNo": "臺灣高等法院臺南分院103年度交上易字第604號",
+     "judgmentUrl": "https://judgment.judicial.gov.tw/FJUD/data.aspx?ty=JD&id=TNHM%2C103%2C交上易%2C604%2C20150917%2C1",
+     "sources": []
+    }
+   ]
+  },
+  {
+   "level": "council",
+   "county": "臺南市",
+   "district": 6,
+   "name": "郭信良",
+   "records": [
+    {
+     "type": "indicted",
+     "offense": "貪污治罪條例第5條第1項第3款公務員對於職務上行為收受賄賂罪嫌（起訴罪名，法院未認定）",
+     "sentence": "尚未判決",
+     "status": "未確定",
+     "caseNo": "114年度訴字第778號（繫屬案號，非判決）",
+     "judgmentUrl": "",
+     "sources": [
+      {
+       "media": "中央社",
+       "date": "2025-10-02",
+       "url": "https://www.cna.com.tw/news/asoc/202510020093.aspx"
+      },
+      {
+       "media": "聯合新聞網",
+       "date": "2025-10-02",
+       "url": "https://udn.com/news/story/7321/9044974"
+      },
+      {
+       "media": "自由時報",
+       "date": "2025-10-02",
+       "url": "https://news.ltn.com.tw/news/society/breakingnews/5197887"
+      },
+      {
+       "media": "中央社",
+       "date": "2025-04-22",
+       "url": "https://www.cna.com.tw/news/asoc/202504220368.aspx"
+      }
+     ]
+    },
+    {
+     "type": "indicted",
+     "offense": "刑法第336條第1項公益侵占罪嫌（起訴罪名，法院未認定）",
+     "sentence": "尚未判決",
+     "status": "未確定",
+     "caseNo": "",
+     "judgmentUrl": "",
+     "sources": [
+      {
+       "media": "中央社",
+       "date": "2026-08-05",
+       "url": "https://www.cna.com.tw/news/asoc/202608050269.aspx"
+      },
+      {
+       "media": "聯合新聞網",
+       "date": "2026-08-06",
+       "url": "https://udn.com/news/story/7321/9673519"
+      },
+      {
+       "media": "自由時報",
+       "date": "2026-08-05",
+       "url": "https://news.ltn.com.tw/news/society/breakingnews/5529476"
+      },
+      {
+       "media": "中央社",
+       "date": "2026-07-01",
+       "url": "https://www.cna.com.tw/news/asoc/202607010323.aspx"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "level": "council",
+   "county": "臺南市",
+   "district": 7,
+   "name": "朱正軒",
+   "records": [
+    {
+     "type": "guilty",
+     "offense": "駕駛動力交通工具發生交通事故致人傷害逃逸罪",
+     "sentence": "有期徒刑6月，易科罰金1000元折算1日",
+     "status": "已確定",
+     "caseNo": "最高法院115年度台上字第2163號",
+     "judgmentUrl": "https://judgment.judicial.gov.tw/FJUD/data.aspx?ty=JD&id=TPSM%2C115%2C台上%2C2163%2C20260624%2C1",
+     "sources": []
+    }
+   ]
+  },
+  {
+   "level": "council",
+   "county": "臺南市",
+   "district": 7,
+   "name": "林燕祝",
+   "records": [
+    {
+     "type": "guilty",
+     "offense": "公然侮辱罪（共同正犯）",
+     "sentence": "拘役40日，易科罰金1000元折算1日",
+     "status": "不得上訴而確定（刑事訴訟法第455條之1）",
+     "caseNo": "臺灣臺南地方法院101年度簡上字第282號",
+     "judgmentUrl": "https://judgment.judicial.gov.tw/FJUD/data.aspx?ty=JD&id=TNDM%2C101%2C簡上%2C282%2C20130830%2C1",
+     "sources": []
+    }
+   ]
+  },
+  {
+   "level": "council",
+   "county": "臺南市",
+   "district": 7,
+   "name": "曹暐國",
+   "records": [
+    {
+     "type": "guilty",
+     "offense": "槍砲彈藥刀械管制條例非法持有空氣槍罪",
+     "sentence": "有期徒刑1年7月，併科罰金3萬元，罰金易服勞役1000元折算1日",
+     "status": "本次查核未追到上級審",
+     "caseNo": "臺灣臺南地方法院103年度訴字第507號",
+     "judgmentUrl": "https://judgment.judicial.gov.tw/FJUD/data.aspx?ty=JD&id=TNDM%2C103%2C訴%2C507%2C20140814%2C1",
+     "sources": []
+    }
+   ]
+  },
+  {
+   "level": "council",
+   "county": "臺南市",
+   "district": 8,
+   "name": "邱莉莉",
+   "records": [
+    {
+     "type": "guilty",
+     "offense": "刑法第140條侮辱公務員罪",
+     "sentence": "拘役30日，易科罰金1000元折算1日",
+     "status": "終局未確認",
+     "caseNo": "臺灣臺南地方法院112年度簡字第2371號",
+     "judgmentUrl": "https://judgment.judicial.gov.tw/FJUD/data.aspx?ty=JD&id=TNDM%2C112%2C%E7%B0%A1%2C2371%2C20230725%2C1",
+     "sources": []
+    }
+   ]
+  },
+  {
+   "level": "council",
+   "county": "臺南市",
+   "district": 8,
+   "name": "鄭方形",
+   "records": [
+    {
+     "type": "indicted",
+     "offense": "刑法加重誹謗、公然侮辱、妨害秘密、恐嚇、竊盜、無故取得他人電磁紀錄罪嫌；個人資料保護法不當利用個人資料罪嫌（起訴罪名，法院未認定）",
+     "sentence": "尚未判決",
+     "status": "未確定",
+     "caseNo": "",
+     "judgmentUrl": "",
+     "sources": [
+      {
+       "media": "自由時報",
+       "date": "2026-09-11",
+       "url": "https://news.ltn.com.tw/news/society/breakingnews/5570506"
+      },
+      {
+       "media": "TVBS",
+       "date": "2026-09-11",
+       "url": "https://news.tvbs.com.tw/local/4020883"
+      },
+      {
+       "media": "鏡週刊",
+       "date": "2026-09-11",
+       "url": "https://www.mirrormedia.mg/story/20260911edi062"
+      },
+      {
+       "media": "三立",
+       "date": "2026-09-11",
+       "url": "https://www.setn.com/news/1905466"
+      },
+      {
+       "media": "東森新聞",
+       "date": "2026-09-11",
+       "url": "https://news.ebc.net.tw/news/society/570773"
+      }
+     ]
+    },
+    {
+     "type": "guilty",
+     "offense": "毒品危害防制條例第11條第4項持有第二級毒品純質淨重二十公克以上罪",
+     "sentence": "有期徒刑1年，緩刑3年",
+     "status": "終局未確認",
+     "caseNo": "",
+     "judgmentUrl": "https://judgment.judicial.gov.tw/FJUD/data.aspx?ty=JD&id=TNDM%2C108%2C%E8%A8%B4%2C1075%2C20191129%2C1",
+     "sources": [
+      {
+       "media": "中時",
+       "date": "2026-01-19",
+       "url": "https://www.chinatimes.com/realtimenews/20260119002979-260407"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "level": "council",
+   "county": "臺南市",
+   "district": 8,
+   "name": "謝秉舟",
+   "records": [
+    {
+     "type": "guilty",
+     "offense": "違反性騷擾防治法第25條第1項意圖性騷擾，乘人不及抗拒而為觸摸胸部之行為罪",
+     "sentence": "有期徒刑3月，如易科罰金，以新臺幣1,000元折算1日；緩刑3年，緩刑期間付保護管束，並應於判決確定之日起6個月內向公庫支付新臺幣2萬元",
+     "status": "已確定（緩刑期間已於 2022 年 5 月屆滿，截至 2026-09-30 判決庫查無撤銷緩刑紀錄）",
+     "caseNo": "臺灣臺南地方法院107年度簡字第2501號",
+     "judgmentUrl": "https://judgment.judicial.gov.tw/FJUD/data.aspx?ty=JD&id=TNDM%2C107%2C%E7%B0%A1%2C2501%2C20190425%2C1",
+     "sources": []
+    }
+   ]
+  },
+  {
+   "level": "council",
+   "county": "臺南市",
+   "district": 10,
+   "name": "王家貞",
+   "records": [
+    {
+     "type": "guilty",
+     "offense": "刑法第214條使公務員登載不實文書罪（8罪）（共同正犯）",
+     "sentence": "8罪各有期徒刑2月，應執行有期徒刑7月，易科罰金1000元折算1日；緩刑2年，向公庫支付10萬元",
+     "status": "已確定，2023-04-12",
+     "caseNo": "臺灣臺南地方法院112年度簡字第382號",
+     "judgmentUrl": "https://judgment.judicial.gov.tw/FJUD/data.aspx?ty=JD&id=TNDM%2C112%2C%E7%B0%A1%2C382%2C20230310%2C1",
+     "sources": []
+    }
+   ]
+  },
+  {
+   "level": "council",
+   "county": "澎湖縣",
+   "district": 2,
+   "name": "蔡清續",
+   "records": [
+    {
+     "type": "guilty",
+     "offense": "政府採購法意圖影響決標價格及獲取不當利益協議使廠商不為價格之競爭罪（共同正犯）",
+     "sentence": "有期徒刑6月，減為3月，易科罰金銀元300元即新臺幣900元折算1日",
+     "status": "未確定",
+     "caseNo": "臺灣澎湖地方法院101年度簡字第23號",
+     "judgmentUrl": "https://judgment.judicial.gov.tw/FJUD/data.aspx?ty=JD&id=PHDM%2C101%2C簡%2C23%2C20121031%2C1",
+     "sources": []
+    }
+   ]
+  }
+ ]
+}

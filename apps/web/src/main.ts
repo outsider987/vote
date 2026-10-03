@@ -4,8 +4,9 @@ import { app, initModeSwitch, select, setMode } from "./app";
 import { COUNCIL_SEATS_2026, COUNT_STARTS_AT, districtLabel, partyLabel, partyOf, partySummary } from "./config";
 import { $, params, reducedMotion } from "./dom";
 import { councilAggregate } from "./model/analysis";
-import { loadCouncils, loadCountyTopo, loadMayors } from "./model/data";
+import { loadCouncils, loadCountyTopo, loadMayors, loadRecords } from "./model/data";
 import { LiveSource, buildLive } from "./model/live";
+import { setRecords } from "./model/records";
 import { ReplaySource, buildReplay } from "./model/replay";
 import { updateDetail } from "./scene/detail";
 import { initPointer, pick, setHover } from "./scene/interaction";
@@ -16,6 +17,7 @@ import { enqueueCallout, preloadEmblems, pumpCallouts } from "./ui/callouts";
 import { initClosest } from "./ui/closest";
 import { initLiveClock, initReplayClock, initStandbyClock, setStandbyStatus, updateLiveClock, updateReplayClock } from "./ui/clock";
 import { hideNotice, showWaiting, startCountdown } from "./ui/countdown";
+import { initDossier } from "./ui/dossier";
 import { refreshDuels, updateDuelFlashPosition, updateDuels } from "./ui/duels";
 import { initNational, renderNational } from "./ui/national";
 import { initRegistered } from "./ui/registered";
@@ -242,6 +244,10 @@ async function boot() {
     app.counties = buildLive(live.snapshot!, mayorFile, councilFile, list);
   }
   app.byCode = new Map(app.counties.map((c) => [c.code, c]));
+  // Court records belong to 2026 candidates: never shown on the 2022 replay or a rehearsal.
+  if (live && !live.rehearsal) {
+    try { setRecords(await loadRecords()); } catch { /* records are optional; the tabs just don't appear */ }
+  }
   app.councilSeats = live && !live.rehearsal ? COUNCIL_SEATS_2026
     : app.counties.reduce((a, c) => a + c.council.seats, 0);
   await Promise.race([document.fonts.ready, wait(2500)]);
@@ -262,6 +268,7 @@ async function boot() {
   initNational();
   initClosest();
   initTextView();
+  initDossier();
   initBoard();
   initModeSwitch();
   preloadEmblems();

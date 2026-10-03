@@ -1,0 +1,397 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>調閱卷宗・原型</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700&family=Iansui&family=Noto+Sans+TC:wght@400;500;700;900&display=swap" rel="stylesheet">
+<style>
+:root {
+  --board: #F4F6F5; --rule: #DDE3E0; --desk: #D9E0DC; --desk-deep: #C9D2CD; --frame: #B9C2BE;
+  --ink: #1B2226; --ink-soft: #4A545A; --ink-faint: #626C72; --paper: #FFFFFF;
+  --pending: #9AA4A9; --dashed: #C3CCC7; --tape: #EFE6C4; --tape-edge: #D9CC9B;
+  --kmt: #2A52BE; --dpp: #3B8A2A; --tpp: #1592B8; --npp: #B38700; --ind: #7A8288; --other: #8067B7;
+  /* 卷宗專屬：牛皮紙與麻繩。紅色保留給「當選確定」，這裡不用紅。 */
+  --kraft: #C9A574; --kraft-deep: #B08C5B; --kraft-light: #DCC09A; --twine: #8A5A2B;
+  --index-card: #FBFAF4; --index-line: #D7E3EA; --verify-ink: #2E4A6B;
+  --hand: "Iansui", "Noto Sans TC", sans-serif;
+  --sans: "Noto Sans TC", system-ui, sans-serif;
+  --num: "Barlow Condensed", "Noto Sans TC", sans-serif;
+}
+* { box-sizing: border-box; }
+html, body { margin: 0; }
+body { background: var(--desk); color: var(--ink); font: 400 15px/1.55 var(--sans); min-height: 100vh; }
+button { font: inherit; color: inherit; }
+a { color: inherit; }
+.wrap { max-width: 1080px; margin: 0 auto; padding: 28px 28px 60px; }
+.proto-note { font-size: 12px; color: var(--ink-faint); margin: 0 0 14px; }
+h1 { font: 400 34px/1.15 var(--hand); margin: 0 0 4px; }
+.lede { color: var(--ink-soft); margin: 0 0 20px; }
+
+.tabs { display: inline-flex; gap: 4px; background: #E3E8E5; padding: 4px; border-radius: 999px; margin-bottom: 18px; }
+.tabs button { border: 0; background: transparent; padding: 7px 16px; border-radius: 999px; font: 700 13px/1.4 var(--sans); color: var(--ink-soft); cursor: pointer; }
+.tabs button[aria-selected="true"] { background: var(--ink); color: var(--board); }
+
+.board { background: var(--board); border-radius: 6px; padding: 18px 20px 14px; box-shadow: 0 1px 0 var(--frame), 0 12px 30px -18px rgba(27,34,38,.35); }
+.board h2 { font: 400 23px/1.2 var(--hand); margin: 0; }
+.board .sub { font-size: 12px; color: var(--ink-faint); margin: 2px 0 14px; }
+.cands { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 10px; }
+.cand { position: relative; display: flex; align-items: center; gap: 8px; width: 100%; min-height: 54px; padding: 10px 12px; background: var(--paper); border: 1px solid var(--rule); border-radius: 6px; text-align: left; }
+.cand .chip { width: 10px; height: 10px; border-radius: 3px; background: var(--c); flex: none; }
+.cand .name { font: 400 21px/1.2 var(--hand); }
+.cand .party { font-size: 12px; color: var(--ink-faint); margin-left: auto; white-space: nowrap; }
+button.cand { cursor: pointer; padding-top: 16px; transition: transform .18s ease, box-shadow .18s ease; }
+button.cand:hover { transform: translateY(-2px); box-shadow: 0 8px 16px -10px rgba(27,34,38,.45); }
+button.cand:focus-visible, .tabs button:focus-visible, .dossier button:focus-visible, .dossier a:focus-visible { outline: 2px solid var(--ink); outline-offset: 2px; border-radius: 4px; }
+/* 牛皮紙小籤：從卡片上緣探出來 */
+.cand .tab { position: absolute; top: -9px; right: 12px; padding: 1px 9px 2px; font: 700 12px/1.5 var(--sans); background: linear-gradient(var(--kraft-light), var(--kraft)); color: #3E2A12; border-radius: 4px 4px 2px 2px; box-shadow: 0 1px 0 var(--kraft-deep); letter-spacing: .04em; }
+.cand .tab .n { font-family: var(--num); font-weight: 700; font-size: 14px; }
+.cand .tab.light { background: #EFE7D8; color: var(--ink-soft); box-shadow: 0 1px 0 #D6C8AE; font-weight: 500; }
+.cand .tab .read { margin-left: 4px; color: var(--verify-ink); }
+.legend { margin-top: 14px; padding-top: 10px; border-top: 1px dashed var(--dashed); font-size: 12px; color: var(--ink-faint); }
+
+/* ===== 卷宗 ===== */
+.dossier { position: fixed; inset: 0; z-index: 10; display: grid; place-items: start center; overflow-y: auto; padding: 40px 16px 60px; background: rgba(40,48,44,.55); backdrop-filter: blur(2px); opacity: 0; transition: opacity .25s ease; }
+.dossier.show { opacity: 1; }
+.folder { position: relative; width: min(920px, 100%); perspective: 1800px; transform: translateY(40px) rotate(-1deg); transition: transform .45s cubic-bezier(.2,.8,.2,1); }
+.dossier.show .folder { transform: none; }
+.close { position: absolute; top: -34px; right: 0; border: 0; background: var(--board); border-radius: 999px; padding: 4px 12px; font: 700 13px/1.4 var(--sans); cursor: pointer; z-index: 5; }
+
+/* 檔案夾內頁 */
+.inside { position: relative; background: var(--kraft-light) linear-gradient(rgba(255,255,255,.12), rgba(0,0,0,.04)); border-radius: 4px 10px 8px 8px; padding: 26px 26px 22px; min-height: 520px; box-shadow: 0 30px 60px -30px rgba(0,0,0,.6), inset 0 0 0 1px rgba(80,55,20,.18); }
+.inside::before { content: ""; position: absolute; top: -18px; left: 22px; width: 150px; height: 22px; background: var(--kraft-light); border-radius: 8px 8px 0 0; box-shadow: inset 0 1px 0 rgba(255,255,255,.3); }
+
+/* 封面 */
+.cover { position: absolute; inset: 0; z-index: 3; transform-origin: left center; transition: transform .9s cubic-bezier(.5,0,.2,1), opacity .2s linear .75s; transform-style: preserve-3d; }
+.cover-face { position: absolute; inset: 0; background: var(--kraft) linear-gradient(115deg, rgba(255,255,255,.10), rgba(0,0,0,.06)); border-radius: 4px 10px 8px 8px; box-shadow: inset 0 0 0 1px rgba(80,55,20,.25), 0 30px 60px -30px rgba(0,0,0,.6); backface-visibility: hidden; display: grid; place-items: center; padding: 24px; }
+.cover-face::before { content: ""; position: absolute; top: -18px; left: 22px; width: 150px; height: 22px; background: var(--kraft); border-radius: 8px 8px 0 0; }
+.cover.open { transform: rotateY(-172deg); opacity: 0; pointer-events: none; }
+.label { background: var(--index-card); padding: 18px 26px 16px; width: min(420px, 100%); border-radius: 2px; box-shadow: 0 2px 0 rgba(0,0,0,.08); text-align: center; transform: rotate(-.8deg); }
+.label .kind { font: 700 12px/1.4 var(--sans); letter-spacing: .3em; color: var(--ink-faint); }
+.label .who { font: 400 40px/1.15 var(--hand); margin: 8px 0 2px; }
+.label .race { font-size: 13px; color: var(--ink-soft); }
+.label .count { margin-top: 12px; padding-top: 10px; border-top: 1px dashed var(--dashed); font-size: 13px; color: var(--ink-soft); }
+.label .count b { font: 700 20px/1 var(--num); color: var(--ink); }
+/* 封條紙膠帶 */
+.seal { position: absolute; left: -10px; right: -10px; top: 72%; height: 46px; display: flex; border: 0; padding: 0; background: none; cursor: grab; }
+.seal span { flex: 1; background: var(--tape); border-top: 1px solid var(--tape-edge); border-bottom: 1px solid var(--tape-edge); opacity: .93; display: grid; place-items: center; font: 400 20px/1 var(--hand); color: #6B5A23; transition: transform .55s cubic-bezier(.3,.6,.3,1), opacity .4s ease .2s; }
+.seal span:first-child { clip-path: polygon(0 0, 100% 0, 97% 22%, 100% 41%, 96% 63%, 100% 82%, 98% 100%, 0 100%); }
+.seal span:last-child { clip-path: polygon(3% 0, 100% 0, 100% 100%, 2% 100%, 0 82%, 4% 63%, 0 41%, 3% 22%); margin-left: -2px; }
+.seal:hover span:first-child { transform: translateX(-3px) rotate(-.4deg); }
+.seal:hover span:last-child { transform: translateX(3px) rotate(.4deg); }
+.seal.torn span:first-child { transform: translate(-60px, 40px) rotate(-14deg); opacity: 0; }
+.seal.torn span:last-child { transform: translate(60px, -30px) rotate(11deg); opacity: 0; }
+.hint { position: absolute; bottom: 18px; left: 0; right: 0; text-align: center; font-size: 12px; color: #4A3518; opacity: .8; }
+
+/* 主角紙條 */
+.subject { position: relative; z-index: 2; display: inline-block; background: var(--index-card); padding: 10px 18px 12px; border-radius: 2px; box-shadow: 0 6px 14px -8px rgba(0,0,0,.45); transform: rotate(-1.2deg); }
+.subject .who { font: 400 30px/1.15 var(--hand); }
+.subject .meta { font-size: 12px; color: var(--ink-soft); }
+.pin { position: absolute; width: 12px; height: 12px; border-radius: 50%; background: radial-gradient(circle at 35% 35%, #E9E2D3, #6E6658 70%); box-shadow: 0 2px 2px rgba(0,0,0,.35); }
+.subject .pin { left: 50%; bottom: -6px; margin-left: -6px; }
+.closed-stamp { position: absolute; right: -22px; top: -16px; padding: 3px 10px; border: 2.5px solid var(--verify-ink); color: var(--verify-ink); font: 900 15px/1.2 var(--sans); letter-spacing: .2em; border-radius: 4px; transform: rotate(9deg) scale(2.2); opacity: 0; background: rgba(251,250,244,.6); }
+.closed-stamp.on { animation: press .32s cubic-bezier(.3,1.4,.5,1) forwards; }
+
+.twine { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; z-index: 1; overflow: visible; }
+.twine path { fill: none; stroke: var(--twine); stroke-width: 2; stroke-linecap: round; filter: drop-shadow(0 2px 1px rgba(0,0,0,.25)); }
+
+/* 證物卡 */
+.evidence { list-style: none; margin: 46px 0 0; padding: 0; display: grid; grid-template-columns: repeat(auto-fit, minmax(270px, 1fr)); gap: 30px 26px; align-items: start; position: relative; z-index: 2; }
+.ev { position: relative; background: var(--index-card) repeating-linear-gradient(transparent 0 25px, var(--index-line) 25px 26px); background-position: 0 44px; padding: 16px 16px 14px; border-radius: 2px; box-shadow: 0 10px 18px -12px rgba(0,0,0,.5); opacity: 0; transform: translateY(30px) rotate(var(--r, 0deg)); transition: transform .5s cubic-bezier(.2,.8,.2,1), opacity .3s ease; }
+.ev.in { opacity: 1; transform: rotate(var(--r, 0deg)); }
+.ev .pin { left: 50%; top: -6px; margin-left: -6px; }
+.ev.pending { background: rgba(251,250,244,.78); outline: 1.5px dashed var(--pending); outline-offset: -6px; box-shadow: 0 6px 14px -12px rgba(0,0,0,.4); }
+.ev-head { display: flex; align-items: baseline; gap: 8px; margin-bottom: 6px; }
+.ev-no { font: 400 22px/1 var(--hand); }
+.ev-kind { margin-left: auto; font: 700 12px/1.5 var(--sans); padding: 0 6px; border-radius: 3px; border: 1.5px solid var(--ink); }
+.pending .ev-kind { border-style: dashed; border-color: var(--pending); color: var(--ink-soft); font-weight: 500; }
+.pencil { font: 400 22px/1 var(--hand); color: #8C949A; transform: rotate(-6deg); display: inline-block; }
+.ev dl { margin: 0; display: grid; grid-template-columns: 3.2em 1fr; column-gap: 8px; row-gap: 0; line-height: 26px; font-size: 14px; }
+.ev dt { color: var(--ink-faint); font-size: 12px; }
+.ev dd { margin: 0; min-width: 0; overflow-wrap: anywhere; }
+.presume { margin: 8px 0 0; font-size: 12px; color: var(--ink-soft); background: #ECEFEE; padding: 4px 8px; border-radius: 3px; line-height: 1.5; }
+
+/* 刮開遮蔽 */
+.redact { position: relative; display: block; border-radius: 2px; margin: 2px 0; }
+.redact canvas { position: absolute; inset: -1px -2px; width: calc(100% + 4px); height: calc(100% + 2px); cursor: crosshair; touch-action: none; border-radius: 2px; }
+.redact .peel { position: absolute; right: 2px; top: 50%; transform: translateY(-50%); border: 0; background: var(--board); font: 700 11px/1.6 var(--sans); padding: 0 7px; border-radius: 999px; cursor: pointer; color: var(--ink-soft); z-index: 1; box-shadow: 0 1px 2px rgba(0,0,0,.2); }
+.redact.done canvas, .redact.done .peel { display: none; }
+
+.srcs { margin: 10px 0 0; padding: 8px 0 0; border-top: 1px dashed var(--dashed); list-style: none; display: flex; flex-wrap: wrap; gap: 6px; }
+.srcs a { display: inline-flex; align-items: center; gap: 4px; font-size: 12px; text-decoration: none; padding: 2px 8px; background: var(--paper); border: 1px solid var(--frame); border-radius: 999px; }
+.srcs a.primary { border-color: var(--ink); font-weight: 700; }
+.srcs a:hover { background: var(--board); }
+.srcs a.visited::after { content: "✓"; color: var(--verify-ink); font-weight: 700; }
+.ev-stamp { position: absolute; right: -10px; top: -14px; padding: 2px 8px; border: 2px solid var(--verify-ink); color: var(--verify-ink); font: 900 13px/1.3 var(--sans); letter-spacing: .15em; border-radius: 3px; transform: rotate(-10deg) scale(2.2); opacity: 0; pointer-events: none; background: rgba(251,250,244,.55); }
+.ev.verified .ev-stamp { animation: press .3s cubic-bezier(.3,1.4,.5,1) forwards; }
+@keyframes press { 0% { opacity: 0; transform: rotate(var(--sr, -10deg)) scale(2.2); } 70% { opacity: .95; transform: rotate(var(--sr, -10deg)) scale(.92); } 100% { opacity: .88; transform: rotate(var(--sr, -10deg)) scale(1); } }
+.closed-stamp { --sr: 9deg; }
+
+.progress { position: relative; z-index: 2; margin: 26px 0 0; font-size: 13px; color: #3E2A12; }
+.progress b { font: 700 18px/1 var(--num); }
+.note { position: relative; z-index: 2; margin: 14px 0 0; background: var(--tape); border-top: 1px solid var(--tape-edge); border-bottom: 1px solid var(--tape-edge); padding: 10px 14px; font-size: 12px; line-height: 1.6; color: #4A3F1E; transform: rotate(-.3deg); }
+.note a { font-weight: 700; }
+
+@media (max-width: 640px) {
+  .wrap { padding: 20px 16px 48px; }
+  h1 { font-size: 28px; }
+  .cands { grid-template-columns: 1fr 1fr; gap: 14px 8px; }
+  .cand .party { display: none; }
+  .dossier { padding: 44px 8px 40px; }
+  .inside { padding: 22px 14px 16px; }
+  .label .who { font-size: 32px; }
+  .evidence { grid-template-columns: 1fr; gap: 26px; }
+  .ev { --r: 0deg !important; }
+}
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { transition-duration: 1ms !important; animation-duration: 1ms !important; }
+}
+</style>
+</head>
+<body>
+<main class="wrap">
+  <p class="proto-note">原型・不影響正式站｜資料：台灣前進民間版選舉公報（2026-09-30 快照，CC BY 4.0）＋中選會登記名單</p>
+  <h1>候選人公開司法紀錄</h1>
+  <p class="lede">帶「卷宗」籤的候選人，有公開判決或具名報導的刑事案件。點開調閱，自己對照原始來源查證。</p>
+  <div class="tabs" role="tablist" id="tabs"></div>
+  <section class="board" id="board"></section>
+</main>
+
+<script src="data.js"></script>
+<script>
+const D = window.DOSSIER;
+const PARTY = { "中國國民黨": "var(--kmt)", "民主進步黨": "var(--dpp)", "台灣民眾黨": "var(--tpp)", "時代力量": "var(--npp)", "無": "var(--ind)" };
+const partyName = p => p === "無" ? "無黨籍" : p;
+const LETTERS = "ABCDEFGHIJ";
+const reduced = matchMedia("(prefers-reduced-motion: reduce)").matches;
+const esc = s => String(s ?? "").replace(/[&<>"]/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
+const read = new Set(); // 本次瀏覽已閱的卷宗
+
+let race = D.races[0];
+const tabs = document.getElementById("tabs"), board = document.getElementById("board");
+
+function renderTabs() {
+  tabs.innerHTML = D.races.map(r => `<button role="tab" aria-selected="${r === race}" data-k="${r.key}">${esc(r.title)}</button>`).join("");
+}
+tabs.addEventListener("click", e => {
+  const b = e.target.closest("button"); if (!b) return;
+  race = D.races.find(r => r.key === b.dataset.k); renderTabs(); renderBoard();
+});
+
+function recsOf(r, name) { return D.records[`${r.key}|${name}`] || []; }
+
+function renderBoard() {
+  board.innerHTML = `<h2>${esc(race.title)}</h2><p class="sub">${esc(race.sub || "登記參選人")}・${race.cands.length} 人</p>
+  <ul class="cands">${race.cands.map(c => {
+    const recs = recsOf(race, c.name);
+    const inner = `<span class="chip" style="--c:${PARTY[c.party] || "var(--other)"}"></span><span class="name">${esc(c.name)}</span><span class="party">${esc(partyName(c.party))}</span>`;
+    if (!recs.length) return `<li><div class="cand">${inner}</div></li>`;
+    const guilty = recs.filter(r => r.type === "有罪").length;
+    const tab = guilty
+      ? `<span class="tab">卷宗・判決 <span class="n">${guilty}</span>${read.has(race.key + c.name) ? '<span class="read">✓</span>' : ""}</span>`
+      : `<span class="tab light">卷宗${read.has(race.key + c.name) ? '<span class="read">✓</span>' : ""}</span>`;
+    return `<li><button class="cand" data-name="${esc(c.name)}" aria-label="調閱 ${esc(c.name)} 的公開司法紀錄">${tab}${inner}</button></li>`;
+  }).join("")}</ul>
+  <p class="legend">沒有卷宗籤不代表沒有紀錄，資料來源本身「未必窮盡」。判決數只算有罪判決，起訴中的案件不計數。</p>`;
+}
+board.addEventListener("click", e => {
+  const b = e.target.closest("button.cand"); if (b) openDossier(race, race.cands.find(c => c.name === b.dataset.name), b);
+});
+
+/* ---------- 卷宗 ---------- */
+function field(label, value, masked) {
+  if (!value) return "";
+  const v = masked ? `<span class="redact"><span>${esc(value)}</span><canvas aria-hidden="true"></canvas><button class="peel" type="button">揭開</button></span>` : esc(value);
+  return `<dt>${label}</dt><dd>${v}</dd>`;
+}
+function evidenceCard(r, i) {
+  const pending = r.type !== "有罪";
+  const rot = [-1.4, 1.1, -0.6, 1.6, -1][i % 5];
+  const src = [
+    r.judgmentUrl ? `<li><a class="primary" href="${esc(r.judgmentUrl)}" target="_blank" rel="noopener">📎 ${pending ? "裁判書" : "判決書原文"} ↗</a></li>` : "",
+    ...r.sources.map(s => `<li><a href="${esc(s.url)}" target="_blank" rel="noopener">📰 ${esc(s.media)} ${esc(s.date)} ↗</a></li>`)
+  ].join("");
+  return `<li class="ev${pending ? " pending" : ""}" style="--r:${rot}deg">
+    <span class="pin"></span>
+    <div class="ev-head"><span class="ev-no">證物 ${LETTERS[i]}</span>${pending ? '<span class="pencil">待審</span>' : ""}<span class="ev-kind">${pending ? "起訴・未判決" : "有罪判決"}</span></div>
+    <dl>
+      ${field(pending ? "起訴" : "罪名", r.offense)}
+      ${field("案號", r.caseNo)}
+      ${field("刑度", r.sentence, !pending)}
+      ${field("審級", r.status, !pending)}
+    </dl>
+    ${pending ? '<p class="presume">檢方起訴的罪名，法院尚未認定。判決確定前推定無罪。</p>' : ""}
+    <ul class="srcs">${src}</ul>
+    <span class="ev-stamp">已查證</span>
+  </li>`;
+}
+
+let lastFocus = null;
+function openDossier(r, cand, opener) {
+  lastFocus = opener;
+  const recs = recsOf(r, cand.name);
+  const guilty = recs.filter(x => x.type === "有罪").length, pend = recs.length - guilty;
+  const raceLine = `${r.title}${r.sub ? "・" + r.sub.split("・")[0] : ""}・${partyName(cand.party)}`;
+  const el = document.createElement("div");
+  el.className = "dossier";
+  el.setAttribute("role", "dialog"); el.setAttribute("aria-modal", "true"); el.setAttribute("aria-label", `${cand.name} 公開司法紀錄卷宗`);
+  el.innerHTML = `<div class="folder">
+    <button class="close" type="button">關閉 ✕</button>
+    <div class="cover"><div class="cover-face">
+      <div class="label">
+        <div class="kind">公開司法紀錄・卷宗</div>
+        <div class="who">${esc(cand.name)}</div>
+        <div class="race">${esc(raceLine)}</div>
+        <div class="count">${guilty ? `有罪判決 <b>${guilty}</b> 件` : ""}${guilty && pend ? "　" : ""}${pend ? `起訴未判決 <b>${pend}</b> 件` : ""}</div>
+      </div>
+      <button class="seal" type="button" aria-label="撕開封條，打開卷宗"><span>封</span><span>條</span></button>
+      <div class="hint">撕開封條調閱</div>
+    </div></div>
+    <div class="inside">
+      <svg class="twine" aria-hidden="true"></svg>
+      <div class="subject"><span class="pin"></span><div class="who">${esc(cand.name)}</div><div class="meta">${esc(raceLine)}</div><span class="closed-stamp">本案已閱</span></div>
+      <ol class="evidence">${recs.map(evidenceCard).join("")}</ol>
+      <p class="progress">已查證 <b class="done">0</b> / <b>${recs.length}</b> 件・點開任一來源連結，該證物即蓋上「已查證」。</p>
+      <p class="note">資料來源：<a href="https://council2026.taiwangogo.tw/" target="_blank" rel="noopener">台灣前進製作民間版選舉公報</a>（CC BY 4.0，截至 ${esc(D.asOf)}）。本站未獨立查核，請以判決書原文為準。列名不代表有前科；有罪判決未必已確定，起訴案件判決確定前推定無罪。資料有誤請向<a href="https://council2026.taiwangogo.tw/" target="_blank" rel="noopener">原整理者回報</a>。</p>
+    </div>
+  </div>`;
+  document.body.appendChild(el);
+  document.body.style.overflow = "hidden";
+  requestAnimationFrame(() => el.classList.add("show"));
+
+  const cover = el.querySelector(".cover"), seal = el.querySelector(".seal");
+  seal.focus({ preventScroll: true });
+  let opened = false;
+  const open = () => {
+    if (opened) return; opened = true;
+    seal.classList.add("torn");
+    setTimeout(() => cover.classList.add("open"), reduced ? 0 : 380);
+    setTimeout(() => { dealCards(el); }, reduced ? 0 : 900);
+    setTimeout(() => cover.remove(), reduced ? 10 : 1700);
+  };
+  seal.addEventListener("click", open);
+  // 往左右拖也能撕開
+  let sx = null;
+  seal.addEventListener("pointerdown", e => { sx = e.clientX; });
+  seal.addEventListener("pointermove", e => { if (sx !== null && Math.abs(e.clientX - sx) > 40) open(); });
+  addEventListener("pointerup", () => { sx = null; }, { once: true });
+
+  const close = () => {
+    el.classList.remove("show");
+    document.body.style.overflow = "";
+    removeEventListener("resize", el._redraw);
+    removeEventListener("keydown", onKey);
+    setTimeout(() => el.remove(), 260);
+    renderBoard();
+    const again = board.querySelector(`button.cand[data-name="${CSS.escape(cand.name)}"]`);
+    (again || lastFocus)?.focus();
+  };
+  const onKey = e => { if (e.key === "Escape") close(); };
+  addEventListener("keydown", onKey);
+  el.querySelector(".close").addEventListener("click", close);
+  el.addEventListener("click", e => { if (e.target === el) close(); });
+
+  // 查證：點開來源 → 蓋章
+  let done = 0;
+  el.querySelectorAll(".ev").forEach(card => {
+    card.querySelectorAll(".srcs a").forEach(a => a.addEventListener("click", () => {
+      a.classList.add("visited");
+      if (card.classList.contains("verified")) return;
+      card.classList.add("verified");
+      el.querySelector(".progress .done").textContent = ++done;
+      if (done === recs.length) {
+        el.querySelector(".closed-stamp").classList.add("on");
+        read.add(r.key + cand.name);
+      }
+    }));
+  });
+}
+
+function dealCards(el) {
+  const cards = [...el.querySelectorAll(".ev")];
+  cards.forEach((c, i) => setTimeout(() => {
+    c.classList.add("in");
+    c.querySelectorAll(".redact").forEach(setupScratch);
+  }, reduced ? 0 : 140 * i));
+  const redraw = () => drawTwine(el);
+  el._redraw = redraw;
+  addEventListener("resize", redraw);
+  setTimeout(redraw, reduced ? 20 : 140 * cards.length + 350);
+}
+
+// 麻繩：從主角紙條的圖釘，垂到每張證物的圖釘
+function drawTwine(el) {
+  const inside = el.querySelector(".inside"), svg = el.querySelector(".twine");
+  const box = inside.getBoundingClientRect();
+  const from = el.querySelector(".subject .pin").getBoundingClientRect();
+  const fx = from.left + 6 - box.left, fy = from.top + 6 - box.top;
+  svg.setAttribute("viewBox", `0 0 ${box.width} ${box.height}`);
+  svg.innerHTML = [...el.querySelectorAll(".ev .pin")].map((p, i) => {
+    const b = p.getBoundingClientRect();
+    const tx = b.left + 6 - box.left, ty = b.top + 6 - box.top;
+    const sag = Math.abs(tx - fx) > 60 ? 14 : 40;
+    const d = `M${fx},${fy} Q${(fx + tx) / 2},${Math.min(fy, ty) + sag} ${tx},${ty}`;
+    return `<path d="${d}" style="--i:${i}"/>`;
+  }).join("");
+  if (reduced || el._drawn) return;
+  el._drawn = true;
+  svg.querySelectorAll("path").forEach((p, i) => {
+    const len = p.getTotalLength();
+    p.style.strokeDasharray = len; p.style.strokeDashoffset = len;
+    p.animate([{ strokeDashoffset: len }, { strokeDashoffset: 0 }], { duration: 650, delay: 110 * i, easing: "cubic-bezier(.4,0,.2,1)", fill: "forwards" })
+      .finished.then(() => { p.style.strokeDasharray = ""; p.style.strokeDashoffset = ""; });
+  });
+}
+
+// 刮刮樂：鉛筆塗黑的遮蔽，拖曳刮開，或按「揭開」
+function setupScratch(wrap) {
+  const cv = wrap.querySelector("canvas"), btn = wrap.querySelector(".peel");
+  const dpr = devicePixelRatio || 1;
+  const w = cv.offsetWidth, h = cv.offsetHeight;
+  cv.width = w * dpr; cv.height = h * dpr;
+  const ctx = cv.getContext("2d"); ctx.scale(dpr, dpr);
+  ctx.fillStyle = "#3A4247"; ctx.fillRect(0, 0, w, h);
+  ctx.strokeStyle = "rgba(255,255,255,.07)"; ctx.lineWidth = 1;
+  for (let x = -h; x < w; x += 4) { ctx.beginPath(); ctx.moveTo(x, h); ctx.lineTo(x + h, 0); ctx.stroke(); }
+  ctx.globalCompositeOperation = "destination-out";
+  let down = false, last = null, finished = false;
+  const finish = () => {
+    if (finished) return; finished = true;
+    if (reduced) { wrap.classList.add("done"); return; }
+    cv.animate([{ opacity: 1 }, { opacity: 0 }], { duration: 220, fill: "forwards" }).finished.then(() => wrap.classList.add("done"));
+  };
+  const cleared = () => {
+    const px = ctx.getImageData(0, 0, cv.width, cv.height).data;
+    let clear = 0, n = 0;
+    for (let i = 3; i < px.length; i += 64) { n++; if (px[i] === 0) clear++; }
+    return clear / n;
+  };
+  const scratch = (x, y) => {
+    ctx.lineCap = "round"; ctx.lineWidth = 26;
+    ctx.beginPath(); ctx.moveTo(last?.x ?? x, last?.y ?? y); ctx.lineTo(x, y); ctx.stroke();
+    last = { x, y };
+  };
+  const pos = e => { const b = cv.getBoundingClientRect(); return [e.clientX - b.left, e.clientY - b.top]; };
+  cv.addEventListener("pointerdown", e => { down = true; last = null; cv.setPointerCapture(e.pointerId); btn.style.display = "none"; scratch(...pos(e)); });
+  cv.addEventListener("pointermove", e => { if (down) scratch(...pos(e)); });
+  cv.addEventListener("pointerup", () => { down = false; if (cleared() > 0.35) finish(); else btn.style.display = ""; });
+  btn.addEventListener("click", () => {
+    btn.style.display = "none";
+    if (reduced) return finish();
+    // 自動刮開：鉛筆左右來回
+    let t = 0; last = null;
+    const step = () => {
+      t += 1;
+      scratch(t / 28 * (w + 24) - 12, h / 2 + Math.sin(t * 1.4) * h / 2);
+      if (t < 28) requestAnimationFrame(step); else finish();
+    };
+    step();
+  });
+}
+
+renderTabs(); renderBoard();
+</script>
+</body>
+</html>

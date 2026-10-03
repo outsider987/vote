@@ -50,6 +50,32 @@ export interface RegisteredFile {
   council: RegisteredCandidate[];
 }
 
+/** data/records-2026.json (scripts/prepare_2026_records.mjs) */
+export interface RecordsFile {
+  asOf: string;
+  source: { name: string; url: string; license: string };
+  people: RecordPerson[];
+}
+
+export interface RecordPerson {
+  level: "mayor" | "council";
+  county: string;
+  /** Council district number; 0 for mayors. */
+  district: number;
+  name: string;
+  records: CourtRecord[];
+}
+
+export interface CourtRecord {
+  type: "guilty" | "indicted";
+  offense: string;
+  sentence: string;
+  status: string;
+  caseNo: string;
+  judgmentUrl: string;
+  sources: { media: string; date: string; url: string }[];
+}
+
 export interface RegisteredCandidate {
   county: string;
   district: string;
@@ -69,4 +95,5 @@ export const loadCouncils = () => getJSON<CouncilFile>("data/council-2022.json")
 export const loadTowns = () => getJSON<TownsFile>("data/mayor-2022-towns.json");
 export const loadCountyTopo = () => getJSON<Topology>("data/taiwan-atlas-counties-10t.json");
 export const loadTownTopo = () => getJSON<Topology>("data/taiwan-atlas-towns-10t.json");
+export const loadRecords = () => getJSON<RecordsFile>("data/records-2026.json");
 export const loadRegistered = () => getJSON<RegisteredFile>("data/registered-2026.json");

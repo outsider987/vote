@@ -89,6 +89,7 @@ npm run dev                                                             # 開 ht
 時程：
 
 - **目前（9/7 登記名冊）**：`data/registered-2026.json` 收錄 22 縣市的 81 位縣市長、1,502 位議員登記人，共 221 個議員選區。用 `python scripts/prepare_2026_registered.py` 從[中選會的四份登記名冊 PDF](https://web.cec.gov.tw/central/article/64733)重產；登記人尚待審定，沒有正式號次或照片，不會混進開票候選人名單。
+- **候選人公開司法紀錄（卷宗）**：`data/records-2026.json` 取自台灣前進「民間版選舉公報」（CC BY 4.0，見 [NOTICE.md](NOTICE.md)），只收有罪判決與起訴中的刑事案件。來源更新後跑 `node scripts/prepare_2026_records.mjs` 重產再推上 main 部署；任何一人對不上登記名冊時腳本會失敗，要先人工確認。卷宗只在 2026 版（登記名冊與即時計票板）出現，2022 重播與彩排不顯示。
 - **10/23 抽號次後、11/17 公告後**：
   - 各跑一次 `npm run import-candidates -w @vote/poller -- --config poller.config.json`，取得已審定候選人、號次與議員選區清單。縣市長正式名單預定 11/12 公告、議員 11/17 公告，以[中選會選務日程](https://www.cec.gov.tw/central/article/61722)為準。
   - 接著跑 `node scripts/publish-live.mjs --once` 發布 `candidates.json`；桌機計票板會列出候選人，手機倒數頁會顯示已公布人數。

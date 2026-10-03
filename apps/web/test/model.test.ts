@@ -3,7 +3,8 @@ import type { LiveResults, RaceTally } from "@vote/shared";
 import { COUNT_STARTS_AT, partyLabel, partyOf, partySeatTotals } from "../src/config";
 import { countdownParts } from "../src/util";
 import { closeDuels, councilAggregate, duelOf } from "../src/model/analysis";
-import type { CouncilFile, MayorFile } from "../src/model/data";
+import type { CouncilFile, MayorFile, RecordsFile } from "../src/model/data";
+import { guiltyCount, recordsOf, setRecords } from "../src/model/records";
 import { LiveSource, buildLive, liveUnit, stateFromTally } from "../src/model/live";
 import { buildReplay, simState } from "../src/model/replay";
 import { emptyCouncilState, emptyState, type County, type Race } from "../src/model/types";
@@ -242,5 +243,39 @@ describe("countdown", () => {
     expect(countdownParts(1)).toEqual({ days: 0, hms: "00:00:01" });
     expect(countdownParts(0)).toEqual({ days: 0, hms: "00:00:00" });
     expect(countdownParts(-5000)).toEqual({ days: 0, hms: "00:00:00" });
+  });
+});
+
+describe("court records", () => {
+  const file: RecordsFile = {
+    asOf: "2026-09-30",
+    source: { name: "x", url: "https://example.org/", license: "CC BY 4.0" },
+    people: [
+      { level: "council", county: "臺北市", district: 1, name: "李文", records: [{ type: "guilty", offense: "", sentence: "", status: "", caseNo: "", judgmentUrl: "", sources: [] }] },
+      { level: "council", county: "苗栗縣", district: 8, name: "劉美蘭Iwan．Sigiy", records: [{ type: "indicted", offense: "", sentence: "", status: "", caseNo: "", judgmentUrl: "", sources: [] }] },
+      { level: "mayor", county: "新竹市", district: 0, name: "高虹安", records: [] },
+    ],
+  };
+  setRecords(file);
+
+  it("matches by level, county and name, accepting 台 for 臺", () => {
+    expect(recordsOf("council", "台北市", "李文")?.name).toBe("李文");
+    expect(recordsOf("mayor", "臺北市", "李文")).toBeNull();
+    expect(recordsOf("mayor", "新竹市", "高虹安")?.level).toBe("mayor");
+  });
+
+  it("rejects a namesake in another council district", () => {
+    expect(recordsOf("council", "臺北市", "李文", 1)).not.toBeNull();
+    expect(recordsOf("council", "臺北市", "李文", 2)).toBeNull();
+  });
+
+  it("ignores romanized indigenous names and stray PDF letters", () => {
+    expect(recordsOf("council", "苗栗縣", "劉美蘭", 8)?.name).toBe("劉美蘭Iwan．Sigiy");
+    expect(recordsOf("council", "苗栗縣", "劉美蘭 Iwan Sigiy", 8)).not.toBeNull();
+  });
+
+  it("counts only guilty verdicts", () => {
+    expect(guiltyCount(file.people[0])).toBe(1);
+    expect(guiltyCount(file.people[1])).toBe(0);
   });
 });

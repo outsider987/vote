@@ -571,11 +571,12 @@ body.is-standby .registered {
 .registered-controls select { width: 100%; min-width: 0; min-height: 42px; padding: 0 8px; border: 1px solid var(--frame); border-radius: 4px; background: var(--board); color: var(--ink); font: 700 14px var(--sans); }
 .registered-summary { margin: 12px 0 7px; font-size: 13px; font-weight: 700; }
 .registered-list { flex: 1; min-height: 0; overflow-y: auto; list-style: none; margin: 0; padding: 0; scrollbar-width: thin; }
-.registered-list li { display: grid; grid-template-columns: 10px minmax(0, 1fr) auto; grid-template-areas: "chip name date" ". party date"; align-items: start; gap: 0 8px; padding: 10px 2px; border-top: 1px dashed var(--frame); }
+.registered-list li { display: grid; grid-template-columns: 10px minmax(0, 1fr) auto; grid-template-areas: "chip name date" ". party date" ". party file"; align-items: start; gap: 0 8px; padding: 10px 2px; border-top: 1px dashed var(--frame); }
 .registered-list .chip { grid-area: chip; margin-top: 7px; }
 .registered-list strong { grid-area: name; min-width: 0; font-size: 16px; overflow-wrap: anywhere; }
 .registered-list span { grid-area: party; font-size: 12px; color: var(--ink-2); }
 .registered-list small { grid-area: date; align-self: center; color: var(--ink-3); white-space: nowrap; }
+.registered-list .dossier-tab { grid-area: file; justify-self: end; margin-top: 4px; }
 .registered-source { margin: 10px 0 0; padding-top: 8px; border-top: 1px solid var(--frame); font-size: 11px; line-height: 1.5; color: var(--ink-2); }
 .registered-source a { color: var(--ink); text-underline-offset: 2px; }
 .standby-roster-link { display: inline-flex; align-items: center; min-height: 44px; margin: 2px 0 10px; padding: 0 14px; border: 1px solid var(--frame); border-radius: 4px; background: var(--board); color: var(--ink); font-size: 14px; font-weight: 700; text-decoration: none; }

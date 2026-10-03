@@ -9,6 +9,12 @@
 
 使用這些資料請標示「資料來源：中央選舉委員會」，並遵循中選會及[政府資料開放平臺](https://data.gov.tw/)的使用規範。本專案與中選會無任何關係，數字以中選會公告為準。
 
+## 候選人公開司法紀錄
+
+`data/records-2026.json`：整理自台灣前進「[民間版選舉公報](https://council2026.taiwangogo.tw/)」，依 [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/deed.zh-hant) 授權使用（由 `scripts/prepare_2026_records.mjs` 產生）。本專案只保留有罪判決與起訴中的刑事案件，並對應到中選會登記名冊；未收錄家族紀錄、行政罰與民事當選無效。轉用請標示「資料來源：台灣前進製作民間版選舉公報」。
+
+該站的參選人照片、判決書與新聞原文不在 CC BY 授權範圍內，本專案沒有使用其照片，只連結到原始來源。本專案未獨立查核；列名不代表有前科，起訴案件判決確定前推定無罪。資料錯誤請向原整理者回報。
+
 ## 行政區界
 
 `data/taiwan-atlas-counties-10t.json`、`data/taiwan-atlas-towns-10t.json`（與 `data/raw/` 中的同名檔）取自 [taiwan-atlas](https://github.com/dkaoster/taiwan-atlas)。該專案的圖資衍生自內政部的[鄉鎮市區界線](https://data.gov.tw/dataset/7441)與[村里界圖](https://data.gov.tw/dataset/7438)。taiwan-atlas 的授權如下：

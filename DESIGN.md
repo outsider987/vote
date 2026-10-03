@@ -183,6 +183,13 @@ A cool fluorescent-white room: sage desk, near-white board, graphite ink, with p
 - **Scrollbar Gray** (`scrollbar-gray`): thin scrollbar thumbs on the board and tab strips.
 - **Masking Tape** / **Tape Edge** (`masking-tape`, `tape-edge`): the county and town labels in the scene.
 
+### Dossier
+Used only in the 調閱卷宗 (court-records) dialog and its tab; tokens live in `styles/dossier.css`.
+- **Kraft** / **Kraft Light** / **Kraft Deep** (`#C9A574`, `#DCC09A`, `#B08C5B`): the case folder and the tab on a roster entry or board row.
+- **Twine** (`#8A5A2B`): the string from the subject slip to each exhibit.
+- **Index Card** / **Index Line** (`#FBFAF4`, `#D7E3EA`): exhibit cards and their ruling.
+- **Verify Ink** (`#2E4A6B`): the 已查證 and 本案已閱 stamps. Never stamp red — a court record is not a decided race.
+
 ### Named Rules
 **The Stamp Rule.** Red means decided. Stamp red is never decoration, a party color, a warning, or a "live" signal. The live label is ink.
 
@@ -289,6 +296,7 @@ Dashed lines mean "not yet": an unfilled seat stamp, the pending chip, the edges
 - **Tug-of-war gauge:** a track with a center zero line. A knot moves toward whoever leads, the fill runs from center to knot in the leader's ink, and it transitions over 0.45s.
 - **Masking-tape labels:** handwritten county or town names on tape, with a mini 卜 stamp once the race is decided.
 - **Live footer:** in live mode the transport gives way to the count site's timestamp, an ink 即時 label (dashed when the feed stalls), and a progress bar of polling stations reported. Before the count it reads 預備 with a dashed border, mirrors the countdown, and links to the 2022 replay.
+- **調閱卷宗 (public court records):** a kraft tab (卷宗・判決 N) on 2026 roster entries and board rows whose candidate has records in `data/records-2026.json`. Pending indictments get a paler tab with no count. The dialog is a kraft folder sealed with masking tape: tear the seal, exhibits deal onto the folder pinned and tied with twine, the sentence and appeal status sit under pencil shading to scratch off, and opening any source stamps that exhibit 已查證. Indictments use a dashed card, a pencil 待審 and a fixed 推定無罪 line. Never shown on the 2022 replay or a rehearsal. No ranking, scores or sound: the puzzle is following evidence to the primary source.
 - **Countdown notice (2026 開票前):** a paper notice taped to the desk, with a strip of masking tape at its top edge and a slight tilt. It takes the 拉鋸戰 column's place, since nothing is close before the count and the camera already keeps that area clear.
   - Content: a label (距離開票), stacked Barlow Condensed numerals (days, then HH:MM:SS) and the start time.
   - At 16:00 it turns into 開票開始 / 16:00 and waits for the first results.

@@ -12,6 +12,7 @@ const FILES = [
   "mayor-2022.json",
   "council-2022.json",
   "registered-2026.json",
+  "records-2026.json",
   "mayor-2022-towns.json",
   "taiwan-atlas-counties-10t.json",
   "taiwan-atlas-towns-10t.json",
