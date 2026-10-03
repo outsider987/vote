@@ -103,16 +103,16 @@ npm run dev                                                             # 開 ht
 
 ## 部署（Cloudflare）
 
-正式網站：https://kaipiao-4xj.pages.dev/ 。
+正式網站：https://vote.outsider987.workers.dev/ 。鏡像站（同一份建置）：https://kaipiao-4xj.pages.dev/ 。
 
 網站與選舉夜資料分開部署：
 
 | 服務 | 內容 | 誰來部署 |
 |---|---|---|
-| Pages 專案 `kaipiao` | 網站本身（`apps/web/dist`） | `npm run deploy:site`；push 到 `main` 時 `.github/workflows/deploy.yml` 會檢查與建置，設定 Cloudflare secrets 後也會部署 |
+| Worker `vote` | 網站本身（`deploy/site/wrangler.jsonc`，內容是 `apps/web/dist`） | `npm run deploy:site`（`deploy/.env` 設了 `PAGES_PROJECT` 時也會同步部署到該 Pages 鏡像站）；push 到 `main` 時 `.github/workflows/deploy.yml` 會檢查與建置，設定 Cloudflare secrets 後也會部署 |
 | Worker `vote-live` | 只有 `results.json` 與 `candidates.json`（`deploy/live/wrangler.jsonc`），網址 `https://vote-live.outsider987.workers.dev/` | 選舉夜由 `scripts/publish-live.mjs` 直接部署 |
 
-兩者分開，程式與資料的部署就不會互相覆蓋。網站透過建置時的 `VITE_LIVE_URL` 讀取 `vote-live` 的資料。`vote-live` 是只有靜態檔的 Worker，請求免費且不限量。Pull request 另有 `ci.yml` 檢查。
+兩者分開，程式與資料的部署就不會互相覆蓋。網站透過建置時的 `VITE_LIVE_URL` 讀取 `vote-live` 的資料。兩個都是只有靜態檔的 Worker，請求免費且不限量。Pull request 另有 `ci.yml` 檢查。
 
 - **帳號：** 與本人代管的其他專案同一個 Cloudflare 帳號。帳號的 `workers.dev` 子網域是 `outsider987`（2026-10-03 從原本的名稱改過來），所有 Worker 共用。部署腳本讀 `deploy/.env` 的 `CLOUDFLARE_ACCOUNT_ID`，每次部署都鎖定這個帳號；沒填 `CLOUDFLARE_API_TOKEN` 時改用本機 `wrangler login`。
 - **第一次設定：**

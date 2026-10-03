@@ -7,6 +7,7 @@ on:
       - "apps/web/**"
       - "packages/shared/**"
       - "data/**"
+      - "deploy/site/**"
       - "package.json"
       - "package-lock.json"
       - ".github/workflows/deploy.yml"
@@ -40,10 +41,10 @@ jobs:
           # live at 16:00). Set it to "replay" to fall back to the 2022 replay. VITE_LIVE_URL points at vote-live.
           VITE_SOURCE: ${{ vars.VITE_SOURCE }}
           VITE_LIVE_URL: ${{ vars.VITE_LIVE_URL }}
-      - name: Deploy the site to Cloudflare Pages
+      - name: Deploy the site Worker
         run: |
           if [ -z "$CLOUDFLARE_API_TOKEN" ]; then
             echo "::warning::CLOUDFLARE_API_TOKEN is not set; built but not deployed. See README (部署)."
             exit 0
           fi
-          npx wrangler pages deploy apps/web/dist --project-name "${{ vars.PAGES_PROJECT || 'kaipiao' }}" --branch main --commit-hash "${GITHUB_SHA::7}"
+          npx wrangler deploy --config deploy/site/wrangler.jsonc
