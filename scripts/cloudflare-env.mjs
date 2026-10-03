@@ -1,6 +1,6 @@
-// Credentials for this project's own Cloudflare account, from deploy/.env or the environment.
-// Deploys refuse to run without them, so wrangler can never fall back to this machine's default
-// `wrangler login`, which may belong to a different account.
+// Cloudflare settings for deploys, from deploy/.env or the environment.
+// CLOUDFLARE_ACCOUNT_ID is required and pins every deploy to this project's account. CLOUDFLARE_API_TOKEN is
+// optional: without it wrangler uses this machine's `wrangler login`, but only for the pinned account.
 import { existsSync, readFileSync } from "node:fs";
 import { join } from "node:path";
 
@@ -13,8 +13,8 @@ export function cloudflareEnv(root) {
       if (m && m[2] && !env[m[1]]) env[m[1]] = m[2];   // real environment variables win
     }
   }
-  if (!env.CLOUDFLARE_ACCOUNT_ID || !env.CLOUDFLARE_API_TOKEN) {
-    throw new Error("CLOUDFLARE_ACCOUNT_ID and CLOUDFLARE_API_TOKEN are not set. Fill in deploy/.env (see deploy/.env.example).");
+  if (!env.CLOUDFLARE_ACCOUNT_ID) {
+    throw new Error("CLOUDFLARE_ACCOUNT_ID is not set. Fill in deploy/.env (see deploy/.env.example).");
   }
   return env;
 }
